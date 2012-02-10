@@ -1,0 +1,42 @@
+#!/bin/bash
+# based on slideshow wrapper.
+
+export EXEC="@abs_builddir@/frobnicator"
+export DATA_DIR="@abs_top_srcdir@/data"
+
+tool_args=()
+found=0
+
+# exctract tool arguments
+for x in $*; do
+    case $x in
+				"--")
+						found=1
+						shift
+						break
+						;;
+				*)
+						tool_args+=($x)
+						shift
+						;;
+    esac
+done
+
+if [ $found -eq 1 ]; then # rest is daemon args
+    daemon_args=($*)
+else # if -- isn't found, everything is considered daemon arguments
+    daemon_args=${tool_args[@]}
+    tool_args=()
+fi
+
+case `basename $0` in
+    frobnicator-gdb)
+				exec gdb ${tool_args[@]} --args ${EXEC} ${daemon_args[@]}
+				;;
+    frobnicator-valgrind)
+				exec valgrind ${tool_args[@]} -- ${EXEC} ${daemon_args[@]}
+				;;
+    *)
+				exec ${EXEC} ${daemon_args[@]}
+				;;
+esac;
