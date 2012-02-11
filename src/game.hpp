@@ -4,18 +4,31 @@
 #include <cstddef>
 #include <string>
 
-class Game {
-public:
-	Game();
-	~Game();
+namespace Game {
+	/**
+	 * Initialize engine.
+	 */
+	void init(const std::string& backend, int width, int height);
 
+	/**
+	 * Stop the engine and release all resources.
+	 */
+	void cleanup();
+
+	/**
+	 * Load a new level, overwriting the current (memory is freed)
+	 */
 	void load_level(const std::string& filename);
+
+	/**
+	 * Generate a new tilemap.
+	 */
+	Tilemap* load_tilemap(const std::string& filename);
+
+	/**
+	 * Do stuff.
+	 */
 	void frobnicate();
-
-private:
-	bool running() const;
-
-	class GamePimpl* pimpl;
 };
 
 #endif /* DVB021_GAME_H */

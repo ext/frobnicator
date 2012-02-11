@@ -24,8 +24,13 @@ public:
 	virtual void cleanup() = 0;
 
 	virtual void render_begin() = 0;
-	virtual void render_tilemap() = 0;
+	virtual void render_tilemap(const Tilemap& tilemap) = 0;
 	virtual void render_end() = 0;
+
+	/**
+	 * Load a tilemap from a file.
+	 */
+	virtual Tilemap* load_tilemap(const std::string& filename) = 0;
 
 	typedef Backend* (*factory_callback)();
 	typedef std::map<std::string, factory_callback> map;

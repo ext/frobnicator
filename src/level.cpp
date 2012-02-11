@@ -3,10 +3,12 @@
 #endif
 
 #include "level.hpp"
+#include "game.hpp"
+#include "tilemap.hpp"
 #include "common.hpp"
 #include <yaml.h>
 #include <inttypes.h>
-
+#include <cassert>
 
 static int yaml_error(yaml_parser_t* parser){
 	switch (parser->error){
@@ -29,8 +31,7 @@ static int yaml_error(yaml_parser_t* parser){
 			        parser->context_mark.line+1, parser->context_mark.column+1,
 			        parser->problem, parser->problem_mark.line+1,
 			        parser->problem_mark.column+1);
-		}
-		else {
+		} else {
 			fprintf(stderr, "Scanner error: %s at line %lu, column %lu\n",
 			        parser->problem, parser->problem_mark.line+1,
 			        parser->problem_mark.column+1);
@@ -44,8 +45,7 @@ static int yaml_error(yaml_parser_t* parser){
 			        parser->context_mark.line+1, parser->context_mark.column+1,
 			        parser->problem, parser->problem_mark.line+1,
 			        parser->problem_mark.column+1);
-		}
-		else {
+		} else {
 			fprintf(stderr, "Parser error: %s at line %lu, column %lu\n",
 			        parser->problem, parser->problem_mark.line+1,
 			        parser->problem_mark.column+1);
@@ -58,10 +58,65 @@ static int yaml_error(yaml_parser_t* parser){
 		break;
 	}
 
-	abort();
+	exit(1);
 }
 
-void parse_level(Level* level, yaml_parser_t* parser){
+class LevelPimpl {
+public:
+	LevelPimpl(const std::string& filename)
+		: title("untitled level")
+		, tilemap(NULL) {
+
+		const char* real_filename = real_path(filename.c_str());
+		fprintf(stderr, "Loading from `%s'.\n", real_filename);
+
+		FILE* fp = fopen(real_filename, "rb");
+		if ( !fp ){
+			fprintf(stderr, "Failed to load level `%s'\n", filename.c_str());
+			exit(1);
+		}
+
+		yaml_parser_t parser;
+		yaml_parser_initialize(&parser);
+
+		yaml_parser_set_input_file(&parser, fp);
+		parse_doc(&parser);
+
+		yaml_parser_delete(&parser);
+		fclose(fp);
+
+		/* sanity check */
+		if ( !tilemap ){
+			fprintf(stderr, "Level missing tilemap\n");
+			exit(1);
+		}
+
+		fprintf(stderr, "Loaded level \"%s\".\n", title.c_str());
+	}
+
+	~LevelPimpl() {
+		delete tilemap;
+	}
+
+private:
+	void parse_doc(yaml_parser_t* parser){
+		yaml_event_t event;
+		yaml_parser_parse(parser, &event) || yaml_error(parser);
+		if ( event.type != YAML_STREAM_START_EVENT ) abort();
+
+		yaml_parser_parse(parser, &event) || yaml_error(parser);
+		if ( event.type != YAML_DOCUMENT_START_EVENT ) abort();
+
+		yaml_parser_parse(parser, &event) || yaml_error(parser);
+		if ( event.type != YAML_MAPPING_START_EVENT ){
+			fprintf(stderr, "YAML Mapping expected\n");
+			abort();
+		}
+
+		parse_level(parser);
+	}
+
+	void parse_level(yaml_parser_t* parser){
 		yaml_event_t ekey;
 		yaml_event_t evalue;
 
@@ -83,62 +138,46 @@ void parse_level(Level* level, yaml_parser_t* parser){
 
 			/* Parse value */
 			yaml_parser_parse(parser, &evalue) || yaml_error(parser);
+			const char* value = (const char*)evalue.data.scalar.value;
+			const size_t value_len = evalue.data.scalar.length;
 
 			/* Fill level with info */
 			if ( strncmp("title", key, len) == 0 ){
-				level->set_title(std::string((const char*)evalue.data.scalar.value, evalue.data.scalar.length));
+				title = std::string(value, value_len);
+			} else if ( strncmp("tilemap", key, len) == 0 ){
+				tilemap = Game::load_tilemap(std::string(value, value_len));
 			} else {
 				/* warning only */
 				fprintf(stderr, "Unhandled key `%.*s'\n", (int)len, key);
 			}
 		} while ( true );
-}
-
-static void parse_doc(Level* level, yaml_parser_t* parser){
-	yaml_event_t event;
-	yaml_parser_parse(parser, &event) || yaml_error(parser);
-	if ( event.type != YAML_STREAM_START_EVENT ) abort();
-
-	yaml_parser_parse(parser, &event) || yaml_error(parser);
-	if ( event.type != YAML_DOCUMENT_START_EVENT ) abort();
-
-	yaml_parser_parse(parser, &event) || yaml_error(parser);
-	if ( event.type != YAML_MAPPING_START_EVENT ){
-		fprintf(stderr, "YAML Mapping expected\n");
-		abort();
 	}
 
-	parse_level(level, parser);
-}
+public:
+	/* All members are public as the only one that can access them is Level and
+	 * creating getters for all of them would just be a waste of time. */
+	std::string title;
+	Tilemap* tilemap;
+};
 
 Level::Level(const std::string& filename)
-	: _title("untitled level") {
+	: pimpl(new LevelPimpl(filename)) {
 
-	fprintf(stderr, "Loading from `%s'.\n", filename.c_str());
-
-	FILE* fp = fopen(real_path(filename.c_str()), "rb");
-	if ( !fp ){
-		/* fatal */
-		fprintf(stderr, "Failed to load level `%s'\n", filename.c_str());
-		exit(1);
-	}
-
-	yaml_parser_t parser;
-	yaml_parser_initialize(&parser);
-
-	yaml_parser_set_input_file(&parser, fp);
-	parse_doc(this, &parser);
-
-	yaml_parser_delete(&parser);
-	fclose(fp);
-
-	fprintf(stderr, "Loaded level \"%s\".\n", _title.c_str());
 }
 
 Level::~Level(){
-
+	delete pimpl;
 }
 
-void Level::set_title(const std::string& title){
-	_title = title;
+Level* Level::from_filename(const std::string& filename){
+	return new Level(filename);
+}
+
+const std::string& Level::title() const {
+	return pimpl->title;
+}
+
+const Tilemap& Level::tilemap() const {
+	assert(pimpl->tilemap);
+	return *pimpl->tilemap;
 }

@@ -3,25 +3,22 @@
 
 #include <string>
 
-typedef struct yaml_parser_s yaml_parser_t;
-
 class Level {
 public:
-	Level(const std::string& filename);
 	~Level();
 
+	/**
+	 * Load a level from filename.
+	 */
+	static Level* from_filename(const std::string& filename);
+
 	const std::string& title() const;
+	const Tilemap& tilemap() const;
 
 private:
-	void set_title(const std::string& title);
-
-	std::string _title;
-
-	/* for backend to render the level */
-	friend class Backend;
-
-	/* for yaml parsing to fill */
-	friend void parse_level(Level*, yaml_parser_t*);
+	Level(const std::string& filename); /* use from_filename */
+	Level(const Level&); /* prevent copying */
+	class LevelPimpl* pimpl;
 };
 
 #endif /* DVB021_LEVEL_H */

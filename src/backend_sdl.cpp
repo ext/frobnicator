@@ -3,9 +3,18 @@
 #endif
 
 #include "backend.hpp"
+#include "tilemap.hpp"
 #include <SDL/SDL.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
+
+class SDLTilemap: public Tilemap {
+public:
+	SDLTilemap(const std::string& filename)
+		: Tilemap(filename) {
+
+	}
+};
 
 class SDLBackend: public Backend {
 public:
@@ -60,6 +69,10 @@ public:
 		return new SDLBackend;
 	}
 
+	Tilemap* load_tilemap(const std::string& filename){
+		return new SDLTilemap(filename);
+	}
+
 	virtual void render_begin(){
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
@@ -70,18 +83,27 @@ public:
 		SDL_GL_SwapBuffers();
 	}
 
-	virtual void render_tilemap(){
+	virtual void render_tilemap(const Tilemap& tilemap){
 		static const float v[][3] = {
-			{-50,-50,0},
-			{50,-50,0},
-			{50,50,0},
-			{-50,50,0},
+			{0,  0,  0},
+			{50, 0,  0},
+			{50, 50, 0},
+			{0,  50, 0},
 		};
 		static const unsigned int indices[4] = {0,1,2,3};
+		static const float c[][4] = {
+			{1,1,1,1},
+			{1,0,0,1},
+			{0,1,0,1},
+			{0,0,1,1},
+		};
 
-		glColor4f(1,1,1,1);
 		glVertexPointer(3, GL_FLOAT, sizeof(float)*3, v);
-		glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, indices);
+		for ( int i = 0; i < 4; ++i ){
+			glColor4fv(c[i]);
+			glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, indices);
+			glTranslatef(50.0f, 0.0f, 0.0f);
+		}
 
 		int err;
 		if ( (err=glGetError()) != GL_NO_ERROR ){
