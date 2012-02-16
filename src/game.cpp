@@ -61,6 +61,7 @@ namespace Game {
 
 	Tilemap* load_tilemap(const std::string& filename){
 		assert(backend);
+		printf("load_tilemap\n");
 		return backend->load_tilemap(filename);
 	}
 };

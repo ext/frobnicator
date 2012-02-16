@@ -12,7 +12,7 @@ class SDLTilemap: public Tilemap {
 public:
 	SDLTilemap(const std::string& filename)
 		: Tilemap(filename) {
-
+		printf("sdl tilemap constructor\n");
 	}
 };
 
@@ -70,6 +70,7 @@ public:
 	}
 
 	Tilemap* load_tilemap(const std::string& filename){
+		printf("sdl load_tilemap\n");
 		return new SDLTilemap(filename);
 	}
 

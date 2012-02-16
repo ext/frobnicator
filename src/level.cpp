@@ -94,6 +94,7 @@ private:
 			if ( strncmp("title", key, len) == 0 ){
 				title = std::string(value, value_len);
 			} else if ( strncmp("tilemap", key, len) == 0 ){
+				printf("tilemap found\n");
 				tilemap = Game::load_tilemap(std::string(value, value_len));
 			} else {
 				/* warning only */
