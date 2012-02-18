@@ -44,22 +44,35 @@ public:
 		fclose(fp);
 
 		/* fill default value for unset tiles */
-		fprintf(stderr, "  preparing tiles\n");
+		fprintf(stderr, "  preparing tiledata\n");
 		const float dx = 1.0f / tiles_horizontal;
 		const float dy = 1.0f / tiles_vertical;
 		for ( size_t i = 0; i < tiles_size; i++ ){
-			if ( !tileinfo[i].set ){
-				tileinfo[i] = default_tile;
+			struct Tilemap::Tile& info = tileinfo[i];
+
+			if ( !info.set ){
+				info = default_tile;
 			}
 
 			const unsigned int x = i % tiles_horizontal;
 			const unsigned int y = i / tiles_horizontal;
-			tileinfo[i].uv.s = (x  )*dx;
-			tileinfo[i].uv.t = (y  )*dy;
-			tileinfo[i].uv.u = (x+1)*dx;
-			tileinfo[i].uv.v = (y+1)*dy;
+			info.index = i;
+			info.uv.s = (x  )*dx;
+			info.uv.t = (y  )*dy;
+			info.uv.u = (x+1)*dx;
+			info.uv.v = (y+1)*dy;
 		}
 		fprintf(stderr, "    %d tiles loaded\n", tiles_size);
+
+		fprintf(stderr, "  preprocessing tiles\n");
+		int n = 0;
+		for ( Tilemap::Tile& it: tile ){
+			it = tileinfo[it.index];
+			it.x = n % map_width;
+			it.y = n / map_width;
+			n++;
+		}
+		fprintf(stderr, "    %zd tiles loaded\n", tile.size());
 	}
 
 private:
@@ -266,16 +279,20 @@ private:
 				abort();
 			}
 
-			const unsigned int index = atoi((const char*)value.data.scalar.value);
+			const unsigned int index = [&value, tiles_size]() -> unsigned int {
+				unsigned int tmp = atoi((const char*)value.data.scalar.value);
+				if ( tmp >= tiles_size ){
+					fprintf(stderr, "warning: tile value to great, got %d max %d, defaulting to 0\n", tmp, tiles_size-1);
+					return 0;
+				} else {
+					return tmp;
+				}
+			}();
 
-			if ( index >= tiles_size ){
-				fprintf(stderr, "warning: tile value to great, got %d max %d, defaulting to 0\n", index, tiles_size-1);
-				tile.push_back(0);
-				continue;
-			}
-
-			tile.push_back(index);
-		} while ( true );
+			Tilemap::Tile tmp;
+			tmp.index = index;
+			tile.push_back(tmp);
+		} while (true);
 
 		/* warn if there was an unexpected number of tiles */
 		if ( tile.size() < map_size ){
@@ -320,7 +337,7 @@ public:
 	unsigned int tiles_horizontal; /* how many horizontal tiles in texture */
 	unsigned int tiles_vertical;   /* how many vertical tiles in texture */
 	unsigned int tiles_size;       /* h * v */
-	std::vector<int> tile;
+	std::vector<Tilemap::Tile> tile;
 
 private:
 	bool meta_set;
@@ -342,4 +359,16 @@ size_t Tilemap::size() const {
 
 size_t Tilemap::width() const {
 	return pimpl->map_width;
+}
+
+const Tilemap::Tile& Tilemap::operator[](unsigned int i) const {
+	return pimpl->tile[i];
+}
+
+std::vector<Tilemap::Tile>::const_iterator Tilemap::begin() const {
+	return pimpl->tile.begin();
+}
+
+std::vector<Tilemap::Tile>::const_iterator Tilemap::end() const {
+	return pimpl->tile.end();
 }

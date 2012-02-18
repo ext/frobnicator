@@ -2,6 +2,7 @@
 #define DVB021_TILEMAP_H
 
 #include <string>
+#include <vector>
 
 class Tilemap {
 public:
@@ -16,7 +17,11 @@ public:
 			float u; /* max */
 			float v;
 		} uv;
+
+		uint8_t x;
+		uint8_t y;
 		uint8_t index;
+
 		uint8_t set: 1;
 		uint8_t build: 1;
 	};
@@ -25,7 +30,12 @@ public:
 
 	size_t size() const;
 	size_t width() const;
+	const Tile& operator[](unsigned int i) const;
+	const Tile& at(unsigned int x, unsigned int y) const;
+	const std::string& filename() const;
 
+	std::vector<Tile>::const_iterator begin() const;
+	std::vector<Tile>::const_iterator end() const;
 
 protected:
 	Tilemap(const std::string& filename);

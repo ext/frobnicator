@@ -69,7 +69,6 @@ public:
 	}
 
 	Tilemap* load_tilemap(const std::string& filename){
-		printf("sdl load_tilemap\n");
 		return new SDLTilemap(filename);
 	}
 
@@ -92,23 +91,24 @@ public:
 		};
 		static const unsigned int indices[4] = {0,1,2,3};
 		static const float c[][4] = {
-			{1,1,1,1},
-			{1,0,0,1},
-			{0,1,0,1},
+			{0,0,0,1},
 			{0,0,1,1},
+			{0,1,0,1},
+			{0,1,1,1},
+			{1,0,0,1},
+			{1,0,1,1},
+			{1,1,0,1},
+			{1,1,1,1},
 		};
 
 		glVertexPointer(3, GL_FLOAT, sizeof(float)*3, v);
-		for ( size_t i = 0; i < tilemap.size(); ++i ){
-			const size_t x = i % tilemap.width();
-			const size_t y = i / tilemap.width();
-
+		for ( auto tile: tilemap ){
 			glPushMatrix();
-
-			glColor4fv(c[i%4]);
-			glTranslatef(x*50.0f, y*50.0f, 0.0f);
-			glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, indices);
-
+			{
+				glColor4fv(c[tile.index%8]);
+				glTranslatef(tile.x*50.0f, tile.y*50.0f, 0.0f);
+				glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, indices);
+			}
 			glPopMatrix();
 		}
 
