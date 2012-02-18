@@ -7,7 +7,7 @@
 #include <yaml.h>
 #include <vector>
 
-static constexpr size_t max_tiles = 100;
+static constexpr size_t max_tiles = 500;
 
 class TilemapPimpl {
 public:
@@ -57,10 +57,16 @@ public:
 			const unsigned int x = i % tiles_horizontal;
 			const unsigned int y = i / tiles_horizontal;
 			info.index = i;
-			info.uv.s = (x  )*dx;
-			info.uv.t = (y  )*dy;
-			info.uv.u = (x+1)*dx;
-			info.uv.v = (y+1)*dy;
+			float s = x * dy;
+			float t = y * dy;
+			info.uv[0] = s;
+			info.uv[1] = t;
+			info.uv[2] = s + dx;
+			info.uv[3] = t;
+			info.uv[4] = s + dx;
+			info.uv[5] = t + dy;
+			info.uv[6] = s;
+			info.uv[7] = t + dy;
 		}
 		fprintf(stderr, "    %d tiles loaded\n", tiles_size);
 
@@ -168,6 +174,8 @@ private:
 				tiles_horizontal = atoi(value);
 			} else if ( strncmp("tiles_vertical", key, len) == 0 ){
 				tiles_vertical = atoi(value);
+			} else if ( strncmp("texture", key, len) == 0 ){
+				texture_name = std::string(value, evalue.data.scalar.length);
 			} else {
 				/* warning only */
 				fprintf(stderr, "    - Unhandled key `%.*s'\n", (int)len, key);
@@ -177,6 +185,11 @@ private:
 		map_size = map_width * map_height;
 		tiles_size = tiles_horizontal * tiles_vertical;
 		meta_set = true;
+
+		if ( tiles_size >= max_tiles ){
+			fprintf(stderr, "too many tiles, max is %zd\n", max_tiles);
+			abort();
+		}
 
 		fprintf(stderr, "    * size: %dx%d (%d)\n", map_width, map_height, map_size);
 		fprintf(stderr, "    * tileset: %dx%d (%d)\n", tiles_horizontal, tiles_vertical, tiles_size);
@@ -230,8 +243,8 @@ private:
 		}
 
 		/* determine range */
-		int lower;
-		int upper;
+		unsigned int lower;
+		unsigned int upper;
 		char* delim = strchr(tilerange, '-');
 		if ( !delim ){ /* single tile only */
 			const int index = atoi(tilerange);
@@ -242,7 +255,11 @@ private:
 			upper = atoi(delim);
 		}
 
-		for ( int i = lower; i <= upper; i++ ){
+		if ( lower > upper || upper > max_tiles ){
+			fprintf(stderr, "  invalid tile range %d-%d, must be min <= max <= %zd\n", lower, upper, max_tiles);
+		}
+
+		for ( unsigned int i = lower; i <= upper; i++ ){
 			tileinfo[i] = cur;
 			tileinfo[i].set = 1;
 		}
@@ -281,6 +298,7 @@ private:
 
 			const unsigned int index = [&value, tiles_size]() -> unsigned int {
 				unsigned int tmp = atoi((const char*)value.data.scalar.value);
+				if ( tmp > 0 ) tmp--; /* tiled uses 1 as first index and 0 as "no tile" */
 				if ( tmp >= tiles_size ){
 					fprintf(stderr, "warning: tile value to great, got %d max %d, defaulting to 0\n", tmp, tiles_size-1);
 					return 0;
@@ -338,6 +356,7 @@ public:
 	unsigned int tiles_vertical;   /* how many vertical tiles in texture */
 	unsigned int tiles_size;       /* h * v */
 	std::vector<Tilemap::Tile> tile;
+	std::string texture_name;
 
 private:
 	bool meta_set;
@@ -359,6 +378,10 @@ size_t Tilemap::size() const {
 
 size_t Tilemap::width() const {
 	return pimpl->map_width;
+}
+
+const std::string& Tilemap::texture_filename() const {
+	return pimpl->texture_name;
 }
 
 const Tilemap::Tile& Tilemap::operator[](unsigned int i) const {
