@@ -110,11 +110,13 @@ namespace Game {
 
 	void click(float x, float y){
 		const Vector2f world = transform(Vector2f(x,y));
+		int tx = max(world.x / tilemap->tile_width() - 1, 0.0f);
+		int ty = max(world.y / tilemap->tile_height() - 1, 0.0f);
 
 		if ( !(cursor_ok[0] && cursor_ok[1] && cursor_ok[2] && cursor_ok[3]) ){
 			return;
 		}
 
-		printf("build ok\n");
+		printf("build ok at (%d,%d)\n", tx, ty);
 	}
 };
