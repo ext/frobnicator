@@ -9,5 +9,6 @@ frobnicator_SOURCES = \
 	src/backend.cpp src/backend.hpp \
 	src/backend_sdl.cpp \
 	src/game.cpp src/game.hpp \
+	src/entity.cpp src/entity.hpp \
 	src/level.cpp src/level.hpp \
 	src/tilemap.cpp src/tilemap.hpp

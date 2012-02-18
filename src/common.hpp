@@ -45,5 +45,6 @@ public:
 };
 
 typedef Vector<float> Vector2f;
+typedef Vector<int> Vector2i;
 
 #endif /* DVB021_COMMON_H */

@@ -29,6 +29,7 @@ public:
 	size_t tile_height() const;
 	const Tile& operator[](unsigned int i) const;
 	const Tile& at(unsigned int x, unsigned int y) const;
+	void reserve(unsigned int x, unsigned int y);
 	const std::string& texture_filename() const;
 	void set_dimensions(size_t w, size_t h);
 

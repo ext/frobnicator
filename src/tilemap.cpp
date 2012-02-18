@@ -406,6 +406,13 @@ const Tilemap::Tile& Tilemap::at(unsigned int x, unsigned int y) const {
 	return pimpl->tile[x + y * pimpl->map_width];
 }
 
+void Tilemap::reserve(unsigned int x, unsigned int y){
+	pimpl->tile[x   + (y  ) * pimpl->map_width].build = 0;
+	pimpl->tile[x+1 + (y  ) * pimpl->map_width].build = 0;
+	pimpl->tile[x   + (y+1) * pimpl->map_width].build = 0;
+	pimpl->tile[x+1 + (y+1) * pimpl->map_width].build = 0;
+}
+
 std::vector<Tilemap::Tile>::const_iterator Tilemap::begin() const {
 	return pimpl->tile.begin();
 }

@@ -6,6 +6,7 @@
 #include "backend.hpp"
 #include "level.hpp"
 #include "tilemap.hpp"
+#include "entity.hpp"
 #include <cstdlib>
 #include <cassert>
 #include <vector>
@@ -32,6 +33,8 @@ static void render_game(){
 	backend->render_begin();
 	{
 		backend->render_tilemap(level->tilemap(), camera);
+
+		backend->render_entities(entity, camera);
 
 		/* render marker */
 		backend->render_marker(cursor, camera, cursor_ok);
@@ -118,5 +121,9 @@ namespace Game {
 		}
 
 		printf("build ok at (%d,%d)\n", tx, ty);
+		entity.push_back(new Entity(Vector2f(tx, ty)));
+
+		tilemap->reserve(tx,ty);
+		motion(x, y); /* to update marker */
 	}
 };

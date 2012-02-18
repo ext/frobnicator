@@ -6,6 +6,7 @@
 #include "tilemap.hpp"
 #include "game.hpp"
 #include "common.hpp"
+#include "entity.hpp"
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <GL/gl.h>
@@ -86,7 +87,7 @@ public:
 
 			case SDL_MOUSEBUTTONDOWN:
 				if ( event.button.button == 1){
-					Game::click(event.button.x, event.button.x);
+					Game::click(event.button.x, event.button.y);
 				}
 				break;
 
@@ -262,15 +263,45 @@ public:
 		for ( int y = 0; y < 2; y++ ){
 			for ( int x = 0; x < 2; x++ ){
 				if ( v[x+y*2] ){
-					glColor4f(1,1,1,0.5);
+					glColor4f(1,1,1,0.6);
 				} else {
-					glColor4f(1,0,0,0.5);
+					glColor4f(1,0,0,0.6);
 				}
 				glPushMatrix();
 				glTranslatef(x,y,0.0f);
 				glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, indices);
 				glPopMatrix();
 			}
+		}
+
+		glPopMatrix();
+
+		int err;
+		if ( (err=glGetError()) != GL_NO_ERROR ){
+			fprintf(stderr, "OpenGL error: %s\n", gluErrorString(err));
+			exit(1);
+		}
+	}
+
+	virtual void render_entities(std::vector<Entity*>& entities, const Vector2f& camera) const {
+		glPushMatrix();
+
+		/* camera */
+		glTranslatef(-camera.x, -camera.y, 0.0f);
+
+		/* tile scale */
+		glScalef(48.0f, 48.0f, 1.0f);
+
+		glVertexPointer(3, GL_FLOAT, sizeof(float)*3, vertices);
+
+		for ( Entity* ent : entities ){
+			glBindTexture(GL_TEXTURE_2D, 0);
+			glColor4f(1,0,1,1);
+			glPushMatrix();
+			glTranslatef(ent->world_pos().x, ent->world_pos().y, 0.0f);
+			glScalef(2,2,1);
+			glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, indices);
+			glPopMatrix();
 		}
 
 		glPopMatrix();
