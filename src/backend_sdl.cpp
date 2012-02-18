@@ -12,7 +12,6 @@ class SDLTilemap: public Tilemap {
 public:
 	SDLTilemap(const std::string& filename)
 		: Tilemap(filename) {
-		printf("sdl tilemap constructor\n");
 	}
 };
 
@@ -100,10 +99,17 @@ public:
 		};
 
 		glVertexPointer(3, GL_FLOAT, sizeof(float)*3, v);
-		for ( int i = 0; i < 4; ++i ){
-			glColor4fv(c[i]);
+		for ( size_t i = 0; i < tilemap.size(); ++i ){
+			const size_t x = i % tilemap.width();
+			const size_t y = i / tilemap.width();
+
+			glPushMatrix();
+
+			glColor4fv(c[i%4]);
+			glTranslatef(x*50.0f, y*50.0f, 0.0f);
 			glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, indices);
-			glTranslatef(50.0f, 0.0f, 0.0f);
+
+			glPopMatrix();
 		}
 
 		int err;

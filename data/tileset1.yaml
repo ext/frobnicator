@@ -1,15 +1,18 @@
-meta: 
+meta:
+    # size in number of tiles
     width: 4
     height: 4
+
+    # tileinfo
     tileset: tileset1.png
-    tile_width: 50
-    tile_height: 50
+    tiles_horizontal: 8
+    tiles_vertical: 2
 
 default:
-    build: true
+    build: yes
 
-20-30:
-    build: false
+5-10:
+    build: no
 
 data:
     [0,1,2,3,
