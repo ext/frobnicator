@@ -4,11 +4,13 @@
 
 #include "backend.hpp"
 #include "tilemap.hpp"
+#include "game.hpp"
 #include "common.hpp"
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include <math.h>
 
 class SDLTilemap: public Tilemap {
 public:
@@ -30,6 +32,11 @@ public:
 		}
 
 		SDL_SetVideoMode(width, height, 0, SDL_OPENGL|SDL_DOUBLEBUF);
+		SDL_EnableKeyRepeat(0, 0);
+
+		for ( bool& st: pressed ){
+			st = false;
+		}
 
 		glClearColor(1,0,1,1);
 		glDisable(GL_CULL_FACE);
@@ -55,12 +62,40 @@ public:
 				if ( event.key.keysym.sym == SDLK_ESCAPE || (event.key.keysym.sym == SDLK_q && event.key.keysym.mod & KMOD_CTRL) ){
 					running = false;
 				}
+
+				/* fall-through */
+
+			case SDL_KEYUP:
+				handle_keyboard(event.key.keysym.sym, event.key.state == SDL_PRESSED);
+				pressed[event.key.keysym.sym] = event.key.state == SDL_PRESSED;
+				break;
+
+			case SDL_MOUSEMOTION:
+				Game::motion(event.motion.x, event.motion.y);
 				break;
 
 			case SDL_QUIT:
 				running = false;
 				break;
 			}
+		}
+
+		/* handle panning using keyboard */
+		pan.x = pan.y = 0.0f;
+		if ( pressed[SDLK_LEFT ] ) pan.x += 24.0f;
+		if ( pressed[SDLK_RIGHT] ) pan.x -= 24.0f;
+		if ( pressed[SDLK_UP   ] ) pan.y += 24.0f;
+		if ( pressed[SDLK_DOWN ] ) pan.y -= 24.0f;
+
+		if ( fabs(pan.x) > 0.1 || fabs(pan.y) > 0.1 ){
+			Game::pan(pan.x, pan.y);
+		}
+	}
+
+	void handle_keyboard(SDLKey code, bool pressed){
+		switch ( code ){
+		default:
+			break;
 		}
 	}
 
@@ -74,12 +109,14 @@ public:
 
 	Tilemap* load_tilemap(const std::string& filename){
 		SDLTilemap* tilemap = new SDLTilemap(filename);
-		tilemap_texture = load_texture(tilemap->texture_filename());
+		size_t w,h;
+		tilemap_texture = load_texture(tilemap->texture_filename(), w, h);
+		tilemap->set_dimensions(w,h);
 		fprintf(stderr, "  texture: %d\n", tilemap_texture);
 		return tilemap;
 	}
 
-	GLuint load_texture(const std::string filename) {
+	GLuint load_texture(const std::string filename, size_t& width, size_t& height) {
 		const char* real_filename = real_path(filename.c_str());
 
 		/* borrowed from blueflower/opengta */
@@ -141,6 +178,9 @@ public:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, rgba_surface->w, rgba_surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba_surface->pixels );
 
+		width  = rgba_surface->w;
+		height = rgba_surface->h;
+
 		SDL_FreeSurface(rgba_surface);
 		SDL_FreeSurface(surface);
 
@@ -157,7 +197,7 @@ public:
 		SDL_GL_SwapBuffers();
 	}
 
-	virtual void render_tilemap(const Tilemap& tilemap){
+	virtual void render_tilemap(const Tilemap& tilemap, const Vector2f& camera){
 		static const float v[][3] = {
 			{0, 0, 0},
 			{1, 0, 0},
@@ -167,7 +207,13 @@ public:
 		static const unsigned int indices[4] = {0,1,2,3};
 
 		glPushMatrix();
+
+		/* camera */
+		glTranslatef(-camera.x, -camera.y, 0.0f);
+
+		/* tile scale */
 		glScalef(48.0f, 48.0f, 1.0f);
+
 		glBindTexture(GL_TEXTURE_2D, tilemap_texture);
 		glColor4f(1,1,1,1);
 		glVertexPointer(3, GL_FLOAT, sizeof(float)*3, v);
@@ -192,6 +238,8 @@ public:
 
 private:
 	GLuint tilemap_texture;
+	Vector2f pan;
+	bool pressed[SDLK_LAST];
 };
 
 REGISTER_BACKEND(SDLBackend);

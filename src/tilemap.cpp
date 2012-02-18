@@ -354,6 +354,8 @@ public:
 	unsigned int map_size;         /* width * height */
 	unsigned int tiles_horizontal; /* how many horizontal tiles in texture */
 	unsigned int tiles_vertical;   /* how many vertical tiles in texture */
+	unsigned int tile_width;       /* tile width in pixels (set by backend after loading) */
+	unsigned int tile_height;      /* tile height in pixels (set by backend after loading) */
 	unsigned int tiles_size;       /* h * v */
 	std::vector<Tilemap::Tile> tile;
 	std::string texture_name;
@@ -376,8 +378,20 @@ size_t Tilemap::size() const {
 	return pimpl->map_size;
 }
 
-size_t Tilemap::width() const {
+size_t Tilemap::map_width() const {
 	return pimpl->map_width;
+}
+
+size_t Tilemap::map_height() const {
+	return pimpl->map_height;
+}
+
+size_t Tilemap::tile_width() const {
+	return pimpl->tile_width;
+}
+
+size_t Tilemap::tile_height() const {
+	return pimpl->tile_height;
 }
 
 const std::string& Tilemap::texture_filename() const {
@@ -394,4 +408,9 @@ std::vector<Tilemap::Tile>::const_iterator Tilemap::begin() const {
 
 std::vector<Tilemap::Tile>::const_iterator Tilemap::end() const {
 	return pimpl->tile.end();
+}
+
+void Tilemap::set_dimensions(size_t w, size_t h){
+	pimpl->tile_width  = w / pimpl->tiles_horizontal;
+	pimpl->tile_height = h / pimpl->tiles_vertical;
 }

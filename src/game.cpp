@@ -5,6 +5,7 @@
 #include "game.hpp"
 #include "backend.hpp"
 #include "level.hpp"
+#include "tilemap.hpp"
 #include <cstdlib>
 #include <cassert>
 #include <vector>
@@ -15,6 +16,10 @@ static bool running = false;
 static Backend* backend = NULL;
 static Level* level = NULL;
 static EntityVector entity;
+static Vector2f camera;
+static Tilemap* tilemap;
+static int width;
+static int height;
 
 static void poll(bool&render){
 	backend->poll(running);
@@ -23,14 +28,16 @@ static void poll(bool&render){
 static void render_game(){
 	backend->render_begin();
 	{
-		backend->render_tilemap(level->tilemap());
+		backend->render_tilemap(level->tilemap(), camera);
 
 	}
 	backend->render_end();
 }
 
 namespace Game {
-	void init(const std::string& bn, int width, int height){
+	void init(const std::string& bn, int w, int h){
+		width = w;
+		height = h;
 		backend = Backend::create(bn);
 
 		if ( !backend ){
@@ -61,6 +68,18 @@ namespace Game {
 
 	Tilemap* load_tilemap(const std::string& filename){
 		assert(backend);
-		return backend->load_tilemap(filename);
+		tilemap = backend->load_tilemap(filename);
+		return tilemap;
+	}
+
+	void pan(float x, float y){
+		const float bx = tilemap->tile_width()  * tilemap->map_width()  - width;
+		const float by = tilemap->tile_height() * tilemap->map_height() - height;
+
+		camera.x = clamp(camera.x - x, 0.0f, bx);
+		camera.y = clamp(camera.y - y, 0.0f, by);
+	}
+
+	void motion(float x, float y){
 	}
 };

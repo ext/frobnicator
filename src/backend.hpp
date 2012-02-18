@@ -3,6 +3,7 @@
 
 #include <map>
 #include <string>
+#include "common.hpp"
 
 class Backend {
 public:
@@ -24,7 +25,7 @@ public:
 	virtual void cleanup() = 0;
 
 	virtual void render_begin() = 0;
-	virtual void render_tilemap(const Tilemap& tilemap) = 0;
+	virtual void render_tilemap(const Tilemap& tilemap, const Vector2f& camera) = 0;
 	virtual void render_end() = 0;
 
 	/**

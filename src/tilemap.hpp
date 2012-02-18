@@ -23,10 +23,14 @@ public:
 	virtual ~Tilemap();
 
 	size_t size() const;
-	size_t width() const;
+	size_t map_width() const;
+	size_t map_height() const;
+	size_t tile_width() const;
+	size_t tile_height() const;
 	const Tile& operator[](unsigned int i) const;
 	const Tile& at(unsigned int x, unsigned int y) const;
 	const std::string& texture_filename() const;
+	void set_dimensions(size_t w, size_t h);
 
 	std::vector<Tile>::const_iterator begin() const;
 	std::vector<Tile>::const_iterator end() const;

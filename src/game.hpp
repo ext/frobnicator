@@ -29,6 +29,16 @@ namespace Game {
 	 * Do stuff.
 	 */
 	void frobnicate();
+
+	/**
+	 * Pan the camera.
+	 */
+	void pan(float x, float y);
+
+	/**
+	 * Inform about mouse movement (in screenspace).
+	 */
+	void motion(float x, float y);
 };
 
 #endif /* DVB021_GAME_H */
