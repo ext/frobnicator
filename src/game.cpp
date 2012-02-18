@@ -9,6 +9,7 @@
 #include <cstdlib>
 #include <cassert>
 #include <vector>
+#include <math.h>
 
 typedef std::vector<Entity*> EntityVector;
 
@@ -17,6 +18,7 @@ static Backend* backend = NULL;
 static Level* level = NULL;
 static EntityVector entity;
 static Vector2f camera;
+static Vector2f cursor;
 static Tilemap* tilemap;
 static int width;
 static int height;
@@ -29,7 +31,7 @@ static void render_game(){
 	backend->render_begin();
 	{
 		backend->render_tilemap(level->tilemap(), camera);
-
+		backend->render_marker(cursor, camera);
 	}
 	backend->render_end();
 }
@@ -81,5 +83,13 @@ namespace Game {
 	}
 
 	void motion(float x, float y){
+		/* transform to worldspace */
+		Vector2f world = Vector2f(x,y) + camera;
+		world.x += 24;
+		world.y += 24;
+
+		world.x -= fmod(world.x, tilemap->tile_width());
+		world.y -= fmod(world.y, tilemap->tile_height());
+		cursor = world;
 	}
 };

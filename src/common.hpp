@@ -27,6 +27,10 @@ public:
 		: x(rhs.x)
 		, y(rhs.y) {}
 
+	Vector operator+(const Vector<T>& rhs){
+		return Vector(x+rhs.x, y+rhs.y);
+	}
+
 	union {
 		struct {
 			T x;

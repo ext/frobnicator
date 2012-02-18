@@ -25,7 +25,8 @@ public:
 	virtual void cleanup() = 0;
 
 	virtual void render_begin() = 0;
-	virtual void render_tilemap(const Tilemap& tilemap, const Vector2f& camera) = 0;
+	virtual void render_tilemap(const Tilemap& tilemap, const Vector2f& camera) const = 0;
+	virtual void render_marker(const Vector2f& pos, const Vector2f& camera) const = 0;
 	virtual void render_end() = 0;
 
 	/**

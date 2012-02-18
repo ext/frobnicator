@@ -12,6 +12,14 @@
 #include <GL/glu.h>
 #include <math.h>
 
+static const float vertices[][3] = {
+	{0, 0, 0},
+	{1, 0, 0},
+	{1, 1, 0},
+	{0, 1, 0},
+};
+static const unsigned int indices[4] = {0,1,2,3};
+
 class SDLTilemap: public Tilemap {
 public:
 	SDLTilemap(const std::string& filename)
@@ -42,6 +50,8 @@ public:
 		glDisable(GL_CULL_FACE);
 		glDisable(GL_DEPTH_TEST);
 		glEnable(GL_TEXTURE_2D);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
@@ -197,15 +207,7 @@ public:
 		SDL_GL_SwapBuffers();
 	}
 
-	virtual void render_tilemap(const Tilemap& tilemap, const Vector2f& camera){
-		static const float v[][3] = {
-			{0, 0, 0},
-			{1, 0, 0},
-			{1, 1, 0},
-			{0, 1, 0},
-		};
-		static const unsigned int indices[4] = {0,1,2,3};
-
+	virtual void render_tilemap(const Tilemap& tilemap, const Vector2f& camera) const {
 		glPushMatrix();
 
 		/* camera */
@@ -216,7 +218,7 @@ public:
 
 		glBindTexture(GL_TEXTURE_2D, tilemap_texture);
 		glColor4f(1,1,1,1);
-		glVertexPointer(3, GL_FLOAT, sizeof(float)*3, v);
+		glVertexPointer(3, GL_FLOAT, sizeof(float)*3, vertices);
 
 		for ( auto tile: tilemap ){
 			glPushMatrix();
@@ -229,6 +231,32 @@ public:
 		}
 
 		glPopMatrix();
+		int err;
+		if ( (err=glGetError()) != GL_NO_ERROR ){
+			fprintf(stderr, "OpenGL error: %s\n", gluErrorString(err));
+			exit(1);
+		}
+	}
+
+	virtual void render_marker(const Vector2f& pos, const Vector2f& camera) const {
+		glPushMatrix();
+
+		/* camera */
+		glTranslatef(-camera.x, -camera.y, 0.0f);
+
+		/* position */
+		glTranslatef(pos.x - 48, pos.y - 48, 0.0f);
+
+		/* tile scale */
+		glScalef(48.0f*2, 48.0f*2, 1.0f);
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glColor4f(1,1,1,0.5);
+		glVertexPointer(3, GL_FLOAT, sizeof(float)*3, vertices);
+		glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, indices);
+
+		glPopMatrix();
+
 		int err;
 		if ( (err=glGetError()) != GL_NO_ERROR ){
 			fprintf(stderr, "OpenGL error: %s\n", gluErrorString(err));
