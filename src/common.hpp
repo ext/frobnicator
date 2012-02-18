@@ -27,8 +27,12 @@ public:
 		: x(rhs.x)
 		, y(rhs.y) {}
 
-	Vector operator+(const Vector<T>& rhs){
+	Vector operator+(const Vector<T>& rhs) const {
 		return Vector(x+rhs.x, y+rhs.y);
+	}
+
+	Vector operator*(T scalar) const {
+		return Vector(x * scalar, y * scalar);
 	}
 
 	union {

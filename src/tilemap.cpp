@@ -402,6 +402,10 @@ const Tilemap::Tile& Tilemap::operator[](unsigned int i) const {
 	return pimpl->tile[i];
 }
 
+const Tilemap::Tile& Tilemap::at(unsigned int x, unsigned int y) const {
+	return pimpl->tile[x + y * pimpl->map_width];
+}
+
 std::vector<Tilemap::Tile>::const_iterator Tilemap::begin() const {
 	return pimpl->tile.begin();
 }

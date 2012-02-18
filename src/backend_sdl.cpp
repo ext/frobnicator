@@ -84,6 +84,12 @@ public:
 				Game::motion(event.motion.x, event.motion.y);
 				break;
 
+			case SDL_MOUSEBUTTONDOWN:
+				if ( event.button.button == 1){
+					Game::click(event.button.x, event.button.x);
+				}
+				break;
+
 			case SDL_QUIT:
 				running = false;
 				break;
@@ -238,7 +244,7 @@ public:
 		}
 	}
 
-	virtual void render_marker(const Vector2f& pos, const Vector2f& camera) const {
+	virtual void render_marker(const Vector2f& pos, const Vector2f& camera, const bool v[]) const {
 		glPushMatrix();
 
 		/* camera */
@@ -248,12 +254,24 @@ public:
 		glTranslatef(pos.x - 48, pos.y - 48, 0.0f);
 
 		/* tile scale */
-		glScalef(48.0f*2, 48.0f*2, 1.0f);
+		glScalef(48.0f, 48.0f, 1.0f);
 
 		glBindTexture(GL_TEXTURE_2D, 0);
-		glColor4f(1,1,1,0.5);
 		glVertexPointer(3, GL_FLOAT, sizeof(float)*3, vertices);
-		glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, indices);
+
+		for ( int y = 0; y < 2; y++ ){
+			for ( int x = 0; x < 2; x++ ){
+				if ( v[x+y*2] ){
+					glColor4f(1,1,1,0.5);
+				} else {
+					glColor4f(1,0,0,0.5);
+				}
+				glPushMatrix();
+				glTranslatef(x,y,0.0f);
+				glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, indices);
+				glPopMatrix();
+			}
+		}
 
 		glPopMatrix();
 
