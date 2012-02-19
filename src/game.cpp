@@ -80,20 +80,35 @@ namespace Game {
 
 		running = true;
 
+		/* for calculating dt */
 		struct timeval t;
 		gettimeofday(&t, NULL);
+
+		/* for calculating framerate */
+		struct timeval fref = {t.tv_sec, 0};
+		unsigned int fps = 0;
 
 		while ( running ){
 			/* frame update */
 			poll(running); /* byref */
 			render_game();
 
-			/* calculate dt */
 			struct timeval cur;
 			gettimeofday(&cur, NULL);
+
+			/* calculate framerate */
+			fps++;
+			if ( cur.tv_sec - fref.tv_sec > 1 ){
+				fprintf(stderr, "fps: %d\n", fps);
+				fref.tv_sec++;
+				fps = 0;
+			}
+
+			/* calculate dt */
 			const uint64_t delta = (cur.tv_sec - t.tv_sec) * 1000000 + (cur.tv_usec - t.tv_usec);
 			const  int64_t delay = per_frame - delta;
 
+			/* move time forward */
 			t.tv_usec += per_frame;
 			if ( t.tv_usec > 1000000 ){
 				t.tv_usec -= 1000000;
