@@ -97,7 +97,13 @@ class SDLTilemap: public Tilemap {
 public:
 	SDLTilemap(const std::string& filename)
 		: Tilemap(filename) {
+
+		size_t w,h;
+		texture = load_texture(texture_filename(), &w, &h);
+		set_dimensions(w,h);
 	}
+
+	GLuint texture;
 };
 
 class SDLSprite: public Sprite {
@@ -208,12 +214,7 @@ public:
 	}
 
 	virtual Tilemap* load_tilemap(const std::string& filename){
-		SDLTilemap* tilemap = new SDLTilemap(filename);
-		size_t w,h;
-		tilemap_texture = load_texture(tilemap->texture_filename(), &w, &h);
-		tilemap->set_dimensions(w,h);
-		fprintf(stderr, "  texture: %d\n", tilemap_texture);
-		return tilemap;
+		return new SDLTilemap(filename);
 	}
 
 	virtual Sprite* load_sprite(const std::string& filename){
@@ -239,7 +240,9 @@ public:
 		SDL_GL_SwapBuffers();
 	}
 
-	virtual void render_tilemap(const Tilemap& tilemap, const Vector2f& camera) const {
+	virtual void render_tilemap(const Tilemap& in, const Vector2f& camera) const {
+		const SDLTilemap* tilemap = static_cast<const SDLTilemap*>(&in);
+
 		glPushMatrix();
 
 		/* camera */
@@ -248,11 +251,11 @@ public:
 		/* tile scale */
 		glScalef(48.0f, 48.0f, 1.0f);
 
-		glBindTexture(GL_TEXTURE_2D, tilemap_texture);
+		glBindTexture(GL_TEXTURE_2D, tilemap->texture);
 		glColor4f(1,1,1,1);
 		glVertexPointer(3, GL_FLOAT, sizeof(float)*5, vertices);
 
-		for ( auto tile: tilemap ){
+		for ( auto tile: *tilemap ){
 			glPushMatrix();
 			{
 				glTexCoordPointer(2, GL_FLOAT, 0, tile.uv);
@@ -342,7 +345,6 @@ public:
 	}
 
 private:
-	GLuint tilemap_texture;
 	Vector2f pan;
 	bool pressed[SDLK_LAST];
 
