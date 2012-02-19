@@ -24,8 +24,10 @@ struct blueprint {
 	
 };
 
-Entity::Entity(const Vector2f& pos)
-	: pos(pos){
+Entity::Entity(const Vector2f& pos, const blueprint_t bp)
+	: pos(pos)
+	, level(1)
+	, blueprint(bp) {
 
 	printf("creating entity at (%.0f,%.0f)\n", pos.x, pos.y);
 }
@@ -34,11 +36,20 @@ const Vector2f& Entity::world_pos() const {
 	return pos;
 }
 
-const blueprint from_filename(const std::string& filename){
-	struct blueprint::level base;
-	struct blueprint::level* prev = &base;
+const Sprite* Entity::sprite() const {
+	return blueprint->data[level].sprite;
 }
 
-const Sprite* sprite(const blueprint bp){
-	return bp->sprite;
+Building::Building(const Vector2f& pos, const blueprint_t bp)
+	: Entity(pos, bp) {
+
+}
+
+namespace Blueprint {
+	const blueprint_t from_filename(const std::string& filename){
+		struct blueprint::level base;
+		struct blueprint::level* prev = &base;
+
+		return (blueprint*)malloc(sizeof(blueprint));
+	}
 }

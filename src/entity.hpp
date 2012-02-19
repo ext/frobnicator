@@ -20,7 +20,6 @@ class Sprite {
 typedef struct blueprint* blueprint_t;
 namespace Blueprint {
 	const blueprint_t from_filename(const std::string& filename);
-	const Sprite* sprite(const blueprint_t bp);
 }
 
 class Entity {
@@ -29,10 +28,11 @@ public:
 	const Sprite* sprite() const;
 
 protected:
-	Entity(const Vector2f& pos);
+	Entity(const Vector2f& pos, const blueprint_t blueprint);
 
 private:
 	Vector2f pos;
+	size_t level;
 	blueprint_t blueprint;
 };
 

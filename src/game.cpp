@@ -50,6 +50,8 @@ static void render_game(){
 }
 
 namespace Game {
+	static void build(const Vector2f& pos, Buildings type);
+
 	void init(const std::string& bn, int w, int h){
 		width = w;
 		height = h;
@@ -131,9 +133,22 @@ namespace Game {
 		}
 
 		printf("build ok at (%d,%d)\n", tx, ty);
-		entity.push_back(new Building(Vector2f(tx, ty), blueprint[ARROW_TOWER]));
+		build(Vector2f(tx, ty), ARROW_TOWER);
 
 		tilemap->reserve(tx,ty);
 		motion(x, y); /* to update marker */
+	}
+
+	static void build(const Vector2f& pos, Buildings type){
+		/* insert at correct "depth" */
+		EntityVector::iterator it = entity.begin();
+		while ( it != entity.end() ){
+			Entity* cur = *it;
+			if ( cur->world_pos().y >= pos.y ) break;
+			++it;
+		}
+
+		Building* tmp = new Building(pos, blueprint[type]);
+		entity.insert(it, tmp);
 	}
 };
