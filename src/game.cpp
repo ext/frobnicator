@@ -11,6 +11,7 @@
 #include <cassert>
 #include <vector>
 #include <math.h>
+#include <sys/time.h>
 
 typedef std::vector<Entity*> EntityVector;
 
@@ -74,10 +75,37 @@ namespace Game {
 	}
 
 	void frobnicate(){
+		static const unsigned int framerate = 60;
+		static const uint64_t per_frame = 1000000 / framerate;
+
 		running = true;
+
+		struct timeval t;
+		gettimeofday(&t, NULL);
+
 		while ( running ){
+			/* frame update */
 			poll(running); /* byref */
 			render_game();
+
+			/* calculate dt */
+			struct timeval cur;
+			gettimeofday(&cur, NULL);
+			const uint64_t delta = (cur.tv_sec - t.tv_sec) * 1000000 + (cur.tv_usec - t.tv_usec);
+			const  int64_t delay = per_frame - delta;
+
+			t.tv_usec += per_frame;
+			if ( t.tv_usec > 1000000 ){
+				t.tv_usec -= 1000000;
+				t.tv_sec++;
+			}
+
+			/* fixed framerate */
+			if ( delay > 0 ){
+				usleep(delay);
+			} else {
+				fprintf(stderr, "warning: game is running slow...\n");
+			}
 		}
 	}
 
