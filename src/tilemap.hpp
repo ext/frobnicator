@@ -22,11 +22,32 @@ public:
 
 	virtual ~Tilemap();
 
+	/**
+	 * Map width * height
+	 */
 	size_t size() const;
+
+	/**
+	 * Width in tiles.
+	 */
 	size_t map_width() const;
+
+	/**
+	 * Height in tiles.
+	 */
 	size_t map_height() const;
+
+	/**
+	 * Width of a tile in pixels.
+	 */
 	size_t tile_width() const;
+
+	/**
+	 * Height of a tile in pixels.
+	 */
 	size_t tile_height() const;
+
+
 	const Tile& operator[](unsigned int i) const;
 	const Tile& at(unsigned int x, unsigned int y) const;
 	void reserve(unsigned int x, unsigned int y);

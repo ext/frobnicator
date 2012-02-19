@@ -14,6 +14,14 @@
 #include <math.h>
 #include <map>
 
+typedef struct {
+	float x;
+	float y;
+	float z;
+	float s;
+	float t;
+} vertex;
+
 static const float vertices[][5] = { /* x,y,z,u,v */
 	{0, 0, 0, 0, 0},
 	{1, 0, 0, 1, 0},
@@ -101,9 +109,53 @@ public:
 		size_t w,h;
 		texture = load_texture(texture_filename(), &w, &h);
 		set_dimensions(w,h);
+
+		/* four vertices per tile (@todo use *strip for less vertices) */
+		vertices = (vertex*)malloc(sizeof(vertex)*4*size());
+		indices = (unsigned int*)malloc(sizeof(unsigned int)*4*size());
+
+		/* generate vertices */
+		fprintf(stderr, "  generating vertices\n");
+		unsigned int n = 0;
+		for ( auto tile: *this ){
+			vertices[n  ].x = (tile.x  ) * tile_width();
+			vertices[n  ].y = (tile.y  ) * tile_height();
+			vertices[n+1].x = (tile.x+1) * tile_width();
+			vertices[n+1].y = (tile.y  ) * tile_height();
+			vertices[n+2].x = (tile.x+1) * tile_width();
+			vertices[n+2].y = (tile.y+1) * tile_height();
+			vertices[n+3].x = (tile.x  ) * tile_width();
+			vertices[n+3].y = (tile.y+1) * tile_height();
+
+			/* unused z */
+			vertices[n  ].z = 0.0f;
+			vertices[n+1].z = 0.0f;
+			vertices[n+2].z = 0.0f;
+			vertices[n+3].z = 0.0f;
+
+			/* UV */
+			vertices[n  ].s = tile.uv[0];
+			vertices[n  ].t = tile.uv[1];
+			vertices[n+1].s = tile.uv[2];
+			vertices[n+1].t = tile.uv[3];
+			vertices[n+2].s = tile.uv[4];
+			vertices[n+2].t = tile.uv[5];
+			vertices[n+3].s = tile.uv[6];
+			vertices[n+3].t = tile.uv[7];
+
+			n += 4;
+		}
+
+		/* generate indices */
+		for ( unsigned int i = 0; i < 4 * size(); i++ ){
+			indices[i] = i;
+		}
 	}
 
 	GLuint texture;
+	vertex* vertices;
+	unsigned int* indices;
+
 };
 
 class SDLSprite: public Sprite {
@@ -248,22 +300,11 @@ public:
 		/* camera */
 		glTranslatef(-camera.x, -camera.y, 0.0f);
 
-		/* tile scale */
-		glScalef(48.0f, 48.0f, 1.0f);
-
 		glBindTexture(GL_TEXTURE_2D, tilemap->texture);
 		glColor4f(1,1,1,1);
-		glVertexPointer(3, GL_FLOAT, sizeof(float)*5, vertices);
-
-		for ( auto tile: *tilemap ){
-			glPushMatrix();
-			{
-				glTexCoordPointer(2, GL_FLOAT, 0, tile.uv);
-				glTranslatef(tile.x, tile.y, 0.0f);
-				glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, indices);
-			}
-			glPopMatrix();
-		}
+		glVertexPointer(3, GL_FLOAT, sizeof(vertex), &tilemap->vertices[0].x);
+		glTexCoordPointer(2, GL_FLOAT, sizeof(vertex), &tilemap->vertices[0].s);
+		glDrawElements(GL_QUADS, 4*tilemap->size(), GL_UNSIGNED_INT, tilemap->indices);
 
 		glPopMatrix();
 		int err;
