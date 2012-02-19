@@ -9,8 +9,7 @@
 #include "entity.hpp"
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
+#include <GL/glew.h>
 #include <math.h>
 #include <map>
 
@@ -111,11 +110,13 @@ public:
 		set_dimensions(w,h);
 
 		/* four vertices per tile (@todo use *strip for less vertices) */
-		vertices = (vertex*)malloc(sizeof(vertex)*4*size());
-		indices = (unsigned int*)malloc(sizeof(unsigned int)*4*size());
 
 		/* generate vertices */
 		fprintf(stderr, "  generating vertices\n");
+		const size_t datasize = sizeof(vertex)*4*size();
+		vertex* vertices = (vertex*)malloc(datasize);
+		glGenBuffers(1, &vbo_data);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo_data);
 		unsigned int n = 0;
 		for ( auto tile: *this ){
 			vertices[n  ].x = (tile.x  ) * tile_width();
@@ -145,17 +146,24 @@ public:
 
 			n += 4;
 		}
+		glBufferData(GL_ARRAY_BUFFER, datasize, vertices, GL_STATIC_DRAW);
+		free(vertices);
 
 		/* generate indices */
+		const size_t indsize = sizeof(unsigned int)*4*size();
+		unsigned int* indices = (unsigned int*)malloc(indsize);
+		glGenBuffers(1, &vbo_index);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_index);
 		for ( unsigned int i = 0; i < 4 * size(); i++ ){
 			indices[i] = i;
 		}
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indsize, indices, GL_STATIC_DRAW);
+		free(indices);
 	}
 
 	GLuint texture;
-	vertex* vertices;
-	unsigned int* indices;
-
+	GLuint vbo_data;
+	GLuint vbo_index;
 };
 
 class SDLSprite: public Sprite {
@@ -187,6 +195,8 @@ public:
 		for ( bool& st: pressed ){
 			st = false;
 		}
+
+		glewInit();
 
 		glClearColor(1,0,1,1);
 		glDisable(GL_CULL_FACE);
@@ -302,9 +312,17 @@ public:
 
 		glBindTexture(GL_TEXTURE_2D, tilemap->texture);
 		glColor4f(1,1,1,1);
-		glVertexPointer(3, GL_FLOAT, sizeof(vertex), &tilemap->vertices[0].x);
-		glTexCoordPointer(2, GL_FLOAT, sizeof(vertex), &tilemap->vertices[0].s);
-		glDrawElements(GL_QUADS, 4*tilemap->size(), GL_UNSIGNED_INT, tilemap->indices);
+
+
+		glBindBuffer(GL_ARRAY_BUFFER, tilemap->vbo_data);
+		glVertexPointer(3, GL_FLOAT, sizeof(vertex), (void*)0);
+		glTexCoordPointer(2, GL_FLOAT, sizeof(vertex), (void*)12);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, tilemap->vbo_index);
+		glDrawElements(GL_QUADS, 4*tilemap->size(), GL_UNSIGNED_INT, 0);
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 		glPopMatrix();
 		int err;
