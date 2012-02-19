@@ -1,16 +1,16 @@
 # level 0 is used for base stats and info, it is ignored by game logic
 # All stats is applied on lower level, e.g. all stats from level 1 is
 # carried over to level 2 unless overridden.
-# Engine assumes levels are in order and sequential.
+# Engine assumes levels are in order and sequential (it is mostly an aid
+# writing config, not really used by engine.
 
-- level 0
+- level: 0
   name: "Arrow Tower"
   sprite: "arrowtower.png"
-  level: 0
   splash: 0
   range: 200
 
-- level 1
+- level: 1
   cost: 75
   rof: 0.7
   damage: 2

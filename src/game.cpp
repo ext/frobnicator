@@ -92,6 +92,11 @@ namespace Game {
 		return tilemap;
 	}
 
+	Sprite* load_sprite(const std::string& filename){
+		assert(backend);
+		return backend->load_sprite(filename);
+	}
+
 	void pan(float x, float y){
 		const float bx = tilemap->tile_width()  * tilemap->map_width()  - width;
 		const float by = tilemap->tile_height() * tilemap->map_height() - height;

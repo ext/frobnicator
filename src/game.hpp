@@ -26,6 +26,11 @@ namespace Game {
 	Tilemap* load_tilemap(const std::string& filename);
 
 	/**
+	 * Generate a new tilemap.
+	 */
+	Sprite* load_sprite(const std::string& filename);
+
+	/**
 	 * Do stuff.
 	 */
 	void frobnicate();

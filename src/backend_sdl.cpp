@@ -103,9 +103,11 @@ public:
 class SDLSprite: public Sprite {
 public:
 	SDLSprite(const std::string& filename){
-
+		texture = load_texture(filename, &width, &height);
 	}
 
+	size_t width;
+	size_t height;
 	GLuint texture;
 };
 
@@ -144,9 +146,6 @@ public:
 
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-
-		tower_texture = load_texture("arrowtower.png",NULL,NULL);
-		printf("tower_texture: %d\n", tower_texture);
 	}
 
 	virtual void poll(bool& running){
@@ -208,7 +207,7 @@ public:
 		return new SDLBackend;
 	}
 
-	Tilemap* load_tilemap(const std::string& filename){
+	virtual Tilemap* load_tilemap(const std::string& filename){
 		SDLTilemap* tilemap = new SDLTilemap(filename);
 		size_t w,h;
 		tilemap_texture = load_texture(tilemap->texture_filename(), &w, &h);
@@ -217,7 +216,7 @@ public:
 		return tilemap;
 	}
 
-	Sprite* load_sprite(const std::string& filename){
+	virtual Sprite* load_sprite(const std::string& filename){
 		/* search cache */
 		auto it = sprite.find(filename);
 		if ( it != sprite.end() ){
@@ -322,7 +321,9 @@ public:
 		glTexCoordPointer(2, GL_FLOAT, sizeof(float)*5, &vertices[0][3]);
 
 		for ( Entity* ent : entities ){
-			glBindTexture(GL_TEXTURE_2D, tower_texture);
+			const SDLSprite* sprite = static_cast<const SDLSprite*>(ent->sprite());
+
+			glBindTexture(GL_TEXTURE_2D, sprite->texture);
 			glColor4f(1,1,1,1);
 			glPushMatrix();
 			glTranslatef(ent->world_pos().x, ent->world_pos().y, 0.0f);
@@ -342,7 +343,6 @@ public:
 
 private:
 	GLuint tilemap_texture;
-	GLuint tower_texture;
 	Vector2f pan;
 	bool pressed[SDLK_LAST];
 
