@@ -13,11 +13,11 @@
 #include <GL/glu.h>
 #include <math.h>
 
-static const float vertices[][3] = {
-	{0, 0, 0},
-	{1, 0, 0},
-	{1, 1, 0},
-	{0, 1, 0},
+static const float vertices[][5] = { /* x,y,z,u,v */
+	{0, 0, 0, 0, 0},
+	{1, 0, 0, 1, 0},
+	{1, 1, 0, 1, 1},
+	{0, 1, 0, 0, 1},
 };
 static const unsigned int indices[4] = {0,1,2,3};
 
@@ -63,6 +63,9 @@ public:
 
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+
+		tower_texture = load_texture("arrowtower.png",NULL,NULL);
+		printf("tower_texture: %d\n", tower_texture);
 	}
 
 	virtual void poll(bool& running){
@@ -127,13 +130,13 @@ public:
 	Tilemap* load_tilemap(const std::string& filename){
 		SDLTilemap* tilemap = new SDLTilemap(filename);
 		size_t w,h;
-		tilemap_texture = load_texture(tilemap->texture_filename(), w, h);
+		tilemap_texture = load_texture(tilemap->texture_filename(), &w, &h);
 		tilemap->set_dimensions(w,h);
 		fprintf(stderr, "  texture: %d\n", tilemap_texture);
 		return tilemap;
 	}
 
-	GLuint load_texture(const std::string filename, size_t& width, size_t& height) {
+	GLuint load_texture(const std::string filename, size_t* width, size_t* height) {
 		const char* real_filename = real_path(filename.c_str());
 
 		/* borrowed from blueflower/opengta */
@@ -195,8 +198,8 @@ public:
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, rgba_surface->w, rgba_surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba_surface->pixels );
 
-		width  = rgba_surface->w;
-		height = rgba_surface->h;
+		if ( width  ) *width  = rgba_surface->w;
+		if ( height ) *height = rgba_surface->h;
 
 		SDL_FreeSurface(rgba_surface);
 		SDL_FreeSurface(surface);
@@ -225,12 +228,12 @@ public:
 
 		glBindTexture(GL_TEXTURE_2D, tilemap_texture);
 		glColor4f(1,1,1,1);
-		glVertexPointer(3, GL_FLOAT, sizeof(float)*3, vertices);
+		glVertexPointer(3, GL_FLOAT, sizeof(float)*5, vertices);
 
 		for ( auto tile: tilemap ){
 			glPushMatrix();
 			{
-				glTexCoordPointer(2, GL_FLOAT, sizeof(float)*2, tile.uv);
+				glTexCoordPointer(2, GL_FLOAT, 0, tile.uv);
 				glTranslatef(tile.x, tile.y, 0.0f);
 				glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, indices);
 			}
@@ -258,7 +261,7 @@ public:
 		glScalef(48.0f, 48.0f, 1.0f);
 
 		glBindTexture(GL_TEXTURE_2D, 0);
-		glVertexPointer(3, GL_FLOAT, sizeof(float)*3, vertices);
+		glVertexPointer(3, GL_FLOAT, sizeof(float)*5, vertices);
 
 		for ( int y = 0; y < 2; y++ ){
 			for ( int x = 0; x < 2; x++ ){
@@ -287,19 +290,20 @@ public:
 		glPushMatrix();
 
 		/* camera */
-		glTranslatef(-camera.x, -camera.y, 0.0f);
+		glTranslatef(-camera.x, -camera.y - 48*2, 0.0f);
 
 		/* tile scale */
 		glScalef(48.0f, 48.0f, 1.0f);
 
-		glVertexPointer(3, GL_FLOAT, sizeof(float)*3, vertices);
+		glVertexPointer(3, GL_FLOAT, sizeof(float)*5, vertices);
+		glTexCoordPointer(2, GL_FLOAT, sizeof(float)*5, &vertices[0][3]);
 
 		for ( Entity* ent : entities ){
-			glBindTexture(GL_TEXTURE_2D, 0);
-			glColor4f(1,0,1,1);
+			glBindTexture(GL_TEXTURE_2D, tower_texture);
+			glColor4f(1,1,1,1);
 			glPushMatrix();
 			glTranslatef(ent->world_pos().x, ent->world_pos().y, 0.0f);
-			glScalef(2,2,1);
+			glScalef(2,4,1);
 			glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, indices);
 			glPopMatrix();
 		}
@@ -315,6 +319,7 @@ public:
 
 private:
 	GLuint tilemap_texture;
+	GLuint tower_texture;
 	Vector2f pan;
 	bool pressed[SDLK_LAST];
 };
