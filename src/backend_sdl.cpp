@@ -12,6 +12,7 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <math.h>
+#include <map>
 
 static const float vertices[][5] = { /* x,y,z,u,v */
 	{0, 0, 0, 0, 0},
@@ -21,11 +22,91 @@ static const float vertices[][5] = { /* x,y,z,u,v */
 };
 static const unsigned int indices[4] = {0,1,2,3};
 
+static GLuint load_texture(const std::string filename, size_t* width, size_t* height) {
+	const char* real_filename = real_path(filename.c_str());
+
+	/* borrowed from blueflower/opengta */
+
+	/* Load image using SDL Image */
+	SDL_Surface* surface = IMG_Load(real_filename);
+	if ( !surface ){
+		fprintf(stderr, "failed to load texture `%s'\n", filename.c_str());
+		abort();
+	}
+
+	/* To properly support all formats the surface must be copied to a new
+	 * surface with a prespecified pixel format suitable for opengl.
+	 *
+	 * This snippet is a slightly modified version of code posted by
+	 * Sam Lantinga to the SDL mailinglist at Sep 11 2002.
+	 */
+	SDL_Surface* rgba_surface = SDL_CreateRGBSurface(
+		SDL_SWSURFACE,
+		surface->w, surface->h,
+		32,
+#if SDL_BYTEORDER == SDL_LIL_ENDIAN /* OpenGL RGBA masks */
+		0x000000FF,
+		0x0000FF00,
+		0x00FF0000,
+		0xFF000000
+#else
+		0xFF000000,
+		0x00FF0000,
+		0x0000FF00,
+		0x000000FF
+#endif
+		);
+
+	if ( !rgba_surface ) {
+		fprintf(stderr, "Failed to create RGBA surface");
+		abort();
+	}
+
+	/* Save the alpha blending attributes */
+	Uint32 saved_flags = surface->flags&(SDL_SRCALPHA|SDL_RLEACCELOK);
+	Uint8 saved_alpha = surface->format->alpha;
+	if ( (saved_flags & SDL_SRCALPHA) == SDL_SRCALPHA ) {
+		SDL_SetAlpha(surface, 0, 0);
+	}
+
+	SDL_BlitSurface(surface, 0, rgba_surface, 0);
+
+	/* Restore the alpha blending attributes */
+	if ( (saved_flags & SDL_SRCALPHA) == SDL_SRCALPHA ) {
+		SDL_SetAlpha(surface, saved_flags, saved_alpha);
+	}
+
+	/* Generate texture and copy pixels to it */
+	GLuint texture;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, rgba_surface->w, rgba_surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba_surface->pixels );
+
+	if ( width  ) *width  = rgba_surface->w;
+	if ( height ) *height = rgba_surface->h;
+
+	SDL_FreeSurface(rgba_surface);
+	SDL_FreeSurface(surface);
+
+	return texture;
+}
+
 class SDLTilemap: public Tilemap {
 public:
 	SDLTilemap(const std::string& filename)
 		: Tilemap(filename) {
 	}
+};
+
+class SDLSprite: public Sprite {
+public:
+	SDLSprite(const std::string& filename){
+
+	}
+
+	GLuint texture;
 };
 
 class SDLBackend: public Backend {
@@ -136,75 +217,17 @@ public:
 		return tilemap;
 	}
 
-	GLuint load_texture(const std::string filename, size_t* width, size_t* height) {
-		const char* real_filename = real_path(filename.c_str());
-
-		/* borrowed from blueflower/opengta */
-
-		/* Load image using SDL Image */
-		SDL_Surface* surface = IMG_Load(real_filename);
-		if ( !surface ){
-			fprintf(stderr, "failed to load texture `%s'\n", filename.c_str());
-			abort();
+	Sprite* load_sprite(const std::string& filename){
+		/* search cache */
+		auto it = sprite.find(filename);
+		if ( it != sprite.end() ){
+			return it->second;
 		}
 
-		/* To properly support all formats the surface must be copied to a new
-		 * surface with a prespecified pixel format suitable for opengl.
-		 *
-		 * This snippet is a slightly modified version of code posted by
-		 * Sam Lantinga to the SDL mailinglist at Sep 11 2002.
-		 */
-		SDL_Surface* rgba_surface = SDL_CreateRGBSurface(
-			SDL_SWSURFACE,
-			surface->w, surface->h,
-			32,
-#if SDL_BYTEORDER == SDL_LIL_ENDIAN /* OpenGL RGBA masks */
-			0x000000FF,
-			0x0000FF00,
-			0x00FF0000,
-			0xFF000000
-#else
-			0xFF000000,
-			0x00FF0000,
-			0x0000FF00,
-			0x000000FF
-#endif
-			);
-
-		if ( !rgba_surface ) {
-			fprintf(stderr, "Failed to create RGBA surface");
-			abort();
-		}
-
-		/* Save the alpha blending attributes */
-		Uint32 saved_flags = surface->flags&(SDL_SRCALPHA|SDL_RLEACCELOK);
-		Uint8 saved_alpha = surface->format->alpha;
-		if ( (saved_flags & SDL_SRCALPHA) == SDL_SRCALPHA ) {
-			SDL_SetAlpha(surface, 0, 0);
-		}
-
-		SDL_BlitSurface(surface, 0, rgba_surface, 0);
-
-		/* Restore the alpha blending attributes */
-		if ( (saved_flags & SDL_SRCALPHA) == SDL_SRCALPHA ) {
-			SDL_SetAlpha(surface, saved_flags, saved_alpha);
-		}
-
-		/* Generate texture and copy pixels to it */
-		GLuint texture;
-		glGenTextures(1, &texture);
-		glBindTexture(GL_TEXTURE_2D, texture);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, rgba_surface->w, rgba_surface->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, rgba_surface->pixels );
-
-		if ( width  ) *width  = rgba_surface->w;
-		if ( height ) *height = rgba_surface->h;
-
-		SDL_FreeSurface(rgba_surface);
-		SDL_FreeSurface(surface);
-
-		return texture;
+		/* create new sprite */
+		SDLSprite* tmp = new SDLSprite(filename);
+		sprite[filename] = tmp;
+		return tmp;
 	}
 
 	virtual void render_begin(){
@@ -322,6 +345,8 @@ private:
 	GLuint tower_texture;
 	Vector2f pan;
 	bool pressed[SDLK_LAST];
+
+	std::map<std::string, SDLSprite*> sprite;
 };
 
 REGISTER_BACKEND(SDLBackend);

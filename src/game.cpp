@@ -14,6 +14,12 @@
 
 typedef std::vector<Entity*> EntityVector;
 
+enum Buildings {
+	ARROW_TOWER,
+
+	BUILDING_LAST,
+};
+
 static bool running = false;
 static Backend* backend = NULL;
 static Level* level = NULL;
@@ -24,6 +30,7 @@ static bool cursor_ok[4] = {false,false,false,false};
 static Tilemap* tilemap;
 static int width;
 static int height;
+static blueprint_t blueprint[BUILDING_LAST];
 
 static void poll(bool&render){
 	backend->poll(running);
@@ -54,6 +61,9 @@ namespace Game {
 		}
 
 		backend->init(width, height);
+
+		/* load all tower blueprints */
+		blueprint[ARROW_TOWER] = Blueprint::from_filename("arrowtower.yaml");
 	}
 
 	void cleanup(){
@@ -121,7 +131,7 @@ namespace Game {
 		}
 
 		printf("build ok at (%d,%d)\n", tx, ty);
-		entity.push_back(new Entity(Vector2f(tx, ty)));
+		entity.push_back(new Building(Vector2f(tx, ty), blueprint[ARROW_TOWER]));
 
 		tilemap->reserve(tx,ty);
 		motion(x, y); /* to update marker */
