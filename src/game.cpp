@@ -178,7 +178,6 @@ namespace Game {
 			return;
 		}
 
-		printf("build ok at (%d,%d)\n", tx, ty);
 		build(Vector2f(tx, ty), ARROW_TOWER);
 
 		tilemap->reserve(tx,ty);
