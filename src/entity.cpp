@@ -37,7 +37,7 @@ Entity::Entity(const Vector2f& pos, const blueprint_t bp)
 	, level(1)
 	, blueprint(Blueprint::copy(bp)) {
 
-	printf("creating entity at (%.0f,%.0f)\n", pos.x, pos.y);
+	fprintf(stderr, "creating \"%s\" at (%.0f,%.0f)\n", bp->data[0].name, pos.x, pos.y);
 }
 
 const Vector2f& Entity::world_pos() const {
@@ -52,7 +52,6 @@ Building::Building(const Vector2f& pos, const blueprint_t bp)
 	: Entity(pos, bp) {
 
 }
-
 
 namespace Blueprint {
 	void fill_blueprint(blueprint::level* data, yaml_parser_t* parser){
