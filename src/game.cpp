@@ -118,8 +118,6 @@ namespace Game {
 			/* fixed framerate */
 			if ( delay > 0 ){
 				usleep(delay);
-			} else {
-				fprintf(stderr, "warning: game is running slow...\n");
 			}
 		}
 	}
