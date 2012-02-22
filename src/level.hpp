@@ -2,6 +2,7 @@
 #define DVB021_LEVEL_H
 
 #include <string>
+#include <vector>
 #include <map>
 
 class Level {
@@ -16,6 +17,7 @@ public:
 	const std::string& title() const;
 	const Tilemap& tilemap() const;
 	const std::map<std::string, Waypoint*>& waypoints() const FROB_PURE;
+	std::vector<Entity*> spawn(unsigned int level);
 
 private:
 	Level(const std::string& filename); /* use from_filename */

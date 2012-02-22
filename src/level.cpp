@@ -5,6 +5,7 @@
 #include "level.hpp"
 #include "game.hpp"
 #include "tilemap.hpp"
+#include "entity.hpp"
 #include "common.hpp"
 #include <yaml.h>
 #include <cassert>
@@ -13,6 +14,19 @@
 #include <inttypes.h>
 #endif
 
+struct CreepSpawner {
+	CreepSpawner(blueprint_t bp, unsigned int level)
+		: bp(bp)
+		, level(level){
+	}
+
+  Entity* operator()(){
+	  new Creep(Vector2f(100,100), bp->)}
+
+	blueprint_t bp;
+	unsigned int level;
+};
+
 class LevelPimpl {
 public:
 	LevelPimpl(const std::string& filename)
@@ -20,7 +34,7 @@ public:
 		, tilemap(NULL) {
 
 		const char* real_filename = real_path(filename.c_str());
-		fprintf(stderr, "Loading from `%s'.\n", real_filename);
+		fprintf(stderr, "Loading level `%s'.\n", filename.c_str());
 
 		FILE* fp = fopen(real_filename, "rb");
 		if ( !fp ){
@@ -44,6 +58,11 @@ public:
 		}
 
 		fprintf(stderr, "Loaded level \"%s\".\n", title.c_str());
+	}
+
+	std::vector<Entity*> spawn(unsigned int level){
+		fprintf(stderr, "Spawning wave %d\n", level);
+		return std::vector<Entity*>();
 	}
 
 	~LevelPimpl() {
@@ -97,14 +116,17 @@ private:
 			if ( strncmp("title", key, len) == 0 ){
 				title = std::string(value, value_len);
 			} else if ( strncmp("tilemap", key, len) == 0 ){
-				printf("tilemap found\n");
 				tilemap = Game::load_tilemap(std::string(value, value_len));
+			} else if ( strncmp("waves", key, len) == 0 ){
+				waves = Blueprint::from_filename(std::string(value, value_len));
 			} else {
 				/* warning only */
 				fprintf(stderr, "Unhandled key `%.*s'\n", (int)len, key);
 			}
 		} while ( true );
 	}
+
+	blueprint_t waves;
 
 public:
 	/* All members are public as the only one that can access them is Level and
@@ -137,4 +159,8 @@ const Tilemap& Level::tilemap() const {
 
 const std::map<std::string, Waypoint*>& Level::waypoints() const {
 	return tilemap().waypoints();
+}
+
+std::vector<Entity*> Level::spawn(unsigned int level){
+	return pimpl->spawn(level);
 }

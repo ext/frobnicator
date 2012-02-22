@@ -1,4 +1,3 @@
 title: "Frobnicator test level"
 tilemap: maul.frob
-derp:
-        herp a derp
+waves: waves.yaml
