@@ -2,6 +2,7 @@
 #define DVB021_LEVEL_H
 
 #include <string>
+#include <vector>
 
 class Level {
 public:
@@ -14,6 +15,7 @@ public:
 
 	const std::string& title() const;
 	const Tilemap& tilemap() const;
+	std::vector<Entity*> spawn(unsigned int level);
 
 private:
 	Level(const std::string& filename); /* use from_filename */

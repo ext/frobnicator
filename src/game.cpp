@@ -36,7 +36,8 @@ enum Buildings {
 static bool running = false;
 static Backend* backend = NULL;
 static Level* level = NULL;
-static EntityVector entity;
+static EntityVector building;
+static EntityVector creep;
 static Vector2f camera;
 static Vector2f cursor;
 static bool cursor_ok[4] = {false,false,false,false};
@@ -54,7 +55,8 @@ static void render_game(){
 	{
 		backend->render_tilemap(level->tilemap(), camera);
 
-		backend->render_entities(entity, camera);
+		backend->render_entities(creep, camera);
+		backend->render_entities(building, camera);
 
 		/* render marker */
 		backend->render_marker(cursor, camera, cursor_ok);
@@ -100,6 +102,9 @@ namespace Game {
 		struct timeval fref = {t.tv_sec, 0};
 		unsigned int fps = 0;
 
+		/* spawn timer */
+		struct timeval sref = {t.tv_sec, 0};
+
 		while ( running ){
 			/* frame update */
 			poll(running); /* byref */
@@ -114,6 +119,13 @@ namespace Game {
 				fprintf(stderr, "fps: %d\n", fps);
 				fref.tv_sec++;
 				fps = 0;
+			}
+
+			/* spawn wave */
+			if ( cur.tv_sec - sref.tv_sec > 10 ){
+				EntityVector wave = level->spawn(1);
+				creep.insert(creep.end(), wave.begin(), wave.end());
+				sref.tv_sec += 10;
 			}
 
 			/* calculate dt */
@@ -200,14 +212,14 @@ namespace Game {
 
 	static void build(const Vector2f& pos, Buildings type){
 		/* insert at correct "depth" */
-		EntityVector::iterator it = entity.begin();
-		while ( it != entity.end() ){
+		EntityVector::iterator it = building.begin();
+		while ( it != building.end() ){
 			Entity* cur = *it;
 			if ( cur->world_pos().y >= pos.y ) break;
 			++it;
 		}
 
 		Building* tmp = new Building(pos, blueprint[type]);
-		entity.insert(it, tmp);
+		building.insert(it, tmp);
 	}
 };

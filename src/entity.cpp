@@ -27,6 +27,9 @@ struct blueprint {
 		float range;
 		float slow;
 		float poison;
+		float speed;
+		float armor;
+		int amount;
 	} data[max_levels];
 };
 
@@ -104,6 +107,12 @@ namespace Blueprint {
 				data->slow = (float)atof(value);
 			} else if ( strncmp("poison", key, len) == 0 ){
 				data->poison = (float)atof(value);
+			} else if ( strncmp("speed", key, len) == 0 ){
+				data->speed = atof(value);
+			} else if ( strncmp("armor", key, len) == 0 ){
+				data->armor = atof(value);
+			} else if ( strncmp("amount", key, len) == 0 ){
+				data->amount = atoi(value);
 			} else {
 				/* warning only */
 				fprintf(stderr, "Unhandled key `%.*s'\n", (int)len, key);
@@ -166,6 +175,9 @@ namespace Blueprint {
 			/* .range  = */ 100.0f,
 			/* .slow   = */ 0.0f,
 			/* .poison = */ 0.0f,
+			/* .speed  = */ 0.0f,
+			/* .armor  = */ 0.0f,
+			/* .amount = */ 10,
 		};
 
 		bool done = false;

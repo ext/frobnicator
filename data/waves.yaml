@@ -1,0 +1,20 @@
+# defaults
+- level: 0
+  splash: 0
+  rof: 0
+  range: 0
+  slow: 0
+  poison: 0
+  speed: 5
+  armor: 0
+  amount: 15
+
+- level: 1
+  name: "Internet trolls"
+  sprite: derp.png
+  hp: 12
+
+- level: 2
+  name: "Herpaderps"
+  sprite: derp.png
+  hp: 14

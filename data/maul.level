@@ -1,4 +1,4 @@
 title: "Frobnicator test level"
+waves: waves.yaml
 tilemap: tileset1.yaml
-derp:
-        herp a derp
+
