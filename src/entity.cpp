@@ -41,11 +41,10 @@ namespace Blueprint {
 }
 
 Entity::Entity(const Vector2f& pos, const blueprint_t bp)
-	: pos(pos)
-	, level(1)
+	: level(1)
+	, pos(pos)
 	, blueprint(Blueprint::copy(bp)) {
 
-	fprintf(stderr, "creating \"%s\" at (%.0f,%.0f)\n", bp->data[0].name, pos.x, pos.y);
 }
 
 const Vector2f& Entity::world_pos() const {
@@ -59,6 +58,16 @@ const Sprite* Entity::sprite() const {
 Building::Building(const Vector2f& pos, const blueprint_t bp)
 	: Entity(pos, bp) {
 
+	fprintf(stderr, "creating \"%s\" at (%.0f,%.0f)\n", bp->data[0].name, pos.x, pos.y);
+}
+
+Creep::Creep(const Vector2f& pos, const blueprint_t bp, unsigned int level)
+	: Entity(pos, bp) {
+	this->level = level;
+
+	fprintf(stderr, "spawning \"%s\" at (%.0f,%.0f)\n", bp->data[level].name, pos.x, pos.y);
+
+	fprintf(stderr, "%s %s %s\n", bp->data[0].name, bp->data[1].name, bp->data[2].name);
 }
 
 namespace Blueprint {
@@ -204,5 +213,9 @@ namespace Blueprint {
 		fclose(fp);
 
 		return bp;
+	}
+
+	unsigned int amount(blueprint_t bp, unsigned int level){
+		return bp->data[level].amount;
 	}
 }
