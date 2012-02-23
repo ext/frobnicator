@@ -9,6 +9,7 @@
 #include "common.hpp"
 #include <yaml.h>
 #include <cassert>
+#include <algorithm>
 
 #ifdef HAVE_INTTYPES_H
 #include <inttypes.h>
@@ -21,7 +22,8 @@ struct CreepSpawner {
 	}
 
   Entity* operator()(){
-	  new Creep(Vector2f(100,100), bp->)}
+	  return new Creep(Vector2f(100,100), bp, level);
+  }
 
 	blueprint_t bp;
 	unsigned int level;
@@ -62,7 +64,9 @@ public:
 
 	std::vector<Entity*> spawn(unsigned int level){
 		fprintf(stderr, "Spawning wave %d\n", level);
-		return std::vector<Entity*>();
+		auto tmp = std::vector<Entity*>(Blueprint::amount(waves, level));
+		std::generate(tmp.begin(), tmp.end(), CreepSpawner(waves, level));
+		return tmp;
 	}
 
 	~LevelPimpl() {

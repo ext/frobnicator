@@ -1,5 +1,6 @@
 # defaults
 - level: 0
+  name: "test"
   splash: 0
   rof: 0
   range: 0
