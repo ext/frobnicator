@@ -133,7 +133,7 @@ private:
 				/* key is not null-terminated */
 				char tmp[64]; /* variable sized array not supported, using max 64 bytes which should be enough */
 				if ( len > 63 ) abort(); /* 63 because null-terminator must fit into array */
-				sprintf(tmp, "%.*s", len, key); /* using sprintf to always get a null-terminator, strcpy might not always add one */
+				sprintf(tmp, "%.*s", (int)len, key); /* using sprintf to always get a null-terminator, strcpy might not always add one */
 				parse_tileinfo(parser, tmp);
 			}
 		} while ( true );
@@ -308,7 +308,7 @@ private:
 				unsigned int tmp = atoi((const char*)value.data.scalar.value);
 				if ( tmp > 0 ) tmp--; /* tiled uses 1 as first index and 0 as "no tile" */
 				if ( tmp >= tiles_size ){
-					fprintf(stderr, "warning: tile value to great, got %d max %d, defaulting to 0\n", tmp, tiles_size-1);
+					fprintf(stderr, "warning: tile value to great, got %d max %ld, defaulting to 0\n", tmp, tiles_size-1);
 					return 0;
 				} else {
 					return tmp;
