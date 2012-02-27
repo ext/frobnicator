@@ -2,6 +2,13 @@
 #include "config.h"
 #endif
 
+/* the world explodes if anything related to opengl is included before windows.h */
+#ifdef WIN32
+#define VC_EXTRALEAN
+#define NOMINMAX
+#include <Windows.h>
+#endif
+
 #include "backend.hpp"
 #include "tilemap.hpp"
 #include "game.hpp"
@@ -117,15 +124,17 @@ public:
 		/* generate vertices */
 		fprintf(stderr, "  generating vertices\n");
 		unsigned int n = 0;
-		for ( auto tile: *this ){
-			vertices[n  ].x = (tile.x  ) * tile_width();
-			vertices[n  ].y = (tile.y  ) * tile_height();
-			vertices[n+1].x = (tile.x+1) * tile_width();
-			vertices[n+1].y = (tile.y  ) * tile_height();
-			vertices[n+2].x = (tile.x+1) * tile_width();
-			vertices[n+2].y = (tile.y+1) * tile_height();
-			vertices[n+3].x = (tile.x  ) * tile_width();
-			vertices[n+3].y = (tile.y+1) * tile_height();
+		for ( auto it = begin(); it != end(); ++it ){
+			Tilemap::Tile& tile = *it;
+
+			vertices[n  ].x = (float)((tile.x  ) * tile_width());
+			vertices[n  ].y = (float)((tile.y  ) * tile_height());
+			vertices[n+1].x = (float)((tile.x+1) * tile_width());
+			vertices[n+1].y = (float)((tile.y  ) * tile_height());
+			vertices[n+2].x = (float)((tile.x+1) * tile_width());
+			vertices[n+2].y = (float)((tile.y+1) * tile_height());
+			vertices[n+3].x = (float)((tile.x  ) * tile_width());
+			vertices[n+3].y = (float)((tile.y+1) * tile_height());
 
 			/* unused z */
 			vertices[n  ].z = 0.0f;
@@ -184,8 +193,8 @@ public:
 		SDL_SetVideoMode(width, height, 0, SDL_OPENGL|SDL_DOUBLEBUF);
 		SDL_EnableKeyRepeat(0, 0);
 
-		for ( bool& st: pressed ){
-			st = false;
+		for ( int i = 0; i < SDLK_LAST; i++ ){
+			pressed[i] = false;
 		}
 
 		glClearColor(1,0,1,1);
@@ -251,10 +260,7 @@ public:
 	}
 
 	void handle_keyboard(SDLKey code, bool pressed){
-		switch ( code ){
-		default:
-			break;
-		}
+
 	}
 
 	virtual void cleanup(){
@@ -332,12 +338,12 @@ public:
 		for ( int y = 0; y < 2; y++ ){
 			for ( int x = 0; x < 2; x++ ){
 				if ( v[x+y*2] ){
-					glColor4f(1,1,1,0.6);
+					glColor4f(1,1,1,0.6f);
 				} else {
-					glColor4f(1,0,0,0.6);
+					glColor4f(1,0,0,0.6f);
 				}
 				glPushMatrix();
-				glTranslatef(x,y,0.0f);
+				glTranslatef((float)x, (float)y, 0.0f);
 				glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, indices);
 				glPopMatrix();
 			}
@@ -364,7 +370,8 @@ public:
 		glVertexPointer(3, GL_FLOAT, sizeof(float)*5, vertices);
 		glTexCoordPointer(2, GL_FLOAT, sizeof(float)*5, &vertices[0][3]);
 
-		for ( Entity* ent : entities ){
+		for ( auto it = entities.begin(); it != entities.end(); ++it ){
+			const Entity* ent = *it;
 			const SDLSprite* sprite = static_cast<const SDLSprite*>(ent->sprite());
 
 			glBindTexture(GL_TEXTURE_2D, sprite->texture);
