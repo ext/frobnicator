@@ -7,6 +7,11 @@
 #include <cstdio>
 #include <yaml.h>
 
+#ifdef WIN32
+#define strdup _strdup
+extern "C" char* strndup(const char* src, size_t n);
+#endif
+
 static const size_t max_levels = 10;
 
 struct blueprint {
@@ -88,17 +93,17 @@ namespace Blueprint {
 			} else if ( strncmp("cost", key, len) == 0 ){
 				data->cost = atoi(value);
 			} else if ( strncmp("splash", key, len) == 0 ){
-				data->splash = atof(value);
+				data->splash = (float)atof(value);
 			} else if ( strncmp("damage", key, len) == 0 ){
-				data->damage = atof(value);
+				data->damage = (float)atof(value);
 			} else if ( strncmp("rof", key, len) == 0 ){
-				data->rof = atof(value);
+				data->rof = (float)atof(value);
 			} else if ( strncmp("range", key, len) == 0 ){
-				data->range = atof(value);
+				data->range = (float)atof(value);
 			} else if ( strncmp("slow", key, len) == 0 ){
-				data->slow = atof(value);
+				data->slow = (float)atof(value);
 			} else if ( strncmp("poison", key, len) == 0 ){
-				data->poison = atof(value);
+				data->poison = (float)atof(value);
 			} else {
 				/* warning only */
 				fprintf(stderr, "Unhandled key `%.*s'\n", (int)len, key);
