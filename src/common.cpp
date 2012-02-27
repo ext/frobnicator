@@ -7,6 +7,10 @@
 #include <cstdlib>
 #include <yaml.h>
 
+#ifdef WIN32
+#define snprintf _snprintf
+#endif
+
 static const char* datapath(){
 	const char* path = getenv("DATA_DIR");
 	if ( !path ){
