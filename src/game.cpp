@@ -11,7 +11,19 @@
 #include <cassert>
 #include <vector>
 #include <math.h>
+
+#ifdef WIN32
+#define VC_EXTRALEAN
+#define NOMINMAX
+#include <windows.h>
+#endif
+
+#ifdef HAVE_SYS_TYPES_H
 #include <sys/time.h>
+#else
+extern "C" int gettimeofday(struct timeval* tv, struct timezone* tz);
+extern "C" void usleep (uint64_t usec);
+#endif
 
 typedef std::vector<Entity*> EntityVector;
 
@@ -139,17 +151,17 @@ namespace Game {
 	}
 
 	void pan(float x, float y){
-		const float bx = tilemap->tile_width()  * tilemap->map_width()  - width;
-		const float by = tilemap->tile_height() * tilemap->map_height() - height;
+		const size_t bx = tilemap->tile_width()  * tilemap->map_width()  - width;
+		const size_t by = tilemap->tile_height() * tilemap->map_height() - height;
 
-		camera.x = clamp(camera.x - x, 0.0f, bx);
-		camera.y = clamp(camera.y - y, 0.0f, by);
+		camera.x = clamp(camera.x - x, 0.0f, (float)bx);
+		camera.y = clamp(camera.y - y, 0.0f, (float)by);
 	}
 
 	static Vector2f transform(const Vector2f& in){
-		Vector2f tmp = in + camera + Vector2f(tilemap->tile_width(), tilemap->tile_height()) * 0.5f;
-		tmp.x -= fmod(tmp.x, tilemap->tile_width());
-		tmp.y -= fmod(tmp.y, tilemap->tile_height());
+		Vector2f tmp = in + camera + Vector2f((float)tilemap->tile_width(), (float)tilemap->tile_height()) * 0.5f;
+		tmp.x -= fmod(tmp.x, (float)tilemap->tile_width());
+		tmp.y -= fmod(tmp.y, (float)tilemap->tile_height());
 
 		return tmp;
 	}
@@ -159,26 +171,28 @@ namespace Game {
 		cursor = world;
 
 		/* get info about tile under cursor */
-		int tx = max(world.x / tilemap->tile_width() - 1, 0.0f);
-		int ty = max(world.y / tilemap->tile_height() - 1, 0.0f);
+		int tx = (int)max(world.x / tilemap->tile_width() - 1, 0.0f);
+		int ty = (int)max(world.y / tilemap->tile_height() - 1, 0.0f);
 
 		/** @bug at the far end of the map it will read unallocated memory */
-		cursor_ok[0] = tilemap->at(tx  ,ty  ).build;
-		cursor_ok[1] = tilemap->at(tx+1,ty  ).build;
-		cursor_ok[2] = tilemap->at(tx  ,ty+1).build;
-		cursor_ok[3] = tilemap->at(tx+1,ty+1).build;
+		cursor_ok[0] = tilemap->at(tx  , ty  ).build;
+		cursor_ok[1] = tilemap->at(tx+1, ty  ).build;
+		cursor_ok[2] = tilemap->at(tx  , ty+1).build;
+		cursor_ok[3] = tilemap->at(tx+1, ty+1).build;
 	}
 
 	void click(float x, float y){
 		const Vector2f world = transform(Vector2f(x,y));
-		int tx = max(world.x / tilemap->tile_width() - 1, 0.0f);
-		int ty = max(world.y / tilemap->tile_height() - 1, 0.0f);
+
+		/* note that result is truncated */
+		int tx = (int)max(world.x / tilemap->tile_width() - 1, 0.0f);
+		int ty = (int)max(world.y / tilemap->tile_height() - 1, 0.0f);
 
 		if ( !(cursor_ok[0] && cursor_ok[1] && cursor_ok[2] && cursor_ok[3]) ){
 			return;
 		}
 
-		build(Vector2f(tx, ty), ARROW_TOWER);
+		build(Vector2f((float)tx, (float)ty), ARROW_TOWER);
 
 		tilemap->reserve(tx,ty);
 		motion(x, y); /* to update marker */
