@@ -7,8 +7,11 @@
 #include "tilemap.hpp"
 #include "common.hpp"
 #include <yaml.h>
-#include <inttypes.h>
 #include <cassert>
+
+#ifdef HAVE_INTTYPES_H
+#include <inttypes.h>
+#endif
 
 class LevelPimpl {
 public:
