@@ -11,21 +11,22 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\vendor\yaml-0.1.4\src\api.c" />
-    <ClCompile Include="..\vendor\yaml-0.1.4\src\dumper.c" />
-    <ClCompile Include="..\vendor\yaml-0.1.4\src\emitter.c" />
-    <ClCompile Include="..\vendor\yaml-0.1.4\src\loader.c" />
-    <ClCompile Include="..\vendor\yaml-0.1.4\src\parser.c" />
-    <ClCompile Include="..\vendor\yaml-0.1.4\src\reader.c" />
-    <ClCompile Include="..\vendor\yaml-0.1.4\src\scanner.c" />
-    <ClCompile Include="..\vendor\yaml-0.1.4\src\writer.c" />
+    <ClInclude Include="..\..\vendor\yaml-0.1.4\include\config.h" />
+    <ClInclude Include="..\..\vendor\yaml-0.1.4\include\yaml.h" />
+    <ClInclude Include="..\..\vendor\yaml-0.1.4\src\yaml_private.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\vendor\yaml-0.1.4\include\yaml.h" />
-    <ClInclude Include="..\vendor\yaml-0.1.4\src\yaml_private.h" />
+    <ClCompile Include="..\..\vendor\yaml-0.1.4\src\api.c" />
+    <ClCompile Include="..\..\vendor\yaml-0.1.4\src\dumper.c" />
+    <ClCompile Include="..\..\vendor\yaml-0.1.4\src\emitter.c" />
+    <ClCompile Include="..\..\vendor\yaml-0.1.4\src\loader.c" />
+    <ClCompile Include="..\..\vendor\yaml-0.1.4\src\parser.c" />
+    <ClCompile Include="..\..\vendor\yaml-0.1.4\src\reader.c" />
+    <ClCompile Include="..\..\vendor\yaml-0.1.4\src\scanner.c" />
+    <ClCompile Include="..\..\vendor\yaml-0.1.4\src\writer.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{03464923-9E0B-489B-AB97-874E98B255C9}</ProjectGuid>
+    <ProjectGuid>{7B921BC5-C541-40F6-996B-349B8396CAAF}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>yaml</RootNamespace>
   </PropertyGroup>
@@ -54,12 +55,12 @@
   <PropertyGroup />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;HAVE_CONFIG_H;YAML_DECLARE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <PrecompiledHeaderFile>
-      </PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)\..\vendor\yaml-0.1.4\include;$(ProjectDir)\..\vendor\yaml-0.1.4\win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS;YAML_DECLARE_STATIC;HAVE_CONFIG_H;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\..\vendor\yaml-0.1.4\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -69,7 +70,8 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>

@@ -3,10 +3,10 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "frobnicator", "frobnicator.vcxproj", "{3BDE7EC0-6EDB-440F-93EB-47E65B466BB3}"
 	ProjectSection(ProjectDependencies) = postProject
-		{03464923-9E0B-489B-AB97-874E98B255C9} = {03464923-9E0B-489B-AB97-874E98B255C9}
+		{7B921BC5-C541-40F6-996B-349B8396CAAF} = {7B921BC5-C541-40F6-996B-349B8396CAAF}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "yaml", "yaml.vcxproj", "{03464923-9E0B-489B-AB97-874E98B255C9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "yaml", "yaml\yaml.vcxproj", "{7B921BC5-C541-40F6-996B-349B8396CAAF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,10 +18,10 @@ Global
 		{3BDE7EC0-6EDB-440F-93EB-47E65B466BB3}.Debug|Win32.Build.0 = Debug|Win32
 		{3BDE7EC0-6EDB-440F-93EB-47E65B466BB3}.Release|Win32.ActiveCfg = Release|Win32
 		{3BDE7EC0-6EDB-440F-93EB-47E65B466BB3}.Release|Win32.Build.0 = Release|Win32
-		{03464923-9E0B-489B-AB97-874E98B255C9}.Debug|Win32.ActiveCfg = Debug|Win32
-		{03464923-9E0B-489B-AB97-874E98B255C9}.Debug|Win32.Build.0 = Debug|Win32
-		{03464923-9E0B-489B-AB97-874E98B255C9}.Release|Win32.ActiveCfg = Release|Win32
-		{03464923-9E0B-489B-AB97-874E98B255C9}.Release|Win32.Build.0 = Release|Win32
+		{7B921BC5-C541-40F6-996B-349B8396CAAF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7B921BC5-C541-40F6-996B-349B8396CAAF}.Debug|Win32.Build.0 = Debug|Win32
+		{7B921BC5-C541-40F6-996B-349B8396CAAF}.Release|Win32.ActiveCfg = Release|Win32
+		{7B921BC5-C541-40F6-996B-349B8396CAAF}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
