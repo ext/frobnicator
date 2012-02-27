@@ -7,7 +7,12 @@
 #include <yaml.h>
 #include <vector>
 
-static constexpr size_t max_tiles = 500;
+static const size_t max_tiles = 500;
+
+#ifdef WIN32
+#define strncasecmp _strnicmp
+#define strncpy(dst, src, n) strncpy_s(dst, n, src, _TRUNCATE)
+#endif
 
 class TilemapPimpl {
 public:
@@ -72,10 +77,11 @@ public:
 
 		fprintf(stderr, "  preprocessing tiles\n");
 		int n = 0;
-		for ( Tilemap::Tile& it: tile ){
-			it = tileinfo[it.index];
-			it.x = n % map_width;
-			it.y = n / map_width;
+		for ( auto it = tile.begin(); it != tile.end(); ++it ){
+			Tilemap::Tile& tile = *it;
+			tile = tileinfo[tile.index];
+			tile.x = n % map_width;
+			tile.y = n / map_width;
 			n++;
 		}
 		fprintf(stderr, "    %zd tiles loaded\n", tile.size());
@@ -124,9 +130,10 @@ private:
 			} else if ( strncmp("data", key, len) == 0 ){
 				parse_data(parser);
 			} else {
-				char tmp[len+1]; /* key is not null-terminated */
-				strncpy(tmp, key, len);
-				tmp[len] = 0;
+				/* key is not null-terminated */
+				char tmp[64]; /* variable sized array not supported, using max 64 bytes which should be enough */
+				if ( len > 63 ) abort(); /* 63 because null-terminator must fit into array */
+				sprintf(tmp, "%.*s", len, key); /* using sprintf to always get a null-terminator, strcpy might not always add one */
 				parse_tileinfo(parser, tmp);
 			}
 		} while ( true );
@@ -296,6 +303,7 @@ private:
 				abort();
 			}
 
+			const size_t tiles_size = this->tiles_size; /* msvc fun again */
 			const unsigned int index = [&value, tiles_size]() -> unsigned int {
 				unsigned int tmp = atoi((const char*)value.data.scalar.value);
 				if ( tmp > 0 ) tmp--; /* tiled uses 1 as first index and 0 as "no tile" */
@@ -403,7 +411,8 @@ const Tilemap::Tile& Tilemap::operator[](unsigned int i) const {
 }
 
 const Tilemap::Tile& Tilemap::at(unsigned int x, unsigned int y) const {
-	return pimpl->tile[x + y * pimpl->map_width];
+	const unsigned int index = x + y * pimpl->map_width;
+	return pimpl->tile[index];
 }
 
 void Tilemap::reserve(unsigned int x, unsigned int y){
@@ -411,6 +420,14 @@ void Tilemap::reserve(unsigned int x, unsigned int y){
 	pimpl->tile[x+1 + (y  ) * pimpl->map_width].build = 0;
 	pimpl->tile[x   + (y+1) * pimpl->map_width].build = 0;
 	pimpl->tile[x+1 + (y+1) * pimpl->map_width].build = 0;
+}
+
+std::vector<Tilemap::Tile>::iterator Tilemap::begin(){
+	return pimpl->tile.begin();
+}
+
+std::vector<Tilemap::Tile>::iterator Tilemap::end(){
+	return pimpl->tile.end();
 }
 
 std::vector<Tilemap::Tile>::const_iterator Tilemap::begin() const {

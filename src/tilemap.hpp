@@ -1,6 +1,7 @@
 #ifndef DVB021_TILEMAP_H
 #define DVB021_TILEMAP_H
 
+#include <stdint.h>
 #include <string>
 #include <vector>
 
@@ -54,6 +55,8 @@ public:
 	const std::string& texture_filename() const;
 	void set_dimensions(size_t w, size_t h);
 
+	std::vector<Tile>::iterator begin();
+	std::vector<Tile>::iterator end();
 	std::vector<Tile>::const_iterator begin() const;
 	std::vector<Tile>::const_iterator end() const;
 
