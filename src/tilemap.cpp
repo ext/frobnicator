@@ -14,6 +14,10 @@ static const size_t max_tiles = 500;
 #define strncpy(dst, src, n) strncpy_s(dst, n, src, _TRUNCATE)
 #endif
 
+static int min(int a, int b){
+	return a < b ? a : b;
+}
+
 class TilemapPimpl {
 public:
 	TilemapPimpl(const std::string& filename)
@@ -129,12 +133,15 @@ private:
 				parse_meta(parser);
 			} else if ( strncmp("data", key, len) == 0 ){
 				parse_data(parser);
-			} else {
+			} else if ( strncmp("tile", key, min(len, 4)) == 0 || strncmp("default", key, len) == 0 ){
 				/* key is not null-terminated */
 				char tmp[64]; /* variable sized array not supported, using max 64 bytes which should be enough */
 				if ( len > 63 ) abort(); /* 63 because null-terminator must fit into array */
 				sprintf(tmp, "%.*s", (int)len, key); /* using sprintf to always get a null-terminator, strcpy might not always add one */
 				parse_tileinfo(parser, tmp);
+			} else {
+				/* warning only */
+				fprintf(stderr, "  - Unhandled key `%.*s'\n", (int)len, key);
 			}
 		} while ( true );
 	}
@@ -249,7 +256,10 @@ private:
 			return;
 		}
 
+		/* cut "tile[" prefix */
+		tilerange += 5;
 
+		/* ensure range is digits */
 		if ( !isdigit(tilerange[0]) ){
 			fprintf(stderr, "invalid tile range: `%s', ignored\n", tilerange);
 			return;
