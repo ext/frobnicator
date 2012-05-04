@@ -249,6 +249,12 @@ private:
 			return;
 		}
 
+
+		if ( !isdigit(tilerange[0]) ){
+			fprintf(stderr, "invalid tile range: `%s', ignored\n", tilerange);
+			return;
+		}
+
 		/* determine range */
 		unsigned int lower;
 		unsigned int upper;
