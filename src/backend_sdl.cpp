@@ -262,10 +262,10 @@ public:
 
 		/* handle panning using keyboard */
 		pan.x = pan.y = 0.0f;
-		if ( pressed[SDLK_LEFT ] ) pan.x += 24.0f;
-		if ( pressed[SDLK_RIGHT] ) pan.x -= 24.0f;
-		if ( pressed[SDLK_UP   ] ) pan.y += 24.0f;
-		if ( pressed[SDLK_DOWN ] ) pan.y -= 24.0f;
+		if ( pressed[SDLK_LEFT ] || pressed[SDLK_a] ) pan.x += 24.0f;
+		if ( pressed[SDLK_RIGHT] || pressed[SDLK_d] ) pan.x -= 24.0f;
+		if ( pressed[SDLK_UP   ] || pressed[SDLK_w] ) pan.y += 24.0f;
+		if ( pressed[SDLK_DOWN ] || pressed[SDLK_s] ) pan.y -= 24.0f;
 
 		if ( fabs(pan.x) > 0.1 || fabs(pan.y) > 0.1 ){
 			Game::pan(pan.x, pan.y);
