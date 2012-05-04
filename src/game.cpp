@@ -181,7 +181,7 @@ namespace Game {
 		cursor_ok[3] = tilemap->at(tx+1, ty+1).build;
 	}
 
-	void click(float x, float y, int button){
+	void button_pressed(float x, float y, int button){
 		const Vector2f world = transform(Vector2f(x,y));
 
 		/* note that result is truncated */

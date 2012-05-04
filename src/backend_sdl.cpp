@@ -243,7 +243,7 @@ public:
 				break;
 
 			case SDL_MOUSEBUTTONDOWN:
-				Game::click(event.button.x, event.button.y, event.button.button);
+				Game::button_pressed(event.button.x, event.button.y, event.button.button);
 				break;
 
 			case SDL_VIDEORESIZE:

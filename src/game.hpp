@@ -48,7 +48,7 @@ namespace Game {
 	/**
 	 * Inform about mouse-click (in screenspace).
 	 */
-	void click(float x, float y, int button);
+	void button_pressed(float x, float y, int button);
 
 	/**
 	 * Inform about video resize.
