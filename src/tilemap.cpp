@@ -205,8 +205,9 @@ private:
 			abort();
 		}
 
-		fprintf(stderr, "    * size: %dx%d (%d)\n", map_width, map_height, map_size);
-		fprintf(stderr, "    * tileset: %dx%d (%d)\n", tiles_horizontal, tiles_vertical, tiles_size);
+		fprintf(stderr, "    * tile size: %dx%d (%d)\n", map_width, map_height, map_size);
+		fprintf(stderr, "    * num tiles: %dx%d (%d)\n", tiles_horizontal, tiles_vertical, tiles_size);
+		fprintf(stderr, "    * texture: %s\n", texture_name.c_str());
 	}
 
 	void parse_tileinfo(yaml_parser_t* parser, char* tilerange){
