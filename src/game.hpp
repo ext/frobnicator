@@ -49,6 +49,13 @@ namespace Game {
 	 * Inform about mouseclick (in screenspace).
 	 */
 	void click(float x, float y);
+
+	/**
+	 * Inform about video resize.
+	 * @param w New width in pixels.
+	 * @param h New height in pixels.
+	 */
+	void resize(size_t w, size_t h);
 };
 
 #endif /* DVB021_GAME_H */

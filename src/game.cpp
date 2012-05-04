@@ -198,6 +198,13 @@ namespace Game {
 		motion(x, y); /* to update marker */
 	}
 
+	void resize(size_t w, size_t h){
+		fprintf(stderr, "Window resized to %zdx%zd\n", w, h);
+
+		width = w;
+		height = h;
+	}
+
 	static void build(const Vector2f& pos, Buildings type){
 		/* insert at correct "depth" */
 		EntityVector::iterator it = entity.begin();

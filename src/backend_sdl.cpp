@@ -37,6 +37,8 @@ static const float vertices[][5] = { /* x,y,z,u,v */
 };
 static const unsigned int indices[4] = {0,1,2,3};
 
+static int video_flags = SDL_OPENGL|SDL_DOUBLEBUF|SDL_RESIZABLE;
+
 static GLuint load_texture(const std::string filename, size_t* width, size_t* height) {
 	const char* real_filename = real_path(filename.c_str());
 
@@ -190,7 +192,7 @@ public:
 			exit(1);
 		}
 
-		SDL_SetVideoMode(width, height, 0, SDL_OPENGL|SDL_DOUBLEBUF);
+		SDL_SetVideoMode(width, height, 0, video_flags);
 		SDL_EnableKeyRepeat(0, 0);
 
 		for ( int i = 0; i < SDLK_LAST; i++ ){
@@ -204,15 +206,20 @@ public:
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glOrtho(0, width, 0, height, -1.0, 1.0);
-		glScalef(1, -1.0, 1);
-		glTranslatef(0, -(float)height, 0);
-		glMatrixMode(GL_MODELVIEW);
+		setup_projection(width, height);
 
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	}
+
+	void setup_projection(int w, int h){
+		glViewport(0, 0, w, h);
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glOrtho(0, w, 0, h, -1.0, 1.0);
+		glScalef(1, -1.0, 1);
+		glTranslatef(0, -(float)h, 0);
+		glMatrixMode(GL_MODELVIEW);
 	}
 
 	virtual void poll(bool& running){
@@ -239,6 +246,12 @@ public:
 				if ( event.button.button == 1){
 					Game::click(event.button.x, event.button.y);
 				}
+				break;
+
+			case SDL_VIDEORESIZE:
+				SDL_SetVideoMode(event.resize.w, event.resize.h, 0, video_flags);
+				setup_projection(event.resize.w, event.resize.h);
+				Game::resize(event.resize.w, event.resize.h);
 				break;
 
 			case SDL_QUIT:
