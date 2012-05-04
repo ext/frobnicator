@@ -125,7 +125,6 @@ namespace Game {
 			/* calculate framerate */
 			fps++;
 			if ( cur.tv_sec - fref.tv_sec > 1 ){
-				fprintf(stderr, "fps: %d\n", fps);
 				fref.tv_sec++;
 				fps = 0;
 			}
