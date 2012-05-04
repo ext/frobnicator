@@ -51,6 +51,13 @@ public:
 		return Vector(x * scalar, y * scalar);
 	}
 
+	/**
+	 * Gives the squared length.
+	 */
+	T length2() const {
+		return x*x + y*y;
+	}
+
 	union {
 		struct {
 			T x;
