@@ -66,7 +66,7 @@ public:
 			const unsigned int x = i % tiles_horizontal;
 			const unsigned int y = i / tiles_horizontal;
 			info.index = i;
-			float s = x * dy;
+			float s = x * dx;
 			float t = y * dy;
 			info.uv[0] = s;
 			info.uv[1] = t;
