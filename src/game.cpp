@@ -45,6 +45,10 @@ static int width;
 static int height;
 static blueprint_t blueprint[BUILDING_LAST];
 
+namespace Game {
+	Vector2f clamp_to_world(const Vector2f& v);
+}
+
 static void poll(bool&render){
 	backend->poll(running);
 }
@@ -150,12 +154,22 @@ namespace Game {
 		return backend->load_sprite(filename);
 	}
 
-	void pan(float x, float y){
+	/**
+	 * Takes a position in world-space and clips it to the area defined by the
+	 * tilemap - window. Can be used to prevent user from moving outside of map.
+	 */
+	Vector2f clamp_to_world(const Vector2f& v){
 		const size_t bx = tilemap->tile_width()  * tilemap->map_width()  - width;
 		const size_t by = tilemap->tile_height() * tilemap->map_height() - height;
 
-		camera.x = clamp(camera.x - x, 0.0f, (float)bx);
-		camera.y = clamp(camera.y - y, 0.0f, (float)by);
+		return Vector2f(
+			clamp(v.x, 0.0f, (float)bx),
+			clamp(v.y, 0.0f, (float)by)
+		);
+	}
+
+	void pan(float x, float y){
+		camera = clamp_to_world(camera - Vector2f(x,y));
 	}
 
 	static Vector2f transform(const Vector2f& in){
