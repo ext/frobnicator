@@ -181,21 +181,25 @@ namespace Game {
 		cursor_ok[3] = tilemap->at(tx+1, ty+1).build;
 	}
 
-	void click(float x, float y){
+	void click(float x, float y, int button){
 		const Vector2f world = transform(Vector2f(x,y));
 
 		/* note that result is truncated */
 		int tx = (int)max(world.x / tilemap->tile_width() - 1, 0.0f);
 		int ty = (int)max(world.y / tilemap->tile_height() - 1, 0.0f);
 
-		if ( !(cursor_ok[0] && cursor_ok[1] && cursor_ok[2] && cursor_ok[3]) ){
-			return;
+		switch ( button ){
+		case 1: /* left button */
+			/* try to build at cursor */
+			if ( !(cursor_ok[0] && cursor_ok[1] && cursor_ok[2] && cursor_ok[3]) ){
+				return;
+			}
+
+			build(Vector2f((float)tx, (float)ty), ARROW_TOWER);
+
+			tilemap->reserve(tx,ty);
+			motion(x, y); /* to update marker */
 		}
-
-		build(Vector2f((float)tx, (float)ty), ARROW_TOWER);
-
-		tilemap->reserve(tx,ty);
-		motion(x, y); /* to update marker */
 	}
 
 	void resize(size_t w, size_t h){
