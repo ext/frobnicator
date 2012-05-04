@@ -261,7 +261,7 @@ public:
 		}
 
 		/* handle panning using keyboard */
-		pan.x = pan.y = 0.0f;
+		Vector2f pan;
 		if ( pressed[SDLK_LEFT ] || pressed[SDLK_a] ) pan.x += 24.0f;
 		if ( pressed[SDLK_RIGHT] || pressed[SDLK_d] ) pan.x -= 24.0f;
 		if ( pressed[SDLK_UP   ] || pressed[SDLK_w] ) pan.y += 24.0f;
@@ -406,7 +406,6 @@ public:
 	}
 
 private:
-	Vector2f pan;
 	bool pressed[SDLK_LAST];
 
 	std::map<std::string, SDLSprite*> sprite;
