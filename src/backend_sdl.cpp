@@ -192,6 +192,7 @@ public:
 			exit(1);
 		}
 
+		SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1);
 		SDL_SetVideoMode(width, height, 0, video_flags);
 		SDL_EnableKeyRepeat(0, 0);
 
