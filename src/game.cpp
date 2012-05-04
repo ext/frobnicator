@@ -56,12 +56,19 @@ static void poll(bool&render){
 static void render_game(){
 	backend->render_begin();
 	{
-		backend->render_tilemap(level->tilemap(), camera);
+		Vector2f panned_cam = camera;
 
-		backend->render_entities(entity, camera);
+		if ( is_panning ){
+			panned_cam += panning_ref - panning_cur;
+			panned_cam = Game::clamp_to_world(panned_cam);
+		}
+
+		backend->render_tilemap(level->tilemap(), panned_cam);
+
+		backend->render_entities(entity, panned_cam);
 
 		/* render marker */
-		backend->render_marker(cursor, camera, cursor_ok);
+		backend->render_marker(cursor, panned_cam, cursor_ok);
 	}
 	backend->render_end();
 }
@@ -181,7 +188,13 @@ namespace Game {
 	}
 
 	void motion(float x, float y){
-		const Vector2f world = transform(Vector2f(x,y));
+		const Vector2f world = [x,y](){
+			if ( is_panning ){
+				return transform(panning_ref);
+			} else {
+				return transform(Vector2f(x,y));
+			}
+		}();
 		cursor = world;
 
 		/* get info about tile under cursor */
@@ -193,6 +206,19 @@ namespace Game {
 		cursor_ok[1] = tilemap->at(tx+1, ty  ).build;
 		cursor_ok[2] = tilemap->at(tx  , ty+1).build;
 		cursor_ok[3] = tilemap->at(tx+1, ty+1).build;
+
+		if ( is_panning ){
+			panning_cur.x = x;
+			panning_cur.y = y;
+
+			/* offset reference point while at the edges by taking the difference
+			 * between the original point and the clamped point. Without this
+			 * you would have to move the mouse back a lot before you could continue
+			 * panning. */
+			const Vector2f p = camera + panning_ref - panning_cur;
+			const Vector2f c = Game::clamp_to_world(p);
+			panning_ref -= p-c;
+		}
 	}
 
 	void button_pressed(float x, float y, int button){
@@ -213,12 +239,28 @@ namespace Game {
 
 			tilemap->reserve(tx,ty);
 			motion(x, y); /* to update marker */
+			break;
+
+		case 3: /* right button */
+			/* panning_ref is used to calculate how much the user has panned */
+			panning_ref.x = panning_cur.x = x;
+			panning_ref.y = panning_cur.y = y;
+			is_panning = true;
+			break;
 		}
 	}
 
 	void button_released(float x, float y, int button){
 		switch ( button ){
+		case 3: /* right button */
+			panning_cur.x = x;
+			panning_cur.y = y;
+			is_panning = false;
 
+			{
+				const Vector2f v = panning_cur - panning_ref;
+				pan(v.x, v.y);
+			}
 		}
 	}
 
