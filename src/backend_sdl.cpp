@@ -246,6 +246,10 @@ public:
 				Game::button_pressed(event.button.x, event.button.y, event.button.button);
 				break;
 
+			case SDL_MOUSEBUTTONUP:
+				Game::button_released(event.button.x, event.button.y, event.button.button);
+				break;
+
 			case SDL_VIDEORESIZE:
 				SDL_SetVideoMode(event.resize.w, event.resize.h, 0, video_flags);
 				setup_projection(event.resize.w, event.resize.h);

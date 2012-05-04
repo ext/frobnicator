@@ -185,8 +185,8 @@ namespace Game {
 		const Vector2f world = transform(Vector2f(x,y));
 
 		/* note that result is truncated */
-		int tx = (int)max(world.x / tilemap->tile_width() - 1, 0.0f);
-		int ty = (int)max(world.y / tilemap->tile_height() - 1, 0.0f);
+		const int tx = (int)max(world.x / tilemap->tile_width() - 1, 0.0f);
+		const int ty = (int)max(world.y / tilemap->tile_height() - 1, 0.0f);
 
 		switch ( button ){
 		case 1: /* left button */
@@ -199,6 +199,12 @@ namespace Game {
 
 			tilemap->reserve(tx,ty);
 			motion(x, y); /* to update marker */
+		}
+	}
+
+	void button_released(float x, float y, int button){
+		switch ( button ){
+
 		}
 	}
 

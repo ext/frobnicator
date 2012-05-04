@@ -46,9 +46,20 @@ namespace Game {
 	void motion(float x, float y);
 
 	/**
-	 * Inform about mouse-click (in screenspace).
+	 * Inform about user pressing mouse-button down.
+	 * @param x in screenspace
+	 * @param y in screenspace
+	 * @param button
 	 */
 	void button_pressed(float x, float y, int button);
+
+	/**
+	 * Inform about user releasing mouse-button.
+	 * @param x in screenspace
+	 * @param y in screenspace
+	 * @param button
+	 */
+	void button_released(float x, float y, int button);
 
 	/**
 	 * Inform about video resize.
