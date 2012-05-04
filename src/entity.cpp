@@ -117,11 +117,11 @@ namespace Blueprint {
 			} else if ( strncmp("poison", key, len) == 0 ){
 				data->poison = (float)atof(value);
 			} else if ( strncmp("speed", key, len) == 0 ){
-				data->speed = atof(value);
+				data->speed = (float)atof(value);
 			} else if ( strncmp("armor", key, len) == 0 ){
-				data->armor = atof(value);
+				data->armor = (float)atof(value);
 			} else if ( strncmp("amount", key, len) == 0 ){
-				data->amount = atoi(value);
+				data->amount = (float)atoi(value);
 			} else {
 				/* warning only */
 				fprintf(stderr, "Unhandled key `%.*s'\n", (int)len, key);
