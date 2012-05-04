@@ -44,6 +44,9 @@ static Tilemap* tilemap;
 static int width;
 static int height;
 static blueprint_t blueprint[BUILDING_LAST];
+static bool is_panning = false;
+static Vector2f panning_ref;    /* reference point when panning using mouse */
+static Vector2f panning_cur;    /* where the mouse currently is (to calculate how much to pan) */
 
 namespace Game {
 	Vector2f clamp_to_world(const Vector2f& v);
