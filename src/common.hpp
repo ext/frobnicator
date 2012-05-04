@@ -31,6 +31,22 @@ public:
 		return Vector(x+rhs.x, y+rhs.y);
 	}
 
+	Vector& operator+=(const Vector<T>& rhs){
+		x += rhs.x;
+		y += rhs.y;
+		return *this;
+	}
+
+	Vector operator-(const Vector<T>& rhs) const {
+		return Vector(x-rhs.x, y-rhs.y);
+	}
+
+	Vector& operator-=(const Vector<T>& rhs){
+		x -= rhs.x;
+		y -= rhs.y;
+		return *this;
+	}
+
 	Vector operator*(T scalar) const {
 		return Vector(x * scalar, y * scalar);
 	}
