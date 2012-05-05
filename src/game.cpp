@@ -51,6 +51,8 @@ static Vector2f panning_ref;    /* reference point when panning using mouse */
 static Vector2f panning_cur;    /* where the mouse currently is (to calculate how much to pan) */
 static bool show_waypoints = false;
 static bool show_aabb = false;
+static const time_t wave_delay = 10;
+static unsigned int wave_current = 0;
 
 namespace Game {
 	Vector2f clamp_to_world(const Vector2f& v);
@@ -145,6 +147,7 @@ namespace Game {
 
 		/* spawn timer */
 		struct timeval sref = {t.tv_sec, 0};
+		fprintf(stderr, "Next wave will start in %lld seconds.\n", (long long)wave_delay);
 
 		while ( running ){
 			/* frame update */
@@ -162,10 +165,11 @@ namespace Game {
 			}
 
 			/* spawn wave */
-			if ( cur.tv_sec - sref.tv_sec > 10 ){
-				EntityVector wave = level->spawn(1);
+			if ( cur.tv_sec - sref.tv_sec > wave_delay ){
+				wave_current++;
+				EntityVector wave = level->spawn(wave_current);
 				creep.insert(creep.end(), wave.begin(), wave.end());
-				sref.tv_sec += 10;
+				sref.tv_sec += wave_delay;
 			}
 
 			/* calculate dt */
