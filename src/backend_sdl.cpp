@@ -375,10 +375,10 @@ public:
 		glTranslatef(-camera.x, -camera.y, 0.0f);
 
 		/* position */
-		glTranslatef(pos.x - 48, pos.y - 48, 0.0f);
+		glTranslatef(pos.x - Game::tile_width(), pos.y - Game::tile_height(), 0.0f);
 
 		/* tile scale */
-		glScalef(48.0f, 48.0f, 1.0f);
+		glScalef(Game::tile_width(), Game::tile_height(), 1.0f);
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glVertexPointer(3, GL_FLOAT, sizeof(float)*5, vertices);
@@ -447,10 +447,10 @@ public:
 		glTranslatef(-camera.x, -camera.y, 0.0f);
 
 		/* position */
-		glTranslatef(ent->world_pos().x * 48, ent->world_pos().y * 48, 0.0f);
+		glTranslatef(ent->world_pos().x, ent->world_pos().y, 0.0f);
 
 		/* tile scale */
-		glScalef(48*2, 48*2, 1.0f);
+		glScalef(Game::tile_width() * 2.0f, Game::tile_height() * 2.0f, 1.0f);
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glVertexPointer(3, GL_FLOAT, sizeof(float)*5, vertices);
@@ -474,28 +474,29 @@ public:
 		}
 	}
 
-
 	virtual void render_entities(std::vector<Entity*>& entities, const Vector2f& camera) const {
 		glPushMatrix();
 
 		/* camera */
-		glTranslatef(-camera.x, -camera.y - 48*2, 0.0f);
-
-		/* tile scale */
-		glScalef(48.0f, 48.0f, 1.0f);
+		glTranslatef(-camera.x, -camera.y - Game::tile_height() * 2.0, 0.0f);
 
 		glVertexPointer(3, GL_FLOAT, sizeof(float)*5, vertices);
 		glTexCoordPointer(2, GL_FLOAT, sizeof(float)*5, &vertices[0][3]);
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 		for ( auto it = entities.begin(); it != entities.end(); ++it ){
 			const Entity* ent = *it;
 			const SDLSprite* sprite = static_cast<const SDLSprite*>(ent->sprite());
 
 			glBindTexture(GL_TEXTURE_2D, sprite->texture);
-			glColor4f(1,1,1,1);
+
 			glPushMatrix();
 			glTranslatef(ent->world_pos().x, ent->world_pos().y, 0.0f);
-			glScalef(2,4,1);
+
+			/* tile scale */
+			glScalef(Game::tile_width(), Game::tile_height(), 1.0f);
+			glScalef(2.0f, 4.0f, 1.0f);
+
 			glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, indices);
 			glPopMatrix();
 		}

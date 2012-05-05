@@ -56,7 +56,7 @@ public:
 	 * by pos.
 	 */
 	static Building* place_at_tile(const Vector2i& pos, const blueprint_t bp){
-		Vector2f world(pos.x, pos.y); /* temporary until rendering uses worlspace coordinates */
+		Vector2f world(pos.x * 48, pos.y * 48);
 		return new Building(world, bp);
 	}
 

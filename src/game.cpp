@@ -341,7 +341,7 @@ namespace Game {
 		EntityVector::iterator it = building.begin();
 		while ( it != building.end() ){
 			Entity* cur = *it;
-			if ( cur->world_pos().y >= pos.y ) break;
+			if ( cur->grid_pos().y >= pos.y ) break;
 			++it;
 		}
 
