@@ -49,6 +49,7 @@ static bool is_panning = false;
 static Vector2f panning_ref;    /* reference point when panning using mouse */
 static Vector2f panning_cur;    /* where the mouse currently is (to calculate how much to pan) */
 static bool show_waypoints = false;
+static bool show_aabb = false;
 
 namespace Game {
 	Vector2f clamp_to_world(const Vector2f& v);
@@ -75,11 +76,19 @@ static void render_game(){
 		/* render marker */
 		backend->render_marker(cursor, panned_cam, cursor_ok);
 
-		/* render waypoints */
 		if ( show_waypoints ){
+			/* render waypoints */
 			for ( auto it = level->waypoints().begin(); it != level->waypoints().end(); ++it ){
 				static float color[3] = {1,1,0};
 				backend->render_region(it->second, panned_cam, color);
+			}
+		}
+
+		if ( show_aabb ){
+			/* render AABB */
+			for ( auto it = entity.begin(); it != entity.end(); ++it ){
+				static float color[3] = {0,0,1};
+				backend->render_region(*it, panned_cam, color);
 			}
 		}
 	}
@@ -103,6 +112,10 @@ namespace Game {
 		backend->bindkey("F1", [](){
 				show_waypoints = !show_waypoints;
 				fprintf(stderr, "%s waypoints\n", show_waypoints ? "Showing" : "Hiding");
+		});
+		backend->bindkey("F2", [](){
+				show_aabb = !show_aabb;
+				fprintf(stderr, "%s AABB\n", show_aabb ? "Showing" : "Hiding");
 		});
 
 		/* load all tower blueprints */

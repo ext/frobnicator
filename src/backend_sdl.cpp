@@ -421,13 +421,13 @@ public:
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glVertexPointer(3, GL_FLOAT, sizeof(float)*5, vertices);
 
-		glColor4f(1,1,0,0.5f);
+		glColor4f(color[0], color[1], color[2], 0.5f);
 		glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, indices);
 
 		/* outline */
 		glPushAttrib (GL_LINE_BIT);
 		glLineWidth(2);
-		glColor4f(1,1,0,1.0f);
+		glColor4f(color[0], color[1], color[2], 1.0f);
 		glDrawElements(GL_LINE_STRIP, 5, GL_UNSIGNED_INT, line_indices);
 		glPopAttrib();
 
@@ -439,6 +439,41 @@ public:
 			exit(1);
 		}
 	}
+
+	virtual void render_region(const Entity* ent, const Vector2f& camera, float color[3]) const {
+		glPushMatrix();
+
+		/* camera */
+		glTranslatef(-camera.x, -camera.y, 0.0f);
+
+		/* position */
+		glTranslatef(ent->world_pos().x * 48, ent->world_pos().y * 48, 0.0f);
+
+		/* tile scale */
+		glScalef(48*2, 48*2, 1.0f);
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glVertexPointer(3, GL_FLOAT, sizeof(float)*5, vertices);
+
+		glColor4f(color[0], color[1], color[2], 0.5f);
+		glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, indices);
+
+		/* outline */
+		glPushAttrib (GL_LINE_BIT);
+		glLineWidth(2);
+		glColor4f(color[0], color[1], color[2], 1.0f);
+		glDrawElements(GL_LINE_STRIP, 5, GL_UNSIGNED_INT, line_indices);
+		glPopAttrib();
+
+		glPopMatrix();
+
+		int err;
+		if ( (err=glGetError()) != GL_NO_ERROR ){
+			fprintf(stderr, "OpenGL error: %s\n", gluErrorString(err));
+			exit(1);
+		}
+	}
+
 
 	virtual void render_entities(std::vector<Entity*>& entities, const Vector2f& camera) const {
 		glPushMatrix();
