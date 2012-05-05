@@ -55,7 +55,7 @@ static const time_t wave_delay = 10;
 static unsigned int wave_current = 0;
 
 namespace Game {
-	Vector2f clamp_to_world(const Vector2f& v);
+	static Vector2f clamp_to_world(const Vector2f& v);
 }
 
 static void poll(bool&render){
@@ -225,7 +225,7 @@ namespace Game {
 	 * Takes a position in world-space and clips it to the area defined by the
 	 * tilemap - window. Can be used to prevent user from moving outside of map.
 	 */
-	Vector2f clamp_to_world(const Vector2f& v){
+	static Vector2f clamp_to_world(const Vector2f& v){
 		const size_t bx = tilemap->tile_width()  * tilemap->map_width()  - width;
 		const size_t by = tilemap->tile_height() * tilemap->map_height() - height;
 
@@ -239,6 +239,9 @@ namespace Game {
 		camera = clamp_to_world(camera - Vector2f(x,y));
 	}
 
+	/**
+	 * Transform a coordinate from screenspace to worldspace.
+	 */
 	static Vector2f transform(const Vector2f& in){
 		Vector2f tmp = in + camera + Vector2f((float)tilemap->tile_width(), (float)tilemap->tile_height()) * 0.5f;
 		tmp.x -= fmod(tmp.x, (float)tilemap->tile_width());
