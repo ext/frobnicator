@@ -348,4 +348,12 @@ namespace Game {
 		Building* tmp = Building::place_at_tile(pos, blueprint[type]);
 		building.insert(it, tmp);
 	}
+
+	size_t tile_width(){
+		return tilemap->tile_width();
+	}
+
+	size_t tile_height(){
+		return tilemap->tile_height();
+	}
 };

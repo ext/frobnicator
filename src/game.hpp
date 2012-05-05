@@ -36,6 +36,16 @@ namespace Game {
 	void frobnicate();
 
 	/**
+	 * Get the width of a tile. Static per level.
+	 */
+	size_t FROB_PURE tile_width();
+
+	/**
+	 * Get the height of a tile. Static per level.
+	 */
+	size_t FROB_PURE tile_height();
+
+	/**
 	 * Pan the camera.
 	 */
 	void pan(float x, float y);
