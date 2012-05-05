@@ -1,11 +1,119 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="48" height="48" tilewidth="50" tileheight="50">
  <tileset firstgid="1" name="tiles1" tilewidth="48" tileheight="48">
-  <image source="tiles1.jpg" width="576" height="576"/>
+  <image source="tiles1.jpg" width="576" height="624"/>
+  <tile id="0">
+   <properties>
+    <property name="build" value="no"/>
+   </properties>
+  </tile>
+  <tile id="28">
+   <properties>
+    <property name="build" value="yes"/>
+   </properties>
+  </tile>
+  <tile id="51">
+   <properties>
+    <property name="build" value="yes"/>
+   </properties>
+  </tile>
+  <tile id="53">
+   <properties>
+    <property name="build" value="yes"/>
+   </properties>
+  </tile>
+  <tile id="54">
+   <properties>
+    <property name="build" value="yes"/>
+   </properties>
+  </tile>
+  <tile id="65">
+   <properties>
+    <property name="build" value="yes"/>
+   </properties>
+  </tile>
+  <tile id="66">
+   <properties>
+    <property name="build" value="yes"/>
+   </properties>
+  </tile>
+  <tile id="144">
+   <properties>
+    <property name="build" value="yes"/>
+   </properties>
+  </tile>
+  <tile id="145">
+   <properties>
+    <property name="build" value="yes"/>
+   </properties>
+  </tile>
+  <tile id="146">
+   <properties>
+    <property name="build" value="yes"/>
+   </properties>
+  </tile>
+  <tile id="147">
+   <properties>
+    <property name="build" value="yes"/>
+   </properties>
+  </tile>
+  <tile id="148">
+   <properties>
+    <property name="build" value="yes"/>
+   </properties>
+  </tile>
+  <tile id="149">
+   <properties>
+    <property name="build" value="yes"/>
+   </properties>
+  </tile>
  </tileset>
  <layer name="Tile Layer 1" width="48" height="48">
   <data encoding="base64" compression="zlib">
-   eJztmjtPwzAQgD0DM7B04VHoSCmwAYUJJt5DhQpigi68WXiKDQr8Zs6KI6yQS3zxXepShk+R2uvd11Pi+tGWUqolwCvwZHgRqhGzC5wxsZfhz12nYvK2gUVgieF6CiwDX5b/B3AAdBjrHCb814B1hmsDmANqlv8MUDfvcdVJ+sffaxpYZaBp+a8w5ayaHjRS/OPvtWDVDY35DP+4//3qn9Z/fd/OFiR5/3Pkofbfjqcincel//3kn9d/6rjkM/7Y4wxX/8t8rrG6Pv0P3Z/S/0vgKodrj3jp/j+az2bx7BEv3f8Q/Yv2/xx4T6Frxb8hMRcB9N+uSwXLU2b/Q/Hn6L/LPKfmkIfqfwTs5MS7+Ov4IWAYYYSQh+Kv2VfR77av/ygwhjAu4P9p0OtVPU/B5i326/Z40lXF/bE8WN00/6LPXhpU/9Dohf+t4U5F4we2brJft+czyXkLxR/Lg9XNen43VLTH0W/Pb7wv1smJd607AUwiTAn5tx3iXeq6rLOaDnl65U/l39/f/14VX389BOAfyvplkPyx9RR1/YXFS/tL8+//O16fqZS1/1xX/P5Uyt6//Yv+PudWXOdfeeuvLP/QGAR/6jgjff6FjUuYPwf6rCZ5/1eZa0j5bwGbKlpPx/43wIn62SPj9tf7b9tMHJu8yf9vVITqUP6nkjeHtEnzl+AbRPncPg==
+   eJztmrlOw0AQQLcGaqCh4QikJASoOAIVVByBIkIQqCANV6DhFB0kIHH9LzOyV0yMJ/bas2YhKZ4smWHmeWSvd9epKKUqFngAbn3uLdXQbAJHQpTb+Nuog+wCM8CswPEQmAdeiH8T2AZqgnV2Av5LwLLAsQhMAnniPw4U/L9J1Qn66+saAxYFKBH/BaGcOb8HxRB/fV3TpK5rTLXx1/3/q/5h/cf7diIhwftfIo9p/3X8G/m/KF79Y1ieJHB54vQ/rO4H8Bm4rneDurb82/UfMR2X0ow/dJyR6n+WzzVXN03/Xfc36f8pcBbBeYp42/2/AYYiuEsRb7v/Lvon7f8x8BRCg8Q/MjEnDvSf1jWFy5Nl/13xl+h/nHlOPkYeU/89YCMiPo4/xvcAvQx9Bnna+a8BVeKPbCnvvZ3Wvx8YYBgU8Md5zD7xfvbB9SrOU7h5Cz1Px5OGSu7P5eHqar8m8U767IVh6u8av+F/4XOpvPGDWzfR83Q+E5y3mPhzebi62q9OvPVzsKK8PQ7Xn1/cm5lTrWMP7ovVmHhT/2FghGFUwB/P4R5ZWbW+v6LeF3HqxllnlWLkSfL+lfA3peuf3v9KJV9/XTvg78r6pZP8ufWU6fqLi7ftb5uu/894fG9ntf9cUPL+pmS9f/sf/dN8t5L6/kXzmPq7Rif4m44ztr9/ceMS5y8B7nEE7/+ccA1b/ri3tKq89bT2rwMH6nuPTNof99/Whagq/vcbNurYIqvfz3wBSPfy6A==
   </data>
  </layer>
+ <objectgroup color="#ffff7f" name="Route" width="48" height="48">
+  <object name="outer 1" type="waypoint" x="1150" y="250" width="100" height="100">
+   <properties>
+    <property name="inner" value="inner 1"/>
+    <property name="next" value="outer 2"/>
+   </properties>
+  </object>
+  <object name="spawn" type="spawn" x="1150" y="0" width="100" height="50"/>
+  <object name="outer 2" type="waypoint" x="250" y="250" width="100" height="100">
+   <properties>
+    <property name="next" value="outer 3"/>
+   </properties>
+  </object>
+  <object name="outer 3" type="waypoint" x="250" y="1150" width="100" height="100">
+   <properties>
+    <property name="inner" value="inner 3"/>
+    <property name="next" value="outer 4"/>
+   </properties>
+  </object>
+  <object name="4" type="waypoint" x="250" y="2050" width="100" height="100"/>
+  <object name="5" type="waypoint" x="1150" y="2050" width="100" height="100"/>
+  <object name="6" type="waypoint" x="2050" y="2050" width="100" height="100"/>
+  <object name="7" type="waypoint" x="2050" y="1150" width="100" height="100"/>
+  <object name="8" type="waypoint" x="2050" y="250" width="100" height="100"/>
+  <object name="inner 1" type="waypoint" x="1150" y="550" width="100" height="100">
+   <properties>
+    <property name="inner" value="middle"/>
+    <property name="next" value="inner 2"/>
+   </properties>
+  </object>
+  <object name="middle" type="waypoint" x="1100" y="1100" width="200" height="200"/>
+  <object name="inner 2" type="waypoint" x="550" y="550" width="100" height="100">
+   <properties>
+    <property name="next" value="inner 3"/>
+   </properties>
+  </object>
+  <object name="outer 3" type="waypoint" x="550" y="1150" width="100" height="100">
+   <properties>
+    <property name="inner" value=""/>
+    <property name="next" value="outer 4"/>
+   </properties>
+  </object>
+ </objectgroup>
 </map>
