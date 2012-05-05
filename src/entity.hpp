@@ -42,11 +42,29 @@ private:
 
 class Building: public Entity {
 public:
+	/**
+	 * Construct a new building using blueprint bp and place it at the tile given
+	 * by pos.
+	 */
+	static Building* place_at_tile(const Vector2i& pos, const blueprint_t bp){
+		Vector2f world(pos.x, pos.y); /* temporary until rendering uses worlspace coordinates */
+		return new Building(world, bp);
+	}
+
+private:
 	Building(const Vector2f& pos, const blueprint_t bp);
 };
 
 class Creep: public Entity {
 public:
+	/**
+	 * Spawn new creep at world space coordinate given by pos.
+	 */
+	static Creep* spawn_at(const Vector2f& pos, const blueprint_t bp, unsigned int level){
+		return new Creep(pos, bp, level);
+	}
+
+private:
 	Creep(const Vector2f& pos, const blueprint_t bp, unsigned int level);
 };
 

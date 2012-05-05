@@ -115,7 +115,7 @@ static void render_game(){
 }
 
 namespace Game {
-	static void build(const Vector2f& pos, Buildings type);
+	static void build(const Vector2i& pos, Buildings type);
 
 	void init(const std::string& bn, int w, int h){
 		width = w;
@@ -285,8 +285,10 @@ namespace Game {
 		const Vector2f world = transform(Vector2f(x,y));
 
 		/* note that result is truncated */
-		const int tx = (int)max(world.x / tilemap->tile_width() - 1, 0.0f);
-		const int ty = (int)max(world.y / tilemap->tile_height() - 1, 0.0f);
+		const Vector2i grid(
+			(int)max(world.x / tilemap->tile_width()  - 1, 0.0f),
+			(int)max(world.y / tilemap->tile_height() - 1, 0.0f)
+		);
 
 		switch ( button ){
 		case 1: /* left button */
@@ -295,9 +297,10 @@ namespace Game {
 				return;
 			}
 
-			build(Vector2f((float)tx, (float)ty), ARROW_TOWER);
+			fprintf(stderr, "building at %f,%f\n", world.x, world.y);
+			build(grid, ARROW_TOWER);
 
-			tilemap->reserve(tx,ty);
+			tilemap->reserve(grid.x, grid.y);
 			motion(x, y); /* to update marker */
 			break;
 
@@ -331,7 +334,7 @@ namespace Game {
 		height = h;
 	}
 
-	static void build(const Vector2f& pos, Buildings type){
+	static void build(const Vector2i& pos, Buildings type){
 		/* insert at correct "depth" */
 		EntityVector::iterator it = building.begin();
 		while ( it != building.end() ){
@@ -340,7 +343,7 @@ namespace Game {
 			++it;
 		}
 
-		Building* tmp = new Building(pos, blueprint[type]);
+		Building* tmp = Building::place_at_tile(pos, blueprint[type]);
 		building.insert(it, tmp);
 	}
 };
