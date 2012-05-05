@@ -62,14 +62,14 @@ const Sprite* Entity::sprite() const {
 Building::Building(const Vector2f& pos, const blueprint_t bp)
 	: Entity(pos, bp) {
 
-	fprintf(stderr, "creating \"%s\" at (%.0f,%.0f)\n", bp->data[0].name, pos.x, pos.y);
+	fprintf(stderr, "Creating \"%s\" at (%.0f,%.0f)\n", bp->data[0].name, pos.x, pos.y);
 }
 
 Creep::Creep(const Vector2f& pos, const blueprint_t bp, unsigned int level)
 	: Entity(pos, bp) {
 	this->level = level;
 
-	fprintf(stderr, "spawning \"%s\" at (%.0f,%.0f)\n", bp->data[level].name, pos.x, pos.y);
+	fprintf(stderr, "Spawning \"%s\" at (%.0f,%.0f)\n", bp->data[level].name, pos.x, pos.y);
 
 	fprintf(stderr, "%s %s %s\n", bp->data[0].name, bp->data[1].name, bp->data[2].name);
 }
