@@ -6,6 +6,7 @@
 #include "common.hpp"
 #include <yaml.h>
 #include <vector>
+#include <map>
 
 static const size_t max_tiles = 500;
 
@@ -14,9 +15,92 @@ static const size_t max_tiles = 500;
 #define strncpy(dst, src, n) strncpy_s(dst, n, src, _TRUNCATE)
 #endif
 
-static int min(int a, int b){
-	return a < b ? a : b;
-}
+class Region {
+protected:
+	Region(){
+
+	}
+
+	virtual void set(const std::string& key, const std::string& value){
+		if ( key == "name" ){ name = value; }
+		if ( key == "x" ){ x = atoi(value.c_str()); }
+		if ( key == "y" ){ y = atoi(value.c_str()); }
+		if ( key == "w" ){ w = atoi(value.c_str()); }
+		if ( key == "h" ){ h = atoi(value.c_str()); }
+	}
+
+	void parse(yaml_parser_t* parser){
+		yaml_event_t ekey;
+		yaml_event_t eval;
+
+		do {
+			/* parse key */
+			yaml_parser_parse(parser, &ekey) || yaml_error(parser);
+
+			if ( ekey.type == YAML_MAPPING_END_EVENT ){
+				break;
+			} else if ( ekey.type != YAML_SCALAR_EVENT ){
+				/* For this purpose only strings are allowed as keys */
+				fprintf(stderr, "YAML dict key must be string\n");
+				abort();
+			}
+
+			/* Parse value */
+			yaml_parser_parse(parser, &eval) || yaml_error(parser);
+
+			const std::string key = std::string((const char*)ekey.data.scalar.value, ekey.data.scalar.length);
+			const std::string val = std::string((const char*)eval.data.scalar.value, eval.data.scalar.length);
+
+			set(key, val);
+		} while ( true );
+	}
+
+public:
+	/* as this class is private the members may as well be public so I don't have to write getters */
+	std::string name;
+	int x;
+	int y;
+	int w;
+	int h;
+};
+
+class Waypoint: public Region {
+public:
+	static Waypoint* from_yaml(yaml_parser_t* parser){
+		auto ptr = new Waypoint;
+		ptr->parse(parser);
+		return ptr;
+	}
+
+	virtual void set(const std::string& key, const std::string& value){
+		if ( key == "inner" ){ inner = value; }
+		if ( key == "next" ){ next = value; }
+		Region::set(key, value);
+	}
+
+private:
+	Waypoint(){
+
+	}
+
+public:
+	std::string inner; /* name of the next inner waypoint */
+	std::string next;  /* name of the next waypoint */
+};
+
+class Spawnpoint: public Region {
+public:
+	static Spawnpoint* from_yaml(yaml_parser_t* parser){
+		auto ptr = new Spawnpoint;
+		ptr->parse(parser);
+		return ptr;
+	}
+
+private:
+	Spawnpoint(){
+
+	}
+};
 
 class TilemapPimpl {
 public:
@@ -77,9 +161,9 @@ public:
 			info.uv[6] = s;
 			info.uv[7] = t + dy;
 		}
-		fprintf(stderr, "    %d tiles loaded\n", tiles_size);
+		fprintf(stderr, "    * %d tiles loaded\n", tiles_size);
 
-		fprintf(stderr, "  preprocessing tiles\n");
+		fprintf(stderr, "  preprocessing map grid\n");
 		int n = 0;
 		for ( auto it = tile.begin(); it != tile.end(); ++it ){
 			Tilemap::Tile& tile = *it;
@@ -88,7 +172,7 @@ public:
 			tile.y = n / map_width;
 			n++;
 		}
-		fprintf(stderr, "    %zd tiles loaded\n", tile.size());
+		fprintf(stderr, "    * %zd cells loaded\n", tile.size());
 	}
 
 private:
@@ -125,20 +209,33 @@ private:
 				abort();
 			}
 
-			const char* key = (const char*)event.data.scalar.value;
+			const char* inkey = (const char*)event.data.scalar.value;
 			const size_t len = event.data.scalar.length;
 
+			/* key is not null-terminated */
+			char key[64]; /* variable sized array not supported, using max 64 bytes which should be enough */
+			if ( len > 63 ) abort(); /* 63 because null-terminator must fit into array */
+			sprintf(key, "%.*s", (int)len, inkey); /* using sprintf to always get a null-terminator, strcpy might not always add one */
+
 			/* Fill level with info */
-			if ( strncmp("meta", key, len) == 0 ){
+			if ( strcmp("meta", key) == 0 ){
 				parse_meta(parser);
-			} else if ( strncmp("data", key, len) == 0 ){
+			} else if ( strcmp("data", key) == 0 ){
 				parse_data(parser);
-			} else if ( strncmp("tile", key, min(len, 4)) == 0 || strncmp("default", key, len) == 0 ){
-				/* key is not null-terminated */
-				char tmp[64]; /* variable sized array not supported, using max 64 bytes which should be enough */
-				if ( len > 63 ) abort(); /* 63 because null-terminator must fit into array */
-				sprintf(tmp, "%.*s", (int)len, key); /* using sprintf to always get a null-terminator, strcpy might not always add one */
-				parse_tileinfo(parser, tmp);
+			} else if ( strncmp("tile", key, 4) == 0 || strcmp("default", key) == 0 ){
+				parse_tileinfo(parser, key);
+			} else if ( strcmp("waypoint", key) == 0 ){
+				fprintf(stderr, "  parsing waypoints\n");
+				parse_region<Waypoint>(parser, [this](Waypoint* wp){
+					waypoint[wp->name] = wp;
+				});
+				fprintf(stderr, "    * %zd waypoints loaded\n", waypoint.size());
+			} else if ( strcmp("spawn", key) == 0 ){
+				fprintf(stderr, "  parsing spawnpoints\n");
+				parse_region<Spawnpoint>(parser, [this](Spawnpoint* r){
+					spawnpoint[r->name] = r;
+				});
+				fprintf(stderr, "    * %zd spawnpoints loaded\n", spawnpoint.size());
 			} else {
 				/* warning only */
 				fprintf(stderr, "  - Unhandled key `%.*s'\n", (int)len, key);
@@ -289,6 +386,33 @@ private:
 		}
 	}
 
+	template<class T, typename F>
+	void parse_region(yaml_parser_t* parser, F func){
+		/* Ensure we get a list */
+		yaml_event_t event;
+		yaml_parser_parse(parser, &event) || yaml_error(parser);
+		if ( event.type != YAML_SEQUENCE_START_EVENT ){
+			fprintf(stderr, "Waypoints must be contained in a list.\n");
+			abort();
+		}
+
+		do {
+			yaml_parser_parse(parser, &event) || yaml_error(parser);
+
+			if ( event.type == YAML_SEQUENCE_END_EVENT ){
+				break;
+			}
+
+			if ( event.type != YAML_MAPPING_START_EVENT ){
+				fprintf(stderr, "Region definition must be dictionary.\n");
+				abort();
+			}
+
+			T* ptr = T::from_yaml(parser);
+			func(ptr);
+		} while ( true );
+	}
+
 	void parse_data(yaml_parser_t* parser){
 		fprintf(stderr, "  parsing data\n");
 
@@ -384,6 +508,8 @@ public:
 	unsigned int tiles_size;       /* h * v */
 	std::vector<Tilemap::Tile> tile;
 	std::string texture_name;
+	std::map<std::string, Waypoint*> waypoint;
+	std::map<std::string, Spawnpoint*> spawnpoint;
 
 private:
 	bool meta_set;

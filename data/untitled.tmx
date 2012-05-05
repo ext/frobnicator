@@ -70,17 +70,19 @@
  </tileset>
  <layer name="Tile Layer 1" width="48" height="48">
   <data encoding="base64" compression="zlib">
-   eJztmrlOw0AQQLcGaqCh4QikJASoOAIVVByBIkIQqCANV6DhFB0kIHH9LzOyV0yMJ/bas2YhKZ4smWHmeWSvd9epKKUqFngAbn3uLdXQbAJHQpTb+Nuog+wCM8CswPEQmAdeiH8T2AZqgnV2Av5LwLLAsQhMAnniPw4U/L9J1Qn66+saAxYFKBH/BaGcOb8HxRB/fV3TpK5rTLXx1/3/q/5h/cf7diIhwftfIo9p/3X8G/m/KF79Y1ieJHB54vQ/rO4H8Bm4rneDurb82/UfMR2X0ow/dJyR6n+WzzVXN03/Xfc36f8pcBbBeYp42/2/AYYiuEsRb7v/Lvon7f8x8BRCg8Q/MjEnDvSf1jWFy5Nl/13xl+h/nHlOPkYeU/89YCMiPo4/xvcAvQx9Bnna+a8BVeKPbCnvvZ3Wvx8YYBgU8Md5zD7xfvbB9SrOU7h5Cz1Px5OGSu7P5eHqar8m8U767IVh6u8av+F/4XOpvPGDWzfR83Q+E5y3mPhzebi62q9OvPVzsKK8PQ7Xn1/cm5lTrWMP7ovVmHhT/2FghGFUwB/P4R5ZWbW+v6LeF3HqxllnlWLkSfL+lfA3peuf3v9KJV9/XTvg78r6pZP8ufWU6fqLi7ftb5uu/894fG9ntf9cUPL+pmS9f/sf/dN8t5L6/kXzmPq7Rif4m44ztr9/ceMS5y8B7nEE7/+ccA1b/ri3tKq89bT2rwMH6nuPTNof99/Whagq/vcbNurYIqvfz3wBSPfy6A==
+   eJztmjlPAzEQhV0DNdDQcKckXBV3BRV3ESEIVJCGm4ZTdCQBiavjxzKjXUuDtZNdr8cbS6T4tMnGmnl5WjvjcSpKqYoHnoGHmCdPOTRbwIkQ2y30+8iD7AMzwKzA9RiYB96I/iawC9QE8+wZ+peBFYHrFDABlIj+MaAcfyaVx9Svv9cIsCjAEtG/IBRzVKX7P03yhsakSvc/dP02/uNzO54T8/mXiGPrP47HOfcRX7PwHl+T4uTBjGPjf1LeL+Db+F6fGfJK6c/jP2K7LrmsP6Me/C9yXnN5XfwPRb+E/+fARQqXDuN9+38PDKTw6DDet//t1C/t/ylQT6BBxr8wY84C8J/mtYWLU6T/Rev36X+WOqeUIY6t/wfAJjPeRj+O7wK6GXos4rSqQ9aBKtGP7Kjod9tVfy/Qx9AvoB/rmEOi+zUG96tYp3B1C71P15OGyq+fi8Pl1fqaRHfeuZeErf7QaIf+65gbFa0f3L6J3qf1jFm32Ojn4nB5tb4rolvPg1UV9ThCn7/Ym5lTf9ce7IvVmPG2+geBIYZhAf14D3tkXP/NRX+WfdZShjid+idc/dL+36r8+6+7APzv7L+K9x/rlp+YOnlN3yftv/Tn5uukOqrT/wlTf17/8Xe7qP5zWcn779p3lYrj2n9ut34b/13OraTOv2gcW/9D4z+cf9muM77Pv8x1Kc1/1yvOOexxmM+/PlMJ/fwde0trKtpPa/24Xz1SUY9MKo/Zf9sQoqr4/2/4yOOLJP0++AVvRvkM
   </data>
  </layer>
- <objectgroup color="#ffff7f" name="Route" width="48" height="48">
+ <objectgroup color="#ffff7f" name="Waypoints" width="48" height="48">
+  <properties>
+   <property name="section" value="waypoint"/>
+  </properties>
   <object name="outer 1" type="waypoint" x="1150" y="250" width="100" height="100">
    <properties>
     <property name="inner" value="inner 1"/>
     <property name="next" value="outer 2"/>
    </properties>
   </object>
-  <object name="spawn" type="spawn" x="1150" y="0" width="100" height="50"/>
   <object name="outer 2" type="waypoint" x="250" y="250" width="100" height="100">
    <properties>
     <property name="next" value="outer 3"/>
@@ -92,11 +94,23 @@
     <property name="next" value="outer 4"/>
    </properties>
   </object>
-  <object name="4" type="waypoint" x="250" y="2050" width="100" height="100"/>
-  <object name="5" type="waypoint" x="1150" y="2050" width="100" height="100"/>
-  <object name="6" type="waypoint" x="2050" y="2050" width="100" height="100"/>
-  <object name="7" type="waypoint" x="2050" y="1150" width="100" height="100"/>
-  <object name="8" type="waypoint" x="2050" y="250" width="100" height="100"/>
+  <object name="outer 4" type="waypoint" x="250" y="2050" width="100" height="100">
+   <properties>
+    <property name="next" value="outer 5"/>
+   </properties>
+  </object>
+  <object name="outer 6" type="waypoint" x="2050" y="2050" width="100" height="100">
+   <properties>
+    <property name="next" value="outer 7"/>
+   </properties>
+  </object>
+  <object name="outer 7" type="waypoint" x="2050" y="1150" width="100" height="100">
+   <properties>
+    <property name="inner" value="inner 7"/>
+    <property name="next" value="outer 8"/>
+   </properties>
+  </object>
+  <object name="outer 8" type="waypoint" x="2050" y="250" width="100" height="100"/>
   <object name="inner 1" type="waypoint" x="1150" y="550" width="100" height="100">
    <properties>
     <property name="inner" value="middle"/>
@@ -111,9 +125,52 @@
   </object>
   <object name="outer 3" type="waypoint" x="550" y="1150" width="100" height="100">
    <properties>
-    <property name="inner" value=""/>
-    <property name="next" value="outer 4"/>
+    <property name="inner" value="middle"/>
+    <property name="next" value="inner 4"/>
+   </properties>
+  </object>
+  <object name="inner 4" type="waypoint" x="550" y="1750" width="100" height="100">
+   <properties>
+    <property name="next" value="inner 5"/>
+   </properties>
+  </object>
+  <object name="outer 5" type="waypoint" x="1150" y="2050" width="100" height="100">
+   <properties>
+    <property name="inner" value="inner 5"/>
+    <property name="next" value="outer 6"/>
+   </properties>
+  </object>
+  <object name="inner 5" type="waypoint" x="1150" y="1750" width="100" height="100">
+   <properties>
+    <property name="inner" value="middle"/>
+    <property name="next" value="inner 6"/>
+   </properties>
+  </object>
+  <object name="inner 6" type="waypoint" x="1750" y="1750" width="100" height="100">
+   <properties>
+    <property name="next" value="inner 7"/>
+   </properties>
+  </object>
+  <object name="inner 7" type="waypoint" x="1750" y="1150" width="100" height="100">
+   <properties>
+    <property name="inner" value="middle"/>
+    <property name="next" value="inner 8"/>
+   </properties>
+  </object>
+  <object name="inner 8" type="waypoint" x="1750" y="550" width="100" height="100">
+   <properties>
+    <property name="next" value="inner 1"/>
    </properties>
   </object>
  </objectgroup>
+ <objectgroup color="#ffff7f" name="Spawnpoints" width="48" height="48">
+  <properties>
+   <property name="section" value="spawn"/>
+  </properties>
+  <object name="spawn 1" type="spawn" x="1150" y="0" width="100" height="50"/>
+  <object name="spawn 2" type="spawn" x="0" y="1150" width="50" height="100"/>
+  <object name="spawn 3" type="spawn" x="1150" y="2350" width="100" height="50"/>
+  <object name="spawn 4" type="spawn" x="2350" y="1150" width="50" height="100"/>
+ </objectgroup>
+ <objectgroup name="Object Layer 3" width="48" height="48"/>
 </map>
