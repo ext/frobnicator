@@ -296,9 +296,20 @@ public:
 
 	virtual void bindkey(const std::string& key, std::function<void()> func) {
 		/* fulhack for the keys I actually use.... */
-		if ( key == "F1" ){
-			actions[SDLK_F1] = func;
-		} else {
+		     if ( key == "F1"  ){	actions[SDLK_F1 ] = func; }
+		else if ( key == "F2"  ){	actions[SDLK_F2 ] = func; }
+		else if ( key == "F3"  ){	actions[SDLK_F3 ] = func; }
+		else if ( key == "F4"  ){	actions[SDLK_F4 ] = func; }
+		else if ( key == "F5"  ){	actions[SDLK_F5 ] = func; }
+		else if ( key == "F6"  ){	actions[SDLK_F6 ] = func; }
+		else if ( key == "F7"  ){	actions[SDLK_F7 ] = func; }
+		else if ( key == "F8"  ){	actions[SDLK_F8 ] = func; }
+		else if ( key == "F9"  ){	actions[SDLK_F9 ] = func; }
+		else if ( key == "F10" ){	actions[SDLK_F10] = func; }
+		else if ( key == "F11" ){	actions[SDLK_F11] = func; }
+		else if ( key == "F12" ){	actions[SDLK_F12] = func; }
+		else if ( key == "F13" ){	actions[SDLK_F13] = func; }
+		else {
 			fprintf(stderr, "key '%s` not recognized.\n", key.c_str());
 			abort();
 		}
