@@ -297,7 +297,6 @@ namespace Game {
 				return;
 			}
 
-			fprintf(stderr, "building at %f,%f\n", world.x, world.y);
 			build(grid, ARROW_TOWER);
 
 			tilemap->reserve(grid.x, grid.y);
