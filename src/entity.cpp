@@ -91,44 +91,30 @@ namespace Blueprint {
 				abort();
 			}
 
-			const char* key = (const char*)event.data.scalar.value;
-			const size_t len = event.data.scalar.length;
+			std::string key((const char*)event.data.scalar.value, event.data.scalar.length);
 
 			yaml_parser_parse(parser, &evalue) || yaml_error(parser);
 			const char* value = (const char*)evalue.data.scalar.value;
 			const size_t value_len = evalue.data.scalar.length;
 
 			/* Fill level with info */
-			if ( strncmp("level", key, len) == 0 ){
+			if ( key == "level" ){
 				/* ignore */
-			} else if ( strncmp("sprite", key, len) == 0 ){
-				data->sprite = Game::load_sprite(std::string(value, value_len));
-			} else if ( strncmp("name", key, len) == 0 ){
-				free(data->name);
-				data->name = strndup(value, value_len);
-			} else if ( strncmp("cost", key, len) == 0 ){
-				data->cost = atoi(value);
-			} else if ( strncmp("splash", key, len) == 0 ){
-				data->splash = (float)atof(value);
-			} else if ( strncmp("damage", key, len) == 0 ){
-				data->damage = (float)atof(value);
-			} else if ( strncmp("rof", key, len) == 0 ){
-				data->rof = (float)atof(value);
-			} else if ( strncmp("range", key, len) == 0 ){
-				data->range = (float)atof(value);
-			} else if ( strncmp("slow", key, len) == 0 ){
-				data->slow = (float)atof(value);
-			} else if ( strncmp("poison", key, len) == 0 ){
-				data->poison = (float)atof(value);
-			} else if ( strncmp("speed", key, len) == 0 ){
-				data->speed = (float)atof(value);
-			} else if ( strncmp("armor", key, len) == 0 ){
-				data->armor = (float)atof(value);
-			} else if ( strncmp("amount", key, len) == 0 ){
-				data->amount = (float)atoi(value);
+			} else if ( key == "sprite" ){ data->sprite = Game::load_sprite(std::string(value, value_len));
+			} else if ( key == "name"   ){ free(data->name); data->name = strndup(value, value_len);
+			} else if ( key == "cost"   ){ data->cost = atoi(value);
+			} else if ( key == "splash" ){ data->splash = (float)atof(value);
+			} else if ( key == "damage" ){ data->damage = (float)atof(value);
+			} else if ( key == "rof"    ){ data->rof = (float)atof(value);
+			} else if ( key == "range"  ){ data->range = (float)atof(value);
+			} else if ( key == "slow"   ){ data->slow = (float)atof(value);
+			} else if ( key == "poison" ){ data->poison = (float)atof(value);
+			} else if ( key == "speed"  ){ data->speed = (float)atof(value);
+			} else if ( key == "armor"  ){ data->armor = (float)atof(value);
+			} else if ( key == "amount" ){ data->amount = (float)atoi(value);
 			} else {
 				/* warning only */
-				fprintf(stderr, "Unhandled key `%.*s'\n", (int)len, key);
+				fprintf(stderr, "Unhandled key `%s'\n", key.c_str());
 			}
 
 		} while (1);
