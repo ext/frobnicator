@@ -62,6 +62,40 @@ static void poll(bool&render){
 	backend->poll(running);
 }
 
+static void render_world(const Vector2f& cam){
+	backend->render_tilemap(level->tilemap(), cam);
+	backend->render_entities(creep, cam);
+	backend->render_entities(building, cam);
+}
+
+static void render_cursor(const Vector2f& cam){
+	backend->render_marker(cursor, cam, cursor_ok);
+}
+
+static void render_waypoints(const Vector2f& cam){
+	if ( !show_waypoints ) return;
+
+	/* render waypoints */
+	for ( auto it = level->waypoints().begin(); it != level->waypoints().end(); ++it ){
+		static float color[3] = {1,1,0};
+		backend->render_region(it->second, cam, color);
+	}
+}
+
+static void render_aabb(const Vector2f& cam){
+	if ( !show_aabb ) return;
+
+	for ( auto it = building.begin(); it != building.end(); ++it ){
+		static float color[3] = {0,0,1};
+		backend->render_region(*it, cam, color);
+	}
+
+	for ( auto it = creep.begin(); it != creep.end(); ++it ){
+		static float color[3] = {0,1,1};
+		backend->render_region(*it, cam, color);
+	}
+}
+
 static void render_game(){
 	backend->render_begin();
 	{
@@ -72,29 +106,10 @@ static void render_game(){
 			panned_cam = Game::clamp_to_world(panned_cam);
 		}
 
-		backend->render_tilemap(level->tilemap(), panned_cam);
-
-		backend->render_entities(creep, camera);
-		backend->render_entities(building, camera);
-
-		/* render marker */
-		backend->render_marker(cursor, panned_cam, cursor_ok);
-
-		if ( show_waypoints ){
-			/* render waypoints */
-			for ( auto it = level->waypoints().begin(); it != level->waypoints().end(); ++it ){
-				static float color[3] = {1,1,0};
-				backend->render_region(it->second, panned_cam, color);
-			}
-		}
-
-		if ( show_aabb ){
-			/* render AABB */
-			for ( auto it = building.begin(); it != building.end(); ++it ){
-				static float color[3] = {0,0,1};
-				backend->render_region(*it, panned_cam, color);
-			}
-		}
+		render_world(panned_cam);
+		render_cursor(panned_cam);
+		render_waypoints(panned_cam);
+		render_aabb(panned_cam);
 	}
 	backend->render_end();
 }
