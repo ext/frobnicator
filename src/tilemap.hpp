@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <string>
 #include <vector>
+#include <map>
 
 class Tilemap {
 public:
@@ -59,6 +60,8 @@ public:
 	std::vector<Tile>::iterator end();
 	std::vector<Tile>::const_iterator begin() const;
 	std::vector<Tile>::const_iterator end() const;
+
+	const std::map<std::string, Waypoint*>& waypoints() const;
 
 protected:
 	Tilemap(const std::string& filename);

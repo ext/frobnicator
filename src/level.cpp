@@ -134,3 +134,7 @@ const Tilemap& Level::tilemap() const {
 	assert(pimpl->tilemap);
 	return *pimpl->tilemap;
 }
+
+const std::map<std::string, Waypoint*>& Level::waypoints() const {
+	return tilemap().waypoints();
+}

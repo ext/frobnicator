@@ -7,6 +7,7 @@
 #include "level.hpp"
 #include "tilemap.hpp"
 #include "entity.hpp"
+#include "waypoint.hpp"
 #include <cstdlib>
 #include <cassert>
 #include <vector>
@@ -72,6 +73,12 @@ static void render_game(){
 
 		/* render marker */
 		backend->render_marker(cursor, panned_cam, cursor_ok);
+
+		/* render waypoints */
+		for ( auto it = level->waypoints().begin(); it != level->waypoints().end(); ++it ){
+			static float color[3] = {1,1,0};
+			backend->render_region(it->second, panned_cam, color);
+		}
 	}
 	backend->render_end();
 }

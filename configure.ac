@@ -19,6 +19,7 @@ AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([frobnicator-dbg], [chmod +x frobnicator-dbg])
 
 AH_BOTTOM([#include "forward.hpp"
+#define FROB_PURE __attribute__((pure))
 ])
 
 pkgdatadir="${datadir}/${PACKAGE}"

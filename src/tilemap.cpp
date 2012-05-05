@@ -511,6 +511,10 @@ std::vector<Tilemap::Tile>::const_iterator Tilemap::end() const {
 	return pimpl->tile.end();
 }
 
+const std::map<std::string, Waypoint*>& Tilemap::waypoints() const {
+	return pimpl->waypoint;
+}
+
 void Tilemap::set_dimensions(size_t w, size_t h){
 	pimpl->tile_width  = w / pimpl->tiles_horizontal;
 	pimpl->tile_height = h / pimpl->tiles_vertical;

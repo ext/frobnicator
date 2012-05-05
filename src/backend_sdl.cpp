@@ -14,6 +14,7 @@
 #include "game.hpp"
 #include "common.hpp"
 #include "entity.hpp"
+#include "region.hpp"
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <GL/gl.h>
@@ -36,6 +37,7 @@ static const float vertices[][5] = { /* x,y,z,u,v */
 	{0, 1, 0, 0, 1},
 };
 static const unsigned int indices[4] = {0,1,2,3};
+static const unsigned int line_indices[5] = {0, 1, 2, 3, 0};
 
 static int video_flags = SDL_OPENGL|SDL_DOUBLEBUF|SDL_RESIZABLE;
 
@@ -368,6 +370,40 @@ public:
 				glPopMatrix();
 			}
 		}
+
+		glPopMatrix();
+
+		int err;
+		if ( (err=glGetError()) != GL_NO_ERROR ){
+			fprintf(stderr, "OpenGL error: %s\n", gluErrorString(err));
+			exit(1);
+		}
+	}
+
+	virtual void render_region(const Region* region, const Vector2f& camera, float color[3]) const {
+		glPushMatrix();
+
+		/* camera */
+		glTranslatef(-camera.x, -camera.y, 0.0f);
+
+		/* position */
+		glTranslatef(region->x(), region->y(), 0.0f);
+
+		/* tile scale */
+		glScalef(region->w(), region->h(), 1.0f);
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glVertexPointer(3, GL_FLOAT, sizeof(float)*5, vertices);
+
+		glColor4f(1,1,0,0.5f);
+		glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, indices);
+
+		/* outline */
+		glPushAttrib (GL_LINE_BIT);
+		glLineWidth(2);
+		glColor4f(1,1,0,1.0f);
+		glDrawElements(GL_LINE_STRIP, 5, GL_UNSIGNED_INT, line_indices);
+		glPopAttrib();
 
 		glPopMatrix();
 
