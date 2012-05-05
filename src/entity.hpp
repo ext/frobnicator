@@ -27,7 +27,16 @@ namespace Blueprint {
 
 class Entity {
 public:
+	/**
+	 * Position in worldspace.
+	 */
 	const Vector2f& world_pos() const;
+
+	/**
+	 * Position on grid (truncated to first tile)
+	 */
+	const Vector2i grid_pos() const;
+
 	const Sprite* sprite() const;
 
 protected:

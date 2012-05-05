@@ -51,6 +51,10 @@ const Vector2f& Entity::world_pos() const {
 	return pos;
 }
 
+const Vector2i Entity::grid_pos() const {
+	return Vector2i(pos.x / Game::tile_width(), pos.y / Game::tile_height());
+}
+
 const Sprite* Entity::sprite() const {
 	return blueprint->data[level].sprite;
 }
