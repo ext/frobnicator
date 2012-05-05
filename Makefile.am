@@ -12,4 +12,5 @@ frobnicator_SOURCES = \
 	src/entity.cpp src/entity.hpp \
 	src/level.cpp src/level.hpp \
 	src/region.cpp src/region.hpp \
-	src/tilemap.cpp src/tilemap.hpp
+	src/tilemap.cpp src/tilemap.hpp \
+	src/waypoint.cpp src/waypoint.hpp

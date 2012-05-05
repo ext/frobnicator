@@ -26,8 +26,6 @@ private:
 	int _y;
 	int _w;
 	int _h;
-
-	friend class RegionParser;
 };
 
 #endif /* DVB021_REGION_H */

@@ -5,6 +5,7 @@
 #include "tilemap.hpp"
 #include "common.hpp"
 #include "region.hpp"
+#include "waypoint.hpp"
 
 #include <yaml.h>
 #include <vector>
@@ -16,30 +17,6 @@ static const size_t max_tiles = 500;
 #define strncasecmp _strnicmp
 #define strncpy(dst, src, n) strncpy_s(dst, n, src, _TRUNCATE)
 #endif
-
-class Waypoint: public Region {
-public:
-	static Waypoint* from_yaml(yaml_parser_t* parser){
-		auto ptr = new Waypoint;
-		ptr->parse(parser);
-		return ptr;
-	}
-
-	virtual void set(const std::string& key, const std::string& value){
-		if ( key == "inner" ){ inner = value; }
-		if ( key == "next" ){ next = value; }
-		Region::set(key, value);
-	}
-
-private:
-	Waypoint(){
-
-	}
-
-public:
-	std::string inner; /* name of the next inner waypoint */
-	std::string next;  /* name of the next waypoint */
-};
 
 class Spawnpoint: public Region {
 public:
