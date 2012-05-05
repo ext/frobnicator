@@ -15,20 +15,6 @@
 #include <inttypes.h>
 #endif
 
-struct CreepSpawner {
-	CreepSpawner(blueprint_t bp, unsigned int level)
-		: bp(bp)
-		, level(level){
-	}
-
-  Entity* operator()(){
-	  return new Creep(Vector2f(100,100), bp, level);
-  }
-
-	blueprint_t bp;
-	unsigned int level;
-};
-
 class LevelPimpl {
 public:
 	LevelPimpl(const std::string& filename)
@@ -63,9 +49,13 @@ public:
 	}
 
 	std::vector<Entity*> spawn(unsigned int level){
-		fprintf(stderr, "Spawning wave %d\n", level);
-		auto tmp = std::vector<Entity*>(Blueprint::amount(waves, level));
-		std::generate(tmp.begin(), tmp.end(), CreepSpawner(waves, level));
+		size_t amount = Blueprint::amount(waves, level);
+		fprintf(stderr, "Spawning wave %d (%zd units)\n", level, amount);
+
+		auto tmp = std::vector<Entity*>(amount);
+		std::generate(tmp.begin(), tmp.end(), [waves, level](){
+			return new Creep(Vector2f(100,100), waves, level);
+		});
 		return tmp;
 	}
 
