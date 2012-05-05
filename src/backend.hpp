@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <functional>
 #include "common.hpp"
 
 class Backend {
@@ -24,6 +25,11 @@ public:
 	 * Inverse of init.
 	 */
 	virtual void cleanup() = 0;
+
+	/**
+	 * Bind a bind to an action.
+	 */
+	virtual void bindkey(const std::string& key, std::function<void()> func) = 0;
 
 	virtual void render_begin() = 0;
 	virtual void render_tilemap(const Tilemap& tilemap, const Vector2f& camera) const = 0;

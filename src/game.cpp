@@ -48,6 +48,7 @@ static blueprint_t blueprint[BUILDING_LAST];
 static bool is_panning = false;
 static Vector2f panning_ref;    /* reference point when panning using mouse */
 static Vector2f panning_cur;    /* where the mouse currently is (to calculate how much to pan) */
+static bool show_waypoints = false;
 
 namespace Game {
 	Vector2f clamp_to_world(const Vector2f& v);
@@ -75,9 +76,11 @@ static void render_game(){
 		backend->render_marker(cursor, panned_cam, cursor_ok);
 
 		/* render waypoints */
-		for ( auto it = level->waypoints().begin(); it != level->waypoints().end(); ++it ){
-			static float color[3] = {1,1,0};
-			backend->render_region(it->second, panned_cam, color);
+		if ( show_waypoints ){
+			for ( auto it = level->waypoints().begin(); it != level->waypoints().end(); ++it ){
+				static float color[3] = {1,1,0};
+				backend->render_region(it->second, panned_cam, color);
+			}
 		}
 	}
 	backend->render_end();
@@ -97,6 +100,10 @@ namespace Game {
 		}
 
 		backend->init(width, height);
+		backend->bindkey("F1", [](){
+				show_waypoints = !show_waypoints;
+				fprintf(stderr, "%s waypoints\n", show_waypoints ? "Showing" : "Hiding");
+		});
 
 		/* load all tower blueprints */
 		blueprint[ARROW_TOWER] = Blueprint::from_filename("arrowtower.yaml");

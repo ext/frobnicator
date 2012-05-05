@@ -204,6 +204,7 @@ public:
 
 		for ( int i = 0; i < SDLK_LAST; i++ ){
 			pressed[i] = false;
+			actions[i] = NULL;
 		}
 
 		glClearColor(1,0,1,1);
@@ -236,6 +237,10 @@ public:
 			case SDL_KEYDOWN:
 				if ( event.key.keysym.sym == SDLK_ESCAPE || (event.key.keysym.sym == SDLK_q && event.key.keysym.mod & KMOD_CTRL) ){
 					running = false;
+				}
+
+				if ( actions[event.key.keysym.sym] ){
+					actions[event.key.keysym.sym]();
 				}
 
 				/* fall-through */
@@ -287,6 +292,16 @@ public:
 
 	virtual void cleanup(){
 		SDL_Quit();
+	}
+
+	virtual void bindkey(const std::string& key, std::function<void()> func) {
+		/* fulhack for the keys I actually use.... */
+		if ( key == "F1" ){
+			actions[SDLK_F1] = func;
+		} else {
+			fprintf(stderr, "key '%s` not recognized.\n", key.c_str());
+			abort();
+		}
 	}
 
 	static Backend* factory(){
@@ -450,6 +465,7 @@ public:
 
 private:
 	bool pressed[SDLK_LAST];
+	std::function<void()> actions[SDLK_LAST];
 
 	std::map<std::string, SDLSprite*> sprite;
 };
