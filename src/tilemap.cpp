@@ -4,6 +4,8 @@
 
 #include "tilemap.hpp"
 #include "common.hpp"
+#include "region.hpp"
+
 #include <yaml.h>
 #include <vector>
 #include <map>
@@ -14,55 +16,6 @@ static const size_t max_tiles = 500;
 #define strncasecmp _strnicmp
 #define strncpy(dst, src, n) strncpy_s(dst, n, src, _TRUNCATE)
 #endif
-
-class Region {
-protected:
-	Region(){
-
-	}
-
-	virtual void set(const std::string& key, const std::string& value){
-		if ( key == "name" ){ name = value; }
-		if ( key == "x" ){ x = atoi(value.c_str()); }
-		if ( key == "y" ){ y = atoi(value.c_str()); }
-		if ( key == "w" ){ w = atoi(value.c_str()); }
-		if ( key == "h" ){ h = atoi(value.c_str()); }
-	}
-
-	void parse(yaml_parser_t* parser){
-		yaml_event_t ekey;
-		yaml_event_t eval;
-
-		do {
-			/* parse key */
-			yaml_parser_parse(parser, &ekey) || yaml_error(parser);
-
-			if ( ekey.type == YAML_MAPPING_END_EVENT ){
-				break;
-			} else if ( ekey.type != YAML_SCALAR_EVENT ){
-				/* For this purpose only strings are allowed as keys */
-				fprintf(stderr, "YAML dict key must be string\n");
-				abort();
-			}
-
-			/* Parse value */
-			yaml_parser_parse(parser, &eval) || yaml_error(parser);
-
-			const std::string key = std::string((const char*)ekey.data.scalar.value, ekey.data.scalar.length);
-			const std::string val = std::string((const char*)eval.data.scalar.value, eval.data.scalar.length);
-
-			set(key, val);
-		} while ( true );
-	}
-
-public:
-	/* as this class is private the members may as well be public so I don't have to write getters */
-	std::string name;
-	int x;
-	int y;
-	int w;
-	int h;
-};
 
 class Waypoint: public Region {
 public:
@@ -227,13 +180,13 @@ private:
 			} else if ( strcmp("waypoint", key) == 0 ){
 				fprintf(stderr, "  parsing waypoints\n");
 				parse_region<Waypoint>(parser, [this](Waypoint* wp){
-					waypoint[wp->name] = wp;
+					waypoint[wp->name()] = wp;
 				});
 				fprintf(stderr, "    * %zd waypoints loaded\n", waypoint.size());
 			} else if ( strcmp("spawn", key) == 0 ){
 				fprintf(stderr, "  parsing spawnpoints\n");
 				parse_region<Spawnpoint>(parser, [this](Spawnpoint* r){
-					spawnpoint[r->name] = r;
+					spawnpoint[r->name()] = r;
 				});
 				fprintf(stderr, "    * %zd spawnpoints loaded\n", spawnpoint.size());
 			} else {
