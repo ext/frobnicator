@@ -4,8 +4,6 @@
 #include <string>
 #include <vector>
 
-typedef struct yaml_parser_s yaml_parser_t;
-
 /**
  * A blueprint is essentially a flyweight for entities.
  * Everything that is common between each instance is held in the blueprint.

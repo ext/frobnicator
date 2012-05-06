@@ -3,8 +3,6 @@
 
 #include <string>
 
-typedef struct yaml_parser_s yaml_parser_t;
-
 class Region {
 protected:
 	Region();
