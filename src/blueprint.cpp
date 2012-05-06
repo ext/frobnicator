@@ -78,9 +78,9 @@ const Blueprint* Blueprint::from_filename(const std::string& filename){
 		bp->data.push_back(current);
 	} while(!done);
 
+	int n = 1;
 	fprintf(stderr, "  * %zd levels loaded\n", bp->data.size());
 	for ( auto it = bp->data.begin(); it != bp->data.end(); ++it ){
-		static int n = 1;
 		fprintf(stderr, "    %2d: %s\n", n++, (*it).name.c_str());
 	}
 
