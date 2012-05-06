@@ -116,7 +116,7 @@ Vector<T> Vector<T>::from_yaml(yaml_parser_t* parser){
 	int n = 0;
 	do {
 		yaml_parser_parse(parser, &event) || yaml_error(parser);
-		if ( event.type != YAML_SEQUENCE_END_EVENT ){
+		if ( event.type == YAML_SEQUENCE_END_EVENT ){
 			break;
 		} else if ( event.type != YAML_SCALAR_EVENT ){
 			fprintf(stderr, "Vector::YAML expected scalar at %lu:%lu\n",
