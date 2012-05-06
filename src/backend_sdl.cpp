@@ -51,7 +51,10 @@ static GLuint load_texture(const std::string filename, size_t* width, size_t* he
 	SDL_Surface* surface = IMG_Load(real_filename);
 	if ( !surface ){
 		fprintf(stderr, "failed to load texture `%s'\n", filename.c_str());
-		abort();
+
+		static const char* default_texture = "default.png";
+		if ( filename == default_texture ) abort();
+		return load_texture(default_texture, width, height);
 	}
 
 	/* To properly support all formats the surface must be copied to a new
