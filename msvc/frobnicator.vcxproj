@@ -85,7 +85,9 @@
     <ClCompile Include="..\src\game.cpp" />
     <ClCompile Include="..\src\level.cpp" />
     <ClCompile Include="..\src\main.cpp" />
+    <ClCompile Include="..\src\region.cpp" />
     <ClCompile Include="..\src\tilemap.cpp" />
+    <ClCompile Include="..\src\waypoint.cpp" />
     <ClCompile Include="..\vendor\getimeofday_qpc.c" />
     <ClCompile Include="..\vendor\strndup.c" />
     <ClCompile Include="..\vendor\usleep.c" />
@@ -97,7 +99,9 @@
     <ClInclude Include="..\src\forward.hpp" />
     <ClInclude Include="..\src\game.hpp" />
     <ClInclude Include="..\src\level.hpp" />
+    <ClInclude Include="..\src\region.hpp" />
     <ClInclude Include="..\src\tilemap.hpp" />
+    <ClInclude Include="..\src\waypoint.hpp" />
     <ClInclude Include="config.h" />
     <ClInclude Include="stdint.h" />
   </ItemGroup>

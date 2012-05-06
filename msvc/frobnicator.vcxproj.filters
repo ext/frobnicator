@@ -54,6 +54,12 @@
     <ClCompile Include="..\vendor\strndup.c">
       <Filter>MSVC</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\region.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\waypoint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\backend.hpp">
@@ -82,6 +88,12 @@
     </ClInclude>
     <ClInclude Include="config.h">
       <Filter>MSVC</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\waypoint.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\region.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
