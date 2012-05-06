@@ -6,6 +6,7 @@
 #include "common.hpp"
 #include "entity.hpp"
 #include "game.hpp"
+#include "sprite.hpp"
 #include <yaml.h>
 
 Blueprint::Blueprint(){

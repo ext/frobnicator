@@ -15,6 +15,7 @@
 #include "common.hpp"
 #include "entity.hpp"
 #include "region.hpp"
+#include "sprite.hpp"
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
 #include <GL/gl.h>

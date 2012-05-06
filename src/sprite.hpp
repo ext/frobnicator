@@ -19,8 +19,8 @@ public:
 	void set_scale(const Vector2f& scale){ _scale = scale; }
 
 private:
-	Vector2f& _offset;
-	Vector2f& _scale;
+	Vector2f _offset;
+	Vector2f _scale;
 };
 
 #endif /* FROBNICATOR_SPRITE_H */

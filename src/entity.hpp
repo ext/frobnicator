@@ -4,13 +4,6 @@
 #include "common.hpp"
 #include <string>
 
-class Sprite {
-public:
-	static Sprite* from_yaml(yaml_parser_t* parser);
-
-	virtual void load_texture(const std::string& filename) = 0;
-};
-
 class Entity {
 public:
 	/**

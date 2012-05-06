@@ -7,6 +7,14 @@
 #include "game.hpp"
 #include <yaml.h>
 
+Sprite::Sprite(){
+
+}
+
+Sprite::~Sprite(){
+
+}
+
 Sprite* Sprite::from_yaml(yaml_parser_t* parser){
 	Sprite* sprite = Game::create_sprite();
 
