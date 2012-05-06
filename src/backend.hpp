@@ -44,7 +44,7 @@ public:
 	 */
 	virtual Tilemap* load_tilemap(const std::string& filename) = 0;
 
-	virtual Sprite* load_sprite(const std::string& filename) = 0;
+	virtual Sprite* create_sprite() = 0;
 
 	typedef Backend* (*factory_callback)();
 	typedef std::map<std::string, factory_callback> map;

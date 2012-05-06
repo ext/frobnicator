@@ -58,6 +58,11 @@ public:
 		return x*x + y*y;
 	}
 
+	/**
+	 * Get a vector from yaml markup.
+	 */
+	static Vector from_yaml(yaml_parser_t* parser);
+
 	union {
 		struct {
 			T x;

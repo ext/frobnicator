@@ -4,6 +4,7 @@
 
 #include "blueprint.hpp"
 #include "common.hpp"
+#include "entity.hpp"
 #include "game.hpp"
 #include <yaml.h>
 
@@ -108,6 +109,12 @@ void Blueprint::parse_leveldata(struct level* level, yaml_parser_t* parser){
 
 		std::string key((const char*)event.data.scalar.value, event.data.scalar.length);
 
+		/* sprite requires special handling */
+		if ( key == "sprite" ){
+			level->sprite = Sprite::from_yaml(parser);
+			continue;
+		}
+
 		yaml_parser_parse(parser, &evalue) || yaml_error(parser);
 		const char* value = (const char*)evalue.data.scalar.value;
 		const size_t len = evalue.data.scalar.length;
@@ -115,7 +122,6 @@ void Blueprint::parse_leveldata(struct level* level, yaml_parser_t* parser){
 		/* Fill level with info */
 		if ( key == "level" ){
 			/* ignore */
-		} else if ( key == "sprite" ){ level->sprite = Game::load_sprite(std::string(value, len));
 		} else if ( key == "name"   ){ level->name = std::string(value, len);
 		} else if ( key == "cost"   ){ level->cost = atoi(value);
 		} else if ( key == "splash" ){ level->splash = (float)atof(value);

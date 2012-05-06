@@ -26,9 +26,9 @@ namespace Game {
 	Tilemap* load_tilemap(const std::string& filename);
 
 	/**
-	 * Generate a new tilemap.
+	 * Allocate a new sprite.
 	 */
-	Sprite* load_sprite(const std::string& filename);
+	Sprite* create_sprite();
 
 	/**
 	 * Do stuff.

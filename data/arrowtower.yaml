@@ -6,7 +6,10 @@
 
 - level: 0
   name: "Arrow Tower"
-  sprite: "arrowtower.png"
+  sprite:
+    texture: "arrowtower.png"
+    offset: [0, -2]
+    scale: [2, 4]
   splash: 0
   range: 200
 

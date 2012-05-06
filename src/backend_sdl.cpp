@@ -183,10 +183,28 @@ public:
 
 };
 
+class SDLSprite;
+static std::map<std::string, SDLSprite*> texture_cache;
+
 class SDLSprite: public Sprite {
 public:
-	SDLSprite(const std::string& filename){
-		texture = load_texture(filename, &width, &height);
+	SDLSprite(){
+		printf("SDLSprite: %p\n", this);
+	}
+
+	virtual void load_texture(const std::string& filename){
+		/* search cache */
+		auto it = texture_cache.find(filename);
+		if ( it != texture_cache.end() ){
+			SDLSprite* c = it->second;
+			texture = c->texture;
+			width   = c->width;
+			height  = c->height;
+		}
+
+		/* load new texture */
+		texture = ::load_texture(filename, &width, &height);
+		texture_cache[filename] = this;
 	}
 
 	size_t width;
@@ -331,17 +349,8 @@ public:
 		return new SDLTilemap(filename);
 	}
 
-	virtual Sprite* load_sprite(const std::string& filename){
-		/* search cache */
-		auto it = sprite.find(filename);
-		if ( it != sprite.end() ){
-			return it->second;
-		}
-
-		/* create new sprite */
-		SDLSprite* tmp = new SDLSprite(filename);
-		sprite[filename] = tmp;
-		return tmp;
+	virtual Sprite* create_sprite(){
+		return new SDLSprite;
 	}
 
 	virtual void render_begin(){
@@ -522,8 +531,6 @@ public:
 private:
 	bool pressed[SDLK_LAST];
 	std::function<void()> actions[SDLK_LAST];
-
-	std::map<std::string, SDLSprite*> sprite;
 };
 
 REGISTER_BACKEND(SDLBackend);

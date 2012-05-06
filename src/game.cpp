@@ -217,9 +217,9 @@ namespace Game {
 		return tilemap;
 	}
 
-	Sprite* load_sprite(const std::string& filename){
+	Sprite* create_sprite(){
 		assert(backend);
-		return backend->load_sprite(filename);
+		return backend->create_sprite();
 	}
 
 	/**

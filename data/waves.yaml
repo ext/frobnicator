@@ -12,10 +12,9 @@
 
 - level: 1
   name: "Internet trolls"
-  sprite: derp.png
+  sprite: derp2.png
   hp: 12
 
 - level: 2
   name: "Herpaderps"
-  sprite: derp.png
   hp: 14
