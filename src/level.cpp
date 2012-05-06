@@ -53,7 +53,7 @@ public:
 		fprintf(stderr, "Spawning wave %d (%zd units)\n", level, amount);
 
 		auto tmp = std::vector<Entity*>(amount);
-		std::generate(tmp.begin(), tmp.end(), [waves, level](){
+		std::generate(tmp.begin(), tmp.end(), [this, level](){
 			return Creep::spawn_at(Vector2f(100,100), waves, level);
 		});
 		return tmp;
