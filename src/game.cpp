@@ -251,7 +251,7 @@ namespace Game {
 	}
 
 	void motion(float x, float y){
-		const Vector2f world = [x,y](){
+		const auto world = [x,y]() -> Vector2f {
 			if ( is_panning ){
 				return transform(panning_ref);
 			} else {
