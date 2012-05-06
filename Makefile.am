@@ -8,6 +8,7 @@ frobnicator_SOURCES = \
 	src/main.cpp src/common.cpp \
 	src/backend.cpp src/backend.hpp \
 	src/backend_sdl.cpp \
+	src/blueprint.cpp src/blueprint.hpp \
 	src/game.cpp src/game.hpp \
 	src/entity.cpp src/entity.hpp \
 	src/level.cpp src/level.hpp \

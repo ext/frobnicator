@@ -2,6 +2,7 @@
 #define DVB021_FORWARD_H
 
 class Backend;
+class Blueprint;
 class Level;
 class Entity;
 class Region;

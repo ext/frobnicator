@@ -8,23 +8,6 @@ class Sprite {
 
 };
 
-/* Act II
- * At this point I'm completely fed up with c++ classes.
- * Enter c-style object orientation with real encapsulation */
-
-/**
- * A blueprint is essentially a flyweight for buildings.
- * Everything that is common between each instance of a building type is
- * held in the blueprint.
- */
-typedef struct blueprint* blueprint_t;
-namespace Blueprint {
-	const blueprint_t from_filename(const std::string& filename);
-
-	/* small hack to get creep amount for a level */
-	unsigned int amount(blueprint_t bp, unsigned int level);
-}
-
 class Entity {
 public:
 	/**
@@ -38,16 +21,16 @@ public:
 	const Vector2i grid_pos() const;
 
 	const Sprite* sprite() const;
+	const std::string name() const;
 
 protected:
-	Entity(const Vector2f& pos, const blueprint_t blueprint);
+	Entity(const Vector2f& pos, const Blueprint* blueprint, unsigned int level);
 	size_t level;
 
 private:
 	Vector2f pos;
-	blueprint_t blueprint;
+	const Blueprint* blueprint;
 };
-
 
 class Building: public Entity {
 public:
@@ -55,13 +38,13 @@ public:
 	 * Construct a new building using blueprint bp and place it at the tile given
 	 * by pos.
 	 */
-	static Building* place_at_tile(const Vector2i& pos, const blueprint_t bp){
+	static Building* place_at_tile(const Vector2i& pos, const Blueprint* blueprint){
 		Vector2f world(pos.x * 48, pos.y * 48);
-		return new Building(world, bp);
+		return new Building(world, blueprint);
 	}
 
 private:
-	Building(const Vector2f& pos, const blueprint_t bp);
+	Building(const Vector2f& pos, const Blueprint* blueprint);
 };
 
 class Creep: public Entity {
@@ -69,12 +52,12 @@ public:
 	/**
 	 * Spawn new creep at world space coordinate given by pos.
 	 */
-	static Creep* spawn_at(const Vector2f& pos, const blueprint_t bp, unsigned int level){
-		return new Creep(pos, bp, level);
+	static Creep* spawn_at(const Vector2f& pos, const Blueprint* blueprint, unsigned int level){
+		return new Creep(pos, blueprint, level);
 	}
 
 private:
-	Creep(const Vector2f& pos, const blueprint_t bp, unsigned int level);
+	Creep(const Vector2f& pos, const Blueprint* blueprint, unsigned int level);
 };
 
 #endif /* DVB021_ENTITY_H */

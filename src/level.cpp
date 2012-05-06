@@ -3,6 +3,7 @@
 #endif
 
 #include "level.hpp"
+#include "blueprint.hpp"
 #include "game.hpp"
 #include "tilemap.hpp"
 #include "entity.hpp"
@@ -49,7 +50,7 @@ public:
 	}
 
 	std::vector<Entity*> spawn(unsigned int level){
-		const size_t amount = Blueprint::amount(waves, level);
+		const size_t amount = waves->amount(level);
 		fprintf(stderr, "Spawning wave %d (%zd units)\n", level, amount);
 
 		auto tmp = std::vector<Entity*>(amount);
@@ -120,7 +121,7 @@ private:
 		} while ( true );
 	}
 
-	blueprint_t waves;
+	const Blueprint* waves;
 
 public:
 	/* All members are public as the only one that can access them is Level and

@@ -21,6 +21,7 @@
 #include <GL/glu.h>
 #include <math.h>
 #include <map>
+#include <cassert>
 
 typedef struct {
 	float x;
@@ -491,6 +492,7 @@ public:
 		for ( auto it = entities.begin(); it != entities.end(); ++it ){
 			const Entity* ent = *it;
 			const SDLSprite* sprite = static_cast<const SDLSprite*>(ent->sprite());
+			assert(sprite);
 
 			glBindTexture(GL_TEXTURE_2D, sprite->texture);
 

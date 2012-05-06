@@ -4,6 +4,7 @@
 
 #include "game.hpp"
 #include "backend.hpp"
+#include "blueprint.hpp"
 #include "level.hpp"
 #include "tilemap.hpp"
 #include "entity.hpp"
@@ -45,7 +46,7 @@ static bool cursor_ok[4] = {false,false,false,false};
 static Tilemap* tilemap;
 static int width;
 static int height;
-static blueprint_t blueprint[BUILDING_LAST];
+static const Blueprint* blueprint[BUILDING_LAST];
 static bool is_panning = false;
 static Vector2f panning_ref;    /* reference point when panning using mouse */
 static Vector2f panning_cur;    /* where the mouse currently is (to calculate how much to pan) */
