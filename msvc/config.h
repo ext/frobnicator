@@ -1,6 +1,7 @@
 /* config.h.  Generated manually for MSVC2011.  */
 
 #define DATA_DIR "."
+#define FROB_PURE
 #define PACKAGE "frobnicator"
 #define PACKAGE_BUGREPORT "ext@sidvind.com"
 #define PACKAGE_NAME "frobnicator"
