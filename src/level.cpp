@@ -49,7 +49,7 @@ public:
 	}
 
 	std::vector<Entity*> spawn(unsigned int level){
-		size_t amount = Blueprint::amount(waves, level);
+		const size_t amount = Blueprint::amount(waves, level);
 		fprintf(stderr, "Spawning wave %d (%zd units)\n", level, amount);
 
 		auto tmp = std::vector<Entity*>(amount);
