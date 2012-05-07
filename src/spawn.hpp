@@ -11,6 +11,13 @@ public:
 		return ptr;
 	}
 
+	virtual void set(const std::string& key, const std::string& value){
+		if ( key == "next" ){  next = value; }
+		else { Region::set(key, value); }
+	}
+
+	std::string next; /* hack... */
+
 private:
 	Spawnpoint(){
 
