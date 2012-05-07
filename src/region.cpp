@@ -19,11 +19,14 @@ Vector2f Region::random_point(const Vector2i& size) const {
 }
 
 void Region::set(const std::string& key, const std::string& value){
-	if ( key == "name" ){ _name = value; }
-	if ( key == "x" ){ _x = atoi(value.c_str()); }
-	if ( key == "y" ){ _y = atoi(value.c_str()); }
-	if ( key == "w" ){ _w = atoi(value.c_str()); }
-	if ( key == "h" ){ _h = atoi(value.c_str()); }
+	     if ( key == "name" ){ _name = value; }
+	else if ( key == "x" ){ _x = atoi(value.c_str()); }
+	else if ( key == "y" ){ _y = atoi(value.c_str()); }
+	else if ( key == "w" ){ _w = atoi(value.c_str()); }
+	else if ( key == "h" ){ _h = atoi(value.c_str()); }
+	else {
+		fprintf(stderr, "    - Region `%s' got unhandled key `%s', ignored\n", _name.c_str(), key.c_str());
+	}
 }
 
 void Region::parse(yaml_parser_t* parser){
