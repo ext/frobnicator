@@ -9,10 +9,11 @@
   speed: 5
   armor: 0
   amount: 15
+  sprite:
+    texture: "derp2.png"
 
 - level: 1
   name: "Internet trolls"
-  sprite: derp2.png
   hp: 12
 
 - level: 2
