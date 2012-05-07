@@ -190,10 +190,14 @@ namespace Game {
 			/* spawn wave */
 			if ( cur.tv_sec - sref.tv_sec > wave_delay ){
 				wave_current++;
-				const std::map<std::string, Spawnpoint*>& derp = level->spawnpoints();
-				const Spawnpoint* spawn = derp.begin()->second;
-				EntityVector wave = level->spawn(wave_current, *spawn);
-				creep.insert(creep.end(), wave.begin(), wave.end());
+				fprintf(stderr, "Spawning wave %d\n", wave_current);
+
+				for ( auto it = level->spawnpoints().begin(); it != level->spawnpoints().end(); ++it ){
+					const Spawnpoint* spawn = it->second;
+					EntityVector wave = level->spawn(wave_current, *spawn);
+					creep.insert(creep.end(), wave.begin(), wave.end());
+				}
+
 				sref.tv_sec += wave_delay;
 			}
 

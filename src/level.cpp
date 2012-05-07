@@ -51,7 +51,7 @@ public:
 
 	std::vector<Entity*> spawn(unsigned int level, const Region& region){
 		const size_t amount = waves->amount(level);
-		fprintf(stderr, "Spawning wave %d at %s (%zd units)\n", level, region.name().c_str(), amount);
+		fprintf(stderr, "  Spawning %zd units at %s\n", amount, region.name().c_str());
 
 		auto tmp = std::vector<Entity*>(amount);
 		std::generate(tmp.begin(), tmp.end(), [this, level, region](){
