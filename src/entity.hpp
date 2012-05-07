@@ -92,6 +92,7 @@ private:
 
 	Vector2f dst;
 	std::string region;
+	int left;
 };
 
 #endif /* DVB021_ENTITY_H */

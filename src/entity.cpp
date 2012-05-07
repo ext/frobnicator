@@ -44,7 +44,8 @@ Building::Building(const Vector2f& pos, const Blueprint* blueprint)
 }
 
 Creep::Creep(const Vector2f& pos, const Blueprint* blueprint, unsigned int level)
-	: Entity(pos, blueprint, level) {
+	: Entity(pos, blueprint, level)
+	, left(7) {
 
 	fprintf(stderr, "Spawning \"%s\" at (%.0f,%.0f)\n", name().c_str(), pos.x, pos.y);
 }
@@ -65,13 +66,23 @@ Creep& Creep::set_dst(const Vector2f& dst){
 
 void Creep::tick(){
 	const Vector2f d = (dst - pos - /* hack hack hack */ Vector2f(24,24)).normalized();
-	pos += d * 0.6;
+	pos += d * 1.6;
 }
 
 void Creep::on_enter_region(const Waypoint& region){
 	fprintf(stderr, "Entity %p entered `%s'.\n", this, region.name().c_str());
 
-	const Waypoint* next = Game::find_waypoint(region.next());
+	if ( region.name() == "middle" ){
+		return;
+	}
+
+	std::string name = region.next();
+	if ( --left == 0 ){
+		name = region.inner();
+		left = 7;
+	}
+
+	const Waypoint* next = Game::find_waypoint(name);
 	if ( !next ){
 		fprintf(stderr, "Waypoint `%s' refers to non-existing waypoint `%s', ignored.\n", region.name().c_str(), region.next().c_str());
 		return;
