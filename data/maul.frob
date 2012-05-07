@@ -178,9 +178,9 @@ spawn:
   -
     name: spawn 1
     x: 1104
-    y: 0
+    y: -144
     w: 96
-    h: 48
+    h: 192
   -
     name: spawn 2
     x: 0
