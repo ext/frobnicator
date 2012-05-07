@@ -201,34 +201,36 @@ namespace Game {
 			const uint64_t delta = (cur.tv_sec - t.tv_sec) * 1000000 + (cur.tv_usec - t.tv_usec);
 			const  int64_t delay = per_frame - delta;
 
+			/* update */
 			for ( auto it = creep.begin(); it != creep.end(); ++it ){
 				Creep* creep = static_cast<Creep*>(*it); /* this vector is known to only hold creep */
 
 				creep->tick();
 
 				/* find what region the creep is in */
-				std::string region = "";
+				const Waypoint* region = NULL;
 				for ( auto jt = level->waypoints().begin(); jt != level->waypoints().end(); ++jt ){
 					const Waypoint* wp = jt->second;
 
 					if ( wp->contains(creep->world_pos(), Vector2f(47,47)) ){
-						region = wp->name();
+						region = wp;
 						break;
 					}
 				}
-				bool found = region != "";
+				bool found = region;
 
 				/* creep exited a region */
 				if ( !found && creep->get_region() != "" ){
-					fprintf(stderr, "Entity %p exited `%s'.\n", creep, creep->get_region().c_str());
+					creep->on_exit_region(*Game::find_waypoint(creep->get_region()));
 				}
 
 				/* creep entered a new region */
-				if ( found && creep->get_region() != region ){
-					fprintf(stderr, "Entity %p entered `%s'.\n", creep, region.c_str());
+				if ( found && creep->get_region() != region->name() ){
+					creep->on_enter_region(*region);
 				}
 
-				creep->set_region(region);
+				/* remember current region */
+				creep->set_region(region ? region->name() : "");
 			}
 
 			/* move time forward */

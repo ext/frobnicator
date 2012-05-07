@@ -5,6 +5,7 @@
 #include "entity.hpp"
 #include "blueprint.hpp"
 #include "game.hpp"
+#include "waypoint.hpp"
 #include <cstdio>
 #include <yaml.h>
 
@@ -65,4 +66,12 @@ Creep& Creep::set_dst(const Vector2f& dst){
 void Creep::tick(){
 	const Vector2f d = (dst - pos - /* hack hack hack */ Vector2f(24,24)).normalized();
 	pos += d * 0.3;
+}
+
+void Creep::on_enter_region(const Waypoint& region){
+	fprintf(stderr, "Entity %p entered `%s'.\n", this, region.name().c_str());
+}
+
+void Creep::on_exit_region(const Waypoint& region){
+	fprintf(stderr, "Entity %p exited `%s'.\n", this, region.name().c_str());
 }

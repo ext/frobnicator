@@ -75,6 +75,18 @@ public:
 
 	virtual void tick();
 
+	/** Triggers **/
+
+	/**
+	 * Called when entity enters a new region.
+	 */
+	void on_enter_region(const Waypoint& region);
+
+	/**
+	 * Called when entity exits a region.
+	 */
+	void on_exit_region(const Waypoint& region);
+
 private:
 	Creep(const Vector2f& pos, const Blueprint* blueprint, unsigned int level);
 
