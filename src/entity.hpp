@@ -22,12 +22,22 @@ public:
 	/**
 	 * Update entity. Should be called every frame.
 	 */
-	virtual void tick(){}
+	virtual void tick(float dt){}
 
 	/**
 	 * Get name of entity.
 	 */
 	const std::string id() const;
+
+	int cost() const;
+	float splash() const;
+	float damage() const;
+	float rof() const;
+	float range() const;
+	float slow() const;
+	float poison() const;
+	float speed() const;
+	float armor() const;
 
 protected:
 	Entity(const std::string& id, const Vector2f& pos, const Blueprint* blueprint, unsigned int level);
@@ -81,7 +91,7 @@ public:
 	 */
 	Creep& set_dst(const Vector2f& dst);
 
-	virtual void tick();
+	virtual void tick(float dt);
 
 	/** Triggers **/
 

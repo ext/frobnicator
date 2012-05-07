@@ -6,7 +6,7 @@
   range: 0
   slow: 0
   poison: 0
-  speed: 5
+  speed: 60
   armor: 0
   amount: 4
   sprite:

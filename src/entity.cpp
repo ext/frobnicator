@@ -44,6 +44,16 @@ const std::string Entity::id() const {
 	return _id;
 }
 
+int Entity::cost()     const { return blueprint->data[level].cost; }
+float Entity::splash() const { return blueprint->data[level].splash; }
+float Entity::damage() const { return blueprint->data[level].damage; }
+float Entity::rof()    const { return blueprint->data[level].rof; }
+float Entity::range()  const { return blueprint->data[level].range; }
+float Entity::slow()   const { return blueprint->data[level].slow; }
+float Entity::poison() const { return blueprint->data[level].poison; }
+float Entity::speed()  const { return blueprint->data[level].speed; }
+float Entity::armor()  const { return blueprint->data[level].armor; }
+
 Building::Building(const Vector2f& pos, const Blueprint* blueprint)
 	: Entity(generate_id(), pos, blueprint, 0) {
 
@@ -85,9 +95,9 @@ Creep& Creep::set_dst(const Vector2f& dst){
 	return *this;
 }
 
-void Creep::tick(){
+void Creep::tick(float dt){
 	const Vector2f d = (dst - pos - /* hack hack hack */ Vector2f(24,24)).normalized();
-	pos += d * 1.6;
+	pos += d * speed() * dt;
 }
 
 void Creep::on_enter_region(const Waypoint& region){

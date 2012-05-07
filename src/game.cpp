@@ -157,7 +157,7 @@ namespace Game {
 	void frobnicate(){
 		static const unsigned int framerate = 60;
 		static const uint64_t per_frame = 1000000 / framerate;
-
+		static const float dt = 1.0f / framerate;
 		running = true;
 
 		/* for calculating dt */
@@ -205,7 +205,7 @@ namespace Game {
 			for ( auto it = creep.begin(); it != creep.end(); ++it ){
 				Creep* creep = static_cast<Creep*>(*it); /* this vector is known to only hold creep */
 
-				creep->tick();
+				creep->tick(dt);
 
 				/* find what region the creep is in */
 				const Waypoint* region = NULL;

@@ -32,6 +32,8 @@ public:
 	}
 
 private:
+	friend class Entity;
+
 	struct level {
 		Sprite* sprite;
 		std::string name;
