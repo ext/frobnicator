@@ -202,7 +202,33 @@ namespace Game {
 			const  int64_t delay = per_frame - delta;
 
 			for ( auto it = creep.begin(); it != creep.end(); ++it ){
-				(*it)->tick();
+				Creep* creep = static_cast<Creep*>(*it); /* this vector is known to only hold creep */
+
+				creep->tick();
+
+				/* find what region the creep is in */
+				std::string region = "";
+				for ( auto jt = level->waypoints().begin(); jt != level->waypoints().end(); ++jt ){
+					const Waypoint* wp = jt->second;
+
+					if ( wp->contains(creep->world_pos(), Vector2f(47,47)) ){
+						region = wp->name();
+						break;
+					}
+				}
+				bool found = region != "";
+
+				/* creep exited a region */
+				if ( !found && creep->get_region() != "" ){
+					fprintf(stderr, "Entity %p exited `%s'.\n", creep, creep->get_region().c_str());
+				}
+
+				/* creep entered a new region */
+				if ( found && creep->get_region() != region ){
+					fprintf(stderr, "Entity %p entered `%s'.\n", creep, region.c_str());
+				}
+
+				creep->set_region(region);
 			}
 
 			/* move time forward */

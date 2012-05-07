@@ -57,6 +57,20 @@ public:
 		return new Creep(pos, blueprint, level);
 	}
 
+	/**
+	 * Mark what region it currently is in.
+	 */
+	Creep& set_region(const std::string& name);
+
+	/**
+	 * Get what region it is currently in.
+	 * @return Empty string if outside any region.
+	 */
+	std::string get_region() const;
+
+	/**
+	 * Set where it is going.
+	 */
 	Creep& set_dst(const Vector2f& dst);
 
 	virtual void tick();
@@ -65,6 +79,7 @@ private:
 	Creep(const Vector2f& pos, const Blueprint* blueprint, unsigned int level);
 
 	Vector2f dst;
+	std::string region;
 };
 
 #endif /* DVB021_ENTITY_H */

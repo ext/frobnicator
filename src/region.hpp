@@ -27,6 +27,12 @@ public:
 	 */
 	Vector2f middle() const;
 
+	/**
+	 * Tell if a point is inside region or not.
+	 * @todo fix AABB class
+	 */
+	bool contains(const Vector2f& pos, const Vector2f& size) const;
+
 protected:
 	virtual void set(const std::string& key, const std::string& value);
 	void parse(yaml_parser_t* parser);

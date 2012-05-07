@@ -22,6 +22,15 @@ Vector2f Region::middle() const {
 	return Vector2f(_x + _w/2, _y + _h/2);
 }
 
+bool Region::contains(const Vector2f& pos, const Vector2f& size) const {
+	const Vector2f min[2] = { pos, Vector2f(_x,_y) };
+	const Vector2f max[2] = { pos+size, Vector2f(_x+_w, _y+_h) };
+
+	if ( max[0].x < min[1].x || min[0].x > max[1].x ){ return false; }
+	if ( max[0].y < min[1].y || min[0].y > max[1].y ){ return false; }
+	return true;
+}
+
 void Region::set(const std::string& key, const std::string& value){
 	     if ( key == "name" ){ _name = value; }
 	else if ( key == "x" ){ _x = atoi(value.c_str()); }

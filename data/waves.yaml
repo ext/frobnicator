@@ -8,7 +8,7 @@
   poison: 0
   speed: 5
   armor: 0
-  amount: 15
+  amount: 1
   sprite:
     texture: "derp2.png"
 

@@ -48,6 +48,15 @@ Creep::Creep(const Vector2f& pos, const Blueprint* blueprint, unsigned int level
 	fprintf(stderr, "Spawning \"%s\" at (%.0f,%.0f)\n", name().c_str(), pos.x, pos.y);
 }
 
+std::string Creep::get_region() const {
+	return region;
+}
+
+Creep& Creep::set_region(const std::string& name){
+	region = name;
+	return *this;
+}
+
 Creep& Creep::set_dst(const Vector2f& dst){
 	this->dst = dst;
 	return *this;
