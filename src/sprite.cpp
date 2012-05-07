@@ -7,7 +7,9 @@
 #include "game.hpp"
 #include <yaml.h>
 
-Sprite::Sprite(){
+Sprite::Sprite()
+	: _offset(0,0)
+	, _scale(1,1) {
 
 }
 
