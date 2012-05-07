@@ -4,6 +4,7 @@
 
 #include "level.hpp"
 #include "blueprint.hpp"
+#include "creep.hpp"
 #include "game.hpp"
 #include "tilemap.hpp"
 #include "entity.hpp"
