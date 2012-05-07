@@ -49,19 +49,26 @@ public:
 		fprintf(stderr, "Loaded level \"%s\".\n", title.c_str());
 	}
 
-	std::vector<Entity*> spawn(unsigned int level, const Region& region){
+	std::vector<Entity*> spawn(unsigned int level){
 		if ( level>= waves->num_levels() ){
 			fprintf(stderr, "  Wave not defined\n");
 			return std::vector<Entity*>();
 		}
 
 		const size_t amount = waves->amount(level);
-		fprintf(stderr, "  Spawning %zd units at %s\n", amount, region.name().c_str());
+		auto tmp = std::vector<Entity*>(amount * tilemap->spawnpoints().size());
 
-		auto tmp = std::vector<Entity*>(amount);
-		std::generate(tmp.begin(), tmp.end(), [this, level, region](){
-			return Creep::spawn_at(region.random_point(Vector2i(48,48)), waves, level);
-		});
+		auto pos = tmp.begin();
+		for ( auto it = tilemap->spawnpoints().begin(); it != tilemap->spawnpoints().end(); ++it ){
+			const Spawnpoint* spawn = it->second;
+			fprintf(stderr, "  Spawning %zd units at %s\n", amount, spawn->name().c_str());
+
+			std::generate(pos, pos+amount, [this, level, spawn](){
+				return Creep::spawn_at(spawn->random_point(Vector2i(48,48)), waves, level);
+			});
+			pos += amount;
+		}
+
 		return tmp;
 	}
 
@@ -165,6 +172,6 @@ const std::map<std::string, Spawnpoint*>& Level::spawnpoints() const {
 	return tilemap().spawnpoints();
 }
 
-std::vector<Entity*> Level::spawn(unsigned int level, const Region& region) const {
-	return pimpl->spawn(level, region);
+std::vector<Entity*> Level::spawn(unsigned int level) const {
+	return pimpl->spawn(level);
 }

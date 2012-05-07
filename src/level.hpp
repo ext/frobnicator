@@ -20,7 +20,7 @@ public:
 	const Tilemap& tilemap() const;
 	const std::map<std::string, Waypoint*>& waypoints() const FROB_PURE;
 	const std::map<std::string, Spawnpoint*>& spawnpoints() const FROB_PURE;
-	std::vector<Entity*> spawn(unsigned int level, const Region& region) const;
+	std::vector<Entity*> spawn(unsigned int level) const;
 
 private:
 	Level(const std::string& filename); /* use from_filename */
