@@ -30,8 +30,9 @@ public:
 	/**
 	 * Tell if a point is inside region or not.
 	 * @todo fix AABB class
+	 * @param inside If true the AABB must the completely inside region.
 	 */
-	bool contains(const Vector2f& pos, const Vector2f& size) const;
+	bool contains(const Vector2f& pos, const Vector2f& size, bool inside=false) const;
 
 protected:
 	virtual void set(const std::string& key, const std::string& value);

@@ -212,7 +212,7 @@ namespace Game {
 				for ( auto jt = level->waypoints().begin(); jt != level->waypoints().end(); ++jt ){
 					const Waypoint* wp = jt->second;
 
-					if ( wp->contains(creep->world_pos(), Vector2f(47,47)) ){
+					if ( wp->contains(creep->world_pos(), Vector2f(47,47), true) ){
 						region = wp;
 						break;
 					}

@@ -22,12 +22,18 @@ Vector2f Region::middle() const {
 	return Vector2f(_x + _w/2, _y + _h/2);
 }
 
-bool Region::contains(const Vector2f& pos, const Vector2f& size) const {
+bool Region::contains(const Vector2f& pos, const Vector2f& size, bool inside) const {
 	const Vector2f min[2] = { pos, Vector2f(_x,_y) };
 	const Vector2f max[2] = { pos+size, Vector2f(_x+_w, _y+_h) };
 
-	if ( max[0].x < min[1].x || min[0].x > max[1].x ){ return false; }
-	if ( max[0].y < min[1].y || min[0].y > max[1].y ){ return false; }
+	if ( !inside ){
+		if ( max[0].x < min[1].x || min[0].x > max[1].x ){ return false; }
+		if ( max[0].y < min[1].y || min[0].y > max[1].y ){ return false; }
+	} else {
+		if ( min[0].x < min[1].x || max[0].x > max[1].x ){ return false; }
+		if ( min[0].y < min[1].y || max[0].y > max[1].y ){ return false; }
+	}
+
 	return true;
 }
 
