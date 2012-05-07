@@ -37,6 +37,18 @@ namespace Game {
 	const Waypoint* find_waypoint(const std::string& name);
 
 	/**
+	 * Find entity by id.
+	 * @return Entity or NULL if no such entity was found.
+	 */
+	Entity* find_entity(const std::string& name);
+
+	/**
+	 * Remove entity by id.
+	 * No-op if entity no such entity was found.
+	 */
+	void remove_entity(const std::string& name);
+
+	/**
 	 * Do stuff.
 	 */
 	void frobnicate();

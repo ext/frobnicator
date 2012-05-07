@@ -54,6 +54,11 @@ float Entity::poison() const { return blueprint->data[level].poison; }
 float Entity::speed()  const { return blueprint->data[level].speed; }
 float Entity::armor()  const { return blueprint->data[level].armor; }
 
+void Entity::kill(){
+	fprintf(stderr, "Entity %s was killed\n", id().c_str());
+	Game::remove_entity(id());
+}
+
 Building::Building(const Vector2f& pos, const Blueprint* blueprint)
 	: Entity(generate_id(), pos, blueprint, 0) {
 

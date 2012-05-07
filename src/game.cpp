@@ -14,6 +14,7 @@
 #include <cassert>
 #include <vector>
 #include <math.h>
+#include <algorithm>
 
 #ifdef WIN32
 #define VC_EXTRALEAN
@@ -39,8 +40,8 @@ enum Buildings {
 static bool running = false;
 static Backend* backend = NULL;
 static Level* level = NULL;
-static EntityVector building;
-static EntityVector creep;
+static std::map<std::string, Building*> building;
+static std::map<std::string, Creep*> creep;
 static Vector2f camera;
 static Vector2f cursor;
 static bool cursor_ok[4] = {false,false,false,false};
@@ -66,8 +67,27 @@ static void poll(bool&render){
 
 static void render_world(const Vector2f& cam){
 	backend->render_tilemap(level->tilemap(), cam);
-	backend->render_entities(creep, cam);
-	backend->render_entities(building, cam);
+
+	/* retrieve all entities and sort them based on "depth" */
+	std::vector<Entity*> all;
+	std::transform(
+		creep.begin(),
+		creep.end(),
+		std::back_inserter(all),
+		[](std::map<std::string, Creep*>::value_type &pair){return pair.second;});
+	std::transform(
+		building.begin(),
+		building.end(),
+		std::back_inserter(all),
+		[](std::map<std::string, Building*>::value_type &pair){return pair.second;});
+	std::sort(
+		all.begin(),
+		all.end(),
+		[](const Entity* a, const Entity* b) -> bool {
+			return a->world_pos().y < b->world_pos().y;
+		});
+
+	backend->render_entities(all, cam);
 }
 
 static void render_cursor(const Vector2f& cam){
@@ -96,12 +116,12 @@ static void render_aabb(const Vector2f& cam){
 
 	for ( auto it = building.begin(); it != building.end(); ++it ){
 		static float color[3] = {0,0,1};
-		backend->render_region(*it, cam, color);
+		backend->render_region(it->second, cam, color);
 	}
 
 	for ( auto it = creep.begin(); it != creep.end(); ++it ){
 		static float color[3] = {0,1,1};
-		backend->render_region(*it, cam, color);
+		backend->render_region(it->second, cam, color);
 	}
 }
 
@@ -195,7 +215,7 @@ namespace Game {
 
 				fprintf(stderr, "Spawning wave %d\n", wave_current);
 				EntityVector wave = level->spawn(wave_current);
-				creep.insert(creep.end(), wave.begin(), wave.end());
+				std::for_each(wave.begin(), wave.end(), [](Entity* e){ creep[e->id()] = static_cast<Creep*>(e); });
 			}
 
 			/* calculate dt */
@@ -203,9 +223,8 @@ namespace Game {
 			const  int64_t delay = per_frame - delta;
 
 			/* update */
-			for ( auto it = creep.begin(); it != creep.end(); ++it ){
-				Creep* creep = static_cast<Creep*>(*it); /* this vector is known to only hold creep */
-
+			std::for_each(creep.begin(), creep.end(), [](std::pair<const std::string, Creep*>& pair){
+				Creep* creep = pair.second;
 				creep->tick(dt);
 
 				/* find what region the creep is in */
@@ -232,7 +251,7 @@ namespace Game {
 
 				/* remember current region */
 				creep->set_region(region ? region->name() : "");
-			}
+			});
 
 			/* move time forward */
 			t.tv_usec += per_frame;
@@ -380,16 +399,8 @@ namespace Game {
 	}
 
 	static void build(const Vector2i& pos, Buildings type){
-		/* insert at correct "depth" */
-		EntityVector::iterator it = building.begin();
-		while ( it != building.end() ){
-			Entity* cur = *it;
-			if ( cur->grid_pos().y >= pos.y ) break;
-			++it;
-		}
-
 		Building* tmp = Building::place_at_tile(pos, blueprint[type]);
-		building.insert(it, tmp);
+		building[tmp->id()] = tmp;
 	}
 
 	size_t tile_width(){
@@ -408,4 +419,37 @@ namespace Game {
 			return NULL;
 		}
 	}
+
+	Entity* find_entity(const std::string& name){
+		/* hack to determine if it is building or creep */
+		const bool is_creep = name[0] == 'c';
+
+		if ( is_creep ){
+			auto it = creep.find(name);
+			if ( it != creep.end() ){
+				return it->second;
+			} else {
+				return NULL;
+			}
+		} else {
+			auto it = building.find(name);
+			if ( it != building.end() ){
+				return it->second;
+			} else {
+				return NULL;
+			}
+		}
+	}
+
+	void remove_entity(const std::string& name){
+		/* hack to determine if it is building or creep */
+		const bool is_creep = name[0] == 'c';
+
+		if ( is_creep ){
+			creep.erase(name);
+		} else {
+			building.erase(name);
+		}
+	}
+
 };

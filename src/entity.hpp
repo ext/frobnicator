@@ -39,6 +39,13 @@ public:
 	float speed() const;
 	float armor() const;
 
+	/**
+	 * Kill this entity.
+	 */
+	void kill();
+
+	virtual void on_kill(){}
+
 protected:
 	Entity(const std::string& id, const Vector2f& pos, const Blueprint* blueprint, unsigned int level);
 	size_t level;
