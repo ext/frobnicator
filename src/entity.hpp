@@ -24,12 +24,18 @@ public:
 	 */
 	virtual void tick(){}
 
+	/**
+	 * Get name of entity.
+	 */
+	const std::string id() const;
+
 protected:
-	Entity(const Vector2f& pos, const Blueprint* blueprint, unsigned int level);
+	Entity(const std::string& id, const Vector2f& pos, const Blueprint* blueprint, unsigned int level);
 	size_t level;
 	Vector2f pos;
 
 private:
+	const std::string _id;
 	const Blueprint* blueprint;
 };
 
@@ -46,6 +52,8 @@ public:
 
 private:
 	Building(const Vector2f& pos, const Blueprint* blueprint);
+
+	static const std::string generate_id();
 };
 
 class Creep: public Entity {
@@ -89,6 +97,8 @@ public:
 
 private:
 	Creep(const Vector2f& pos, const Blueprint* blueprint, unsigned int level);
+
+	static const std::string generate_id();
 
 	Vector2f dst;
 	std::string region;

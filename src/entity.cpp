@@ -7,6 +7,8 @@
 #include "game.hpp"
 #include "waypoint.hpp"
 #include <cstdio>
+#include <sstream>
+#include <iomanip>
 #include <yaml.h>
 
 #ifdef WIN32
@@ -14,9 +16,10 @@
 extern "C" char* strndup(const char* src, size_t n);
 #endif
 
-Entity::Entity(const Vector2f& pos, const Blueprint* blueprint, unsigned int level)
+Entity::Entity(const std::string& id, const Vector2f& pos, const Blueprint* blueprint, unsigned int level)
 	: level(level)
 	, pos(pos)
+	, _id(id)
 	, blueprint(blueprint) {
 
 }
@@ -37,17 +40,35 @@ const std::string Entity::name() const {
 	return blueprint->name(level);
 }
 
+const std::string Entity::id() const {
+	return _id;
+}
+
 Building::Building(const Vector2f& pos, const Blueprint* blueprint)
-	: Entity(pos, blueprint, 0) {
+	: Entity(generate_id(), pos, blueprint, 0) {
 
 	fprintf(stderr, "Creating \"%s\" at (%.0f,%.0f)\n", name().c_str(), pos.x, pos.y);
 }
 
+const std::string Building::generate_id(){
+	static int n = 1;
+	std::stringstream s;
+	s << "building_" << n++;
+	return s.str();
+}
+
 Creep::Creep(const Vector2f& pos, const Blueprint* blueprint, unsigned int level)
-	: Entity(pos, blueprint, level)
+	: Entity(generate_id(), pos, blueprint, level)
 	, left(7) {
 
 	fprintf(stderr, "Spawning \"%s\" at (%.0f,%.0f)\n", name().c_str(), pos.x, pos.y);
+}
+
+const std::string Creep::generate_id(){
+	static int n = 1;
+	std::stringstream s;
+	s << "creep_" << std::setfill('0') << std::setw(4) << n++;
+	return s.str();
 }
 
 std::string Creep::get_region() const {
@@ -70,7 +91,7 @@ void Creep::tick(){
 }
 
 void Creep::on_enter_region(const Waypoint& region){
-	fprintf(stderr, "Entity %p entered `%s'.\n", this, region.name().c_str());
+	fprintf(stderr, "Entity %s entered `%s'.\n", id().c_str(), region.name().c_str());
 
 	if ( region.name() == "middle" ){
 		return;
@@ -92,5 +113,5 @@ void Creep::on_enter_region(const Waypoint& region){
 }
 
 void Creep::on_exit_region(const Waypoint& region){
-	fprintf(stderr, "Entity %p exited `%s'.\n", this, region.name().c_str());
+	fprintf(stderr, "Entity %s exited `%s'.\n", id().c_str(), region.name().c_str());
 }
