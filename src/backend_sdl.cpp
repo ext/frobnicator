@@ -190,7 +190,6 @@ static std::map<std::string, SDLSprite*> texture_cache;
 class SDLSprite: public Sprite {
 public:
 	SDLSprite(){
-		printf("SDLSprite: %p\n", this);
 	}
 
 	virtual void load_texture(const std::string& filename){
