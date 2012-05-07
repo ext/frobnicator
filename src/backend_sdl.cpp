@@ -496,7 +496,7 @@ public:
 		glPushMatrix();
 
 		/* camera */
-		glTranslatef(-camera.x, -camera.y - Game::tile_height() * 2.0, 0.0f);
+		glTranslatef(-camera.x, -camera.y, 0.0f);
 
 		glVertexPointer(3, GL_FLOAT, sizeof(float)*5, vertices);
 		glTexCoordPointer(2, GL_FLOAT, sizeof(float)*5, &vertices[0][3]);
@@ -510,11 +510,16 @@ public:
 			glBindTexture(GL_TEXTURE_2D, sprite->texture);
 
 			glPushMatrix();
-			glTranslatef(ent->world_pos().x, ent->world_pos().y, 0.0f);
+			glTranslatef(
+				ent->world_pos().x + Game::tile_width()  * sprite->offset().x,
+				ent->world_pos().y + Game::tile_height() * sprite->offset().y,
+				0.0f);
 
-			/* tile scale */
-			glScalef(Game::tile_width(), Game::tile_height(), 1.0f);
-			glScalef(2.0f, 4.0f, 1.0f);
+			/* entity scale */
+			glScalef(
+				Game::tile_width()  * sprite->scale().x,
+				Game::tile_height() * sprite->scale().y,
+				1.0f);
 
 			glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, indices);
 			glPopMatrix();
