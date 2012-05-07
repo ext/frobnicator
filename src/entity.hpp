@@ -19,6 +19,11 @@ public:
 	const Sprite* sprite() const;
 	const std::string name() const;
 
+	/**
+	 * Update entity. Should be called every frame.
+	 */
+	virtual void tick(){}
+
 protected:
 	Entity(const Vector2f& pos, const Blueprint* blueprint, unsigned int level);
 	size_t level;
@@ -52,8 +57,14 @@ public:
 		return new Creep(pos, blueprint, level);
 	}
 
+	Creep& set_dst(const Vector2f& dst);
+
+	virtual void tick();
+
 private:
 	Creep(const Vector2f& pos, const Blueprint* blueprint, unsigned int level);
+
+	Vector2f dst;
 };
 
 #endif /* DVB021_ENTITY_H */

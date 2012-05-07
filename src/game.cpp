@@ -366,4 +366,13 @@ namespace Game {
 	size_t tile_height(){
 		return tilemap->tile_height();
 	}
+
+	const Waypoint* find_waypoint(const std::string& name){
+		auto it = level->waypoints().find(name);
+		if ( it != level->waypoints().end() ){
+			return it->second;
+		} else {
+			return NULL;
+		}
+	}
 };

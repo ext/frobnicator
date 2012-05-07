@@ -47,3 +47,12 @@ Creep::Creep(const Vector2f& pos, const Blueprint* blueprint, unsigned int level
 
 	fprintf(stderr, "Spawning \"%s\" at (%.0f,%.0f)\n", name().c_str(), pos.x, pos.y);
 }
+
+Creep& Creep::set_dst(const Vector2f& dst){
+	this->dst = dst;
+	return *this;
+}
+
+void Creep::tick(){
+
+}

@@ -31,6 +31,12 @@ namespace Game {
 	Sprite* create_sprite();
 
 	/**
+	 * Find waypoint by name.
+	 * @return Waypoint or NULL if no such waypoint could be found.
+	 */
+	const Waypoint* find_waypoint(const std::string& name);
+
+	/**
 	 * Do stuff.
 	 */
 	void frobnicate();

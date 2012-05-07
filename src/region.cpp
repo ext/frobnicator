@@ -18,6 +18,10 @@ Vector2f Region::random_point(const Vector2i& size) const {
 	return Vector2f(_x + rx, _y + ry);
 }
 
+Vector2f Region::middle() const {
+	return Vector2f(_x + _w/2, _y + _h/2);
+}
+
 void Region::set(const std::string& key, const std::string& value){
 	     if ( key == "name" ){ _name = value; }
 	else if ( key == "x" ){ _x = atoi(value.c_str()); }

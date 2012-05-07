@@ -22,6 +22,11 @@ public:
 	 */
 	Vector2f random_point(const Vector2i& size = Vector2i(0,0)) const;
 
+	/**
+	 * Get the middle coordinates of this region.
+	 */
+	Vector2f middle() const;
+
 protected:
 	virtual void set(const std::string& key, const std::string& value);
 	void parse(yaml_parser_t* parser);

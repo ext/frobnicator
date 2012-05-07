@@ -63,8 +63,11 @@ public:
 			const Spawnpoint* spawn = it->second;
 			fprintf(stderr, "  Spawning %zd units at %s\n", amount, spawn->name().c_str());
 
-			std::generate(pos, pos+amount, [this, level, spawn](){
-				return Creep::spawn_at(spawn->random_point(Vector2i(48,48)), waves, level);
+			const Waypoint* dst = Game::find_waypoint(spawn->next);
+			std::generate(pos, pos+amount, [this, level, spawn, dst](){
+					Creep* creep = Creep::spawn_at(spawn->random_point(Vector2i(48,48)), waves, level);
+					if ( dst ){ creep->set_dst(dst->middle()); }
+					return creep;
 			});
 			pos += amount;
 		}
