@@ -9,10 +9,10 @@ public:
 	virtual void set(const std::string& key, const std::string& value);
 
 	/* name of the next inner waypoint */
-	const std::string& inner(){ return _inner; }
+	const std::string& inner() const { return _inner; }
 
 	/* name of the next waypoint */
-	const std::string& next(){ return _next; }
+	const std::string& next() const { return _next; }
 
 private:
 	Waypoint();

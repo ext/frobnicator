@@ -65,11 +65,19 @@ Creep& Creep::set_dst(const Vector2f& dst){
 
 void Creep::tick(){
 	const Vector2f d = (dst - pos - /* hack hack hack */ Vector2f(24,24)).normalized();
-	pos += d * 0.3;
+	pos += d * 0.6;
 }
 
 void Creep::on_enter_region(const Waypoint& region){
 	fprintf(stderr, "Entity %p entered `%s'.\n", this, region.name().c_str());
+
+	const Waypoint* next = Game::find_waypoint(region.next());
+	if ( !next ){
+		fprintf(stderr, "Waypoint `%s' refers to non-existing waypoint `%s', ignored.\n", region.name().c_str(), region.next().c_str());
+		return;
+	}
+
+	set_dst(next->middle());
 }
 
 void Creep::on_exit_region(const Waypoint& region){
