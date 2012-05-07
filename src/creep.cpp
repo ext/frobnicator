@@ -45,6 +45,7 @@ void Creep::on_enter_region(const Waypoint& region){
 	fprintf(stderr, "Entity %s entered `%s'.\n", id().c_str(), region.name().c_str());
 
 	if ( region.name() == "middle" ){
+		kill();
 		return;
 	}
 
