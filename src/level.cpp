@@ -50,6 +50,11 @@ public:
 	}
 
 	std::vector<Entity*> spawn(unsigned int level, const Region& region){
+		if ( level>= waves->num_levels() ){
+			fprintf(stderr, "  Wave not defined\n");
+			return std::vector<Entity*>();
+		}
+
 		const size_t amount = waves->amount(level);
 		fprintf(stderr, "  Spawning %zd units at %s\n", amount, region.name().c_str());
 

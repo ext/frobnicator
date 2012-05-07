@@ -27,6 +27,10 @@ public:
 		return data[level].amount;
 	}
 
+	size_t num_levels() const {
+		return data.size();
+	}
+
 private:
 	struct level {
 		Sprite* sprite;
