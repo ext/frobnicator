@@ -1,6 +1,9 @@
 #ifndef DVB021_TILEMAP_H
 #define DVB021_TILEMAP_H
 
+#include "spawn.hpp"
+#include "waypoint.hpp"
+
 #include <stdint.h>
 #include <string>
 #include <vector>
@@ -62,6 +65,7 @@ public:
 	std::vector<Tile>::const_iterator end() const;
 
 	const std::map<std::string, Waypoint*>& waypoints() const;
+	const std::map<std::string, Spawnpoint*>& spawnpoints() const;
 
 protected:
 	Tilemap(const std::string& filename);

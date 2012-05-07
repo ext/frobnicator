@@ -1,6 +1,8 @@
 #ifndef DVB021_LEVEL_H
 #define DVB021_LEVEL_H
 
+#include "spawn.hpp"
+#include "waypoint.hpp"
 #include <string>
 #include <vector>
 #include <map>
@@ -17,7 +19,8 @@ public:
 	const std::string& title() const;
 	const Tilemap& tilemap() const;
 	const std::map<std::string, Waypoint*>& waypoints() const FROB_PURE;
-	std::vector<Entity*> spawn(unsigned int level);
+	const std::map<std::string, Spawnpoint*>& spawnpoints() const FROB_PURE;
+	std::vector<Entity*> spawn(unsigned int level, const Region& region) const;
 
 private:
 	Level(const std::string& filename); /* use from_filename */

@@ -5,6 +5,7 @@
 #include "tilemap.hpp"
 #include "common.hpp"
 #include "region.hpp"
+#include "spawn.hpp"
 #include "waypoint.hpp"
 
 #include <yaml.h>
@@ -17,20 +18,6 @@ static const size_t max_tiles = 500;
 #define strncasecmp _strnicmp
 #define strncpy(dst, src, n) strncpy_s(dst, n, src, _TRUNCATE)
 #endif
-
-class Spawnpoint: public Region {
-public:
-	static Spawnpoint* from_yaml(yaml_parser_t* parser){
-		auto ptr = new Spawnpoint;
-		ptr->parse(parser);
-		return ptr;
-	}
-
-private:
-	Spawnpoint(){
-
-	}
-};
 
 class TilemapPimpl {
 public:
@@ -513,6 +500,10 @@ std::vector<Tilemap::Tile>::const_iterator Tilemap::end() const {
 
 const std::map<std::string, Waypoint*>& Tilemap::waypoints() const {
 	return pimpl->waypoint;
+}
+
+const std::map<std::string, Spawnpoint*>& Tilemap::spawnpoints() const {
+	return pimpl->spawnpoint;
 }
 
 void Tilemap::set_dimensions(size_t w, size_t h){

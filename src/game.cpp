@@ -81,6 +81,13 @@ static void render_waypoints(const Vector2f& cam){
 		static float color[3] = {1,1,0};
 		backend->render_region(it->second, cam, color);
 	}
+
+	/* render spawnpoints */
+	for ( auto it = level->spawnpoints().begin(); it != level->spawnpoints().end(); ++it ){
+		static float color[3] = {0.7f, 0, 0.7f};
+		backend->render_region(it->second, cam, color);
+	}
+
 }
 
 static void render_aabb(const Vector2f& cam){
@@ -183,7 +190,9 @@ namespace Game {
 			/* spawn wave */
 			if ( cur.tv_sec - sref.tv_sec > wave_delay ){
 				wave_current++;
-				EntityVector wave = level->spawn(wave_current);
+				const std::map<std::string, Spawnpoint*>& derp = level->spawnpoints();
+				const Spawnpoint* spawn = derp.begin()->second;
+				EntityVector wave = level->spawn(wave_current, *spawn);
 				creep.insert(creep.end(), wave.begin(), wave.end());
 				sref.tv_sec += wave_delay;
 			}

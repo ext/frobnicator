@@ -10,6 +10,12 @@ Region::Region(){
 
 }
 
+Vector2f Region::random_point() const {
+	const int rx = rand() % _w;
+	const int ry = rand() % _h;
+	return Vector2f(_x + rx, _y + ry);
+}
+
 void Region::set(const std::string& key, const std::string& value){
 	if ( key == "name" ){ _name = value; }
 	if ( key == "x" ){ _x = atoi(value.c_str()); }

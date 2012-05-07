@@ -1,6 +1,7 @@
 #ifndef DVB021_REGION_H
 #define DVB021_REGION_H
 
+#include "common.hpp"
 #include <string>
 
 class Region {
@@ -13,6 +14,11 @@ public:
 	int w() const { return _w; }
 	int h() const { return _h; }
 	const std::string& name() const { return _name; }
+
+	/**
+	 * Generete a random point within the region.
+	 */
+	Vector2f random_point() const;
 
 protected:
 	virtual void set(const std::string& key, const std::string& value);
