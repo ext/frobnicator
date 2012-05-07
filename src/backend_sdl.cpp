@@ -459,6 +459,8 @@ public:
 	}
 
 	virtual void render_region(const Entity* ent, const Vector2f& camera, float color[3]) const {
+		const SDLSprite* sprite = static_cast<const SDLSprite*>(ent->sprite());
+
 		glPushMatrix();
 
 		/* camera */
@@ -468,7 +470,7 @@ public:
 		glTranslatef(ent->world_pos().x, ent->world_pos().y, 0.0f);
 
 		/* tile scale */
-		glScalef(Game::tile_width() * 2.0f, Game::tile_height() * 2.0f, 1.0f);
+		glScalef(Game::tile_width() * sprite->scale().x, Game::tile_height() * (sprite->scale().y+sprite->offset().y), 1.0f);
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glVertexPointer(3, GL_FLOAT, sizeof(float)*5, vertices);
