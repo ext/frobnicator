@@ -27,9 +27,9 @@ public:
 protected:
 	Entity(const Vector2f& pos, const Blueprint* blueprint, unsigned int level);
 	size_t level;
+	Vector2f pos;
 
 private:
-	Vector2f pos;
 	const Blueprint* blueprint;
 };
 

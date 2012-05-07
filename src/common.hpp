@@ -1,6 +1,8 @@
 #ifndef DVB021_COMMON_H
 #define DVB021_COMMON_H
 
+#include <math.h>
+
 const char* real_path(const char* filename);
 int yaml_error(struct yaml_parser_s* parser);
 
@@ -56,6 +58,21 @@ public:
 	 */
 	T length2() const {
 		return x*x + y*y;
+	}
+
+	/**
+	 * Gives length of vector.
+	 */
+	T length() const {
+		return sqrt(length2());
+	}
+
+	/**
+	 * Get a normalized copy of the vector.
+	 */
+	Vector normalized() const {
+		const T len = length();
+		return Vector(x/len, y/len);
 	}
 
 	/**

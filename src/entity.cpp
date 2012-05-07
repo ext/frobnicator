@@ -54,5 +54,6 @@ Creep& Creep::set_dst(const Vector2f& dst){
 }
 
 void Creep::tick(){
-
+	const Vector2f d = (dst - pos).normalized();
+	pos += d * 0.3;
 }

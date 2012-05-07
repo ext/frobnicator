@@ -201,6 +201,10 @@ namespace Game {
 			const uint64_t delta = (cur.tv_sec - t.tv_sec) * 1000000 + (cur.tv_usec - t.tv_usec);
 			const  int64_t delay = per_frame - delta;
 
+			for ( auto it = creep.begin(); it != creep.end(); ++it ){
+				(*it)->tick();
+			}
+
 			/* move time forward */
 			t.tv_usec += per_frame;
 			if ( t.tv_usec > 1000000 ){
