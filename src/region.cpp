@@ -10,9 +10,11 @@ Region::Region(){
 
 }
 
-Vector2f Region::random_point() const {
-	const int rx = rand() % _w;
-	const int ry = rand() % _h;
+Vector2f Region::random_point(const Vector2i& size) const {
+	const int dx = _w - size.x;
+	const int dy = _h - size.y;
+	const int rx = dx > 0 ? rand() % dx : 0;
+	const int ry = dy > 0 ? rand() % dy : 0;
 	return Vector2f(_x + rx, _y + ry);
 }
 

@@ -55,7 +55,7 @@ public:
 
 		auto tmp = std::vector<Entity*>(amount);
 		std::generate(tmp.begin(), tmp.end(), [this, level, region](){
-			return Creep::spawn_at(region.random_point(), waves, level);
+			return Creep::spawn_at(region.random_point(Vector2i(48,48)), waves, level);
 		});
 		return tmp;
 	}
