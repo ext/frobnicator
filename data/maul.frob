@@ -99,6 +99,7 @@ waypoint:
     y: 240
     w: 96
     h: 96
+    next: outer 1
   -
     name: inner 1
     x: 1104

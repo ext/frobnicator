@@ -110,7 +110,11 @@
     <property name="next" value="outer 8"/>
    </properties>
   </object>
-  <object name="outer 8" type="waypoint" x="2050" y="250" width="100" height="100"/>
+  <object name="outer 8" type="waypoint" x="2050" y="250" width="100" height="100">
+   <properties>
+    <property name="next" value="outer 1"/>
+   </properties>
+  </object>
   <object name="inner 1" type="waypoint" x="1150" y="550" width="100" height="100">
    <properties>
     <property name="inner" value="middle"/>
