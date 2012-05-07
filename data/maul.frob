@@ -121,7 +121,7 @@ waypoint:
     h: 96
     next: inner 3
   -
-    name: outer 3
+    name: inner 3
     x: 528
     y: 1104
     w: 96
@@ -184,9 +184,9 @@ spawn:
     next: outer 1
   -
     name: spawn 2
-    x: 0
+    x: -144
     y: 1104
-    w: 48
+    w: 192
     h: 96
     next: outer 3
   -
@@ -194,13 +194,13 @@ spawn:
     x: 1104
     y: 2256
     w: 96
-    h: 48
+    h: 192
     next: outer 5
   -
     name: spawn 4
     x: 2256
     y: 1104
-    w: 48
+    w: 192
     h: 96
     next: outer 7
 
