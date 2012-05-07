@@ -13,8 +13,8 @@ public:
 
 	virtual void load_texture(const std::string& filename) = 0;
 
-	const Vector2f& offset() const { return _offset; }
-	const Vector2f& scale() const { return _scale; }
+	const Vector2f& FROB_PURE offset() const { return _offset; }
+	const Vector2f& FROB_PURE scale() const { return _scale; }
 	void set_offset(const Vector2f& offset){ _offset = offset; }
 	void set_scale(const Vector2f& scale){ _scale = scale; }
 
