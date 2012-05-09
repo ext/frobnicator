@@ -11,15 +11,14 @@
     offset: [0, -2]
     scale: [2, 4]
   splash: 0
-  range: 200
+  range: 500
+  rof: 60
 
 - level: 1
   cost: 75
-  rof: 0.7
   damage: 2
 
 - level: 2
   cost: 150
-  rof: 1.0
   damage: 3
   range: 250

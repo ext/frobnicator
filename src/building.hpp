@@ -22,6 +22,12 @@ private:
 	static const std::string generate_id();
 
 	bool can_fire() const;
+	bool have_target() const;
+	void fire_at(Creep* creep);
+
+	std::string target;
+	uint64_t firing_delta;
+	uint64_t last_firing;
 };
 
 #endif /* FROBNICATOR_BUILDING_H */
