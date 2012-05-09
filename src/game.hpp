@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <string>
+#include <map>
 
 namespace Game {
 	/**
@@ -47,6 +48,11 @@ namespace Game {
 	 * No-op if entity no such entity was found.
 	 */
 	void remove_entity(const std::string& name);
+
+	/**
+	 * All creep.
+	 */
+	const std::map<std::string, Creep*>& all_creep();
 
 	/**
 	 * Do stuff.

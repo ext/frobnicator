@@ -67,10 +67,14 @@ public:
 		return new Building(world, blueprint);
 	}
 
+	virtual void tick(float dt);
+
 private:
 	Building(const Vector2f& pos, const Blueprint* blueprint);
 
 	static const std::string generate_id();
+
+	bool can_fire() const;
 };
 
 #endif /* DVB021_ENTITY_H */

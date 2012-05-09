@@ -3,6 +3,7 @@
 
 class Backend;
 class Blueprint;
+class Creep;
 class Level;
 class Entity;
 class Region;

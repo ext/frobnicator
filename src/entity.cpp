@@ -4,6 +4,7 @@
 
 #include "entity.hpp"
 #include "blueprint.hpp"
+#include "creep.hpp"
 #include "game.hpp"
 #include "waypoint.hpp"
 #include <cstdio>
@@ -70,4 +71,22 @@ const std::string Building::generate_id(){
 	std::stringstream s;
 	s << "building_" << n++;
 	return s.str();
+}
+
+void Building::tick(float dt){
+	if ( can_fire() ){
+		for ( auto it = Game::all_creep().begin(); it != Game::all_creep().end(); ++it ){
+			Creep* creep = it->second;
+			const float distance = (world_pos() - creep->world_pos()).length();
+
+			if ( distance < range() ){
+				fprintf(stderr, "Entity `%s' can fire at `%s'.\n", id().c_str(), creep->id().c_str());
+				break;
+			}
+		}
+	}
+}
+
+bool Building::can_fire() const {
+	return true;
 }

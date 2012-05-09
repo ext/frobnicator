@@ -222,7 +222,7 @@ namespace Game {
 			const uint64_t delta = (cur.tv_sec - t.tv_sec) * 1000000 + (cur.tv_usec - t.tv_usec);
 			const  int64_t delay = per_frame - delta;
 
-			/* update */
+			/* update creep */
 			std::for_each(creep.begin(), creep.end(), [](std::pair<const std::string, Creep*>& pair){
 				Creep* creep = pair.second;
 				creep->tick(dt);
@@ -251,6 +251,11 @@ namespace Game {
 
 				/* remember current region */
 				creep->set_region(region ? region->name() : "");
+			});
+
+			/* update towers */
+			std::for_each(building.begin(), building.end(), [](std::pair<const std::string, Building*>& pair){
+				pair.second->tick(dt);
 			});
 
 			/* move time forward */
@@ -450,6 +455,10 @@ namespace Game {
 		} else {
 			building.erase(name);
 		}
+	}
+
+	const std::map<std::string, Creep*>& all_creep(){
+		return ::creep;
 	}
 
 };
