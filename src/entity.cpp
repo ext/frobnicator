@@ -21,6 +21,7 @@ Entity::Entity(const std::string& id, const Vector2f& pos, const Blueprint* blue
 	, _id(id)
 	, blueprint(blueprint) {
 
+	hp = max_hp();
 }
 
 const Vector2f& Entity::world_pos() const {
@@ -52,8 +53,17 @@ float Entity::slow()   const { return blueprint->data[level].slow; }
 float Entity::poison() const { return blueprint->data[level].poison; }
 float Entity::speed()  const { return blueprint->data[level].speed; }
 float Entity::armor()  const { return blueprint->data[level].armor; }
+float Entity::max_hp()  const { return blueprint->data[level].hp; }
+float Entity::current_hp()  const { return hp; }
 
 void Entity::kill(){
 	fprintf(stderr, "Entity %s was killed\n", id().c_str());
 	Game::remove_entity(id());
+}
+
+void Entity::damage(float amount){
+	hp -= amount;
+	if ( hp <= 0.0f ){
+		kill();
+	}
 }

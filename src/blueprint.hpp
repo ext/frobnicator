@@ -48,6 +48,7 @@ private:
 		float poison;
 		float speed;
 		float armor;
+		float hp;
 		unsigned int amount;
 	};
 

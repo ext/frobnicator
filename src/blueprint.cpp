@@ -134,6 +134,7 @@ void Blueprint::parse_leveldata(struct level* level, yaml_parser_t* parser){
 		} else if ( key == "speed"  ){ level->speed = (float)atof(value);
 		} else if ( key == "armor"  ){ level->armor = (float)atof(value);
 		} else if ( key == "amount" ){ level->amount = (float)atoi(value);
+		} else if ( key == "hp" ){     level->hp = (float)atoi(value);
 		} else {
 			/* warning only */
 			fprintf(stderr, "Unhandled key `%s'\n", key.c_str());

@@ -68,6 +68,7 @@ bool Building::have_target() const {
 
 void Building::fire_at(Creep* creep){
 	fprintf(stderr, "`%s' fires at `%s'.\n", id().c_str(), creep->id().c_str());
+	creep->damage(damage());
 
 	struct timeval t;
 	gettimeofday(&t, NULL);
