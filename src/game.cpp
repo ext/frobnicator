@@ -132,7 +132,7 @@ static void render_aabb(const Vector2f& cam){
 }
 
 static void render_game(){
-	backend->render_begin();
+	backend->render_begin(nullptr);
 	{
 		Vector2f panned_cam = camera;
 

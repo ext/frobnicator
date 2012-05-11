@@ -7,6 +7,12 @@
 #include <functional>
 #include "vector.hpp"
 
+class RenderTarget {
+public:
+	virtual void bind() = 0;
+	virtual void unbind() = 0;
+};
+
 class Backend {
 public:
 	virtual ~Backend();
@@ -31,7 +37,7 @@ public:
 	 */
 	virtual void bindkey(const std::string& key, std::function<void()> func) = 0;
 
-	virtual void render_begin() = 0;
+	virtual void render_begin(RenderTarget* target) = 0;
 	virtual void render_tilemap(const Tilemap& tilemap, const Vector2f& camera) const = 0;
 	virtual void render_marker(const Vector2f& pos, const Vector2f& camera, const bool v[]) const = 0;
 	virtual void render_region(const Region* region, const Vector2f& camera, float color[3]) const = 0;
@@ -46,6 +52,7 @@ public:
 	virtual Tilemap* load_tilemap(const std::string& filename) = 0;
 
 	virtual Sprite* create_sprite() = 0;
+	virtual RenderTarget* create_rendertarget(const Vector2i& size) = 0;
 
 	typedef Backend* (*factory_callback)();
 	typedef std::map<std::string, factory_callback> map;

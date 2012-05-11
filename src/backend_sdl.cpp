@@ -213,6 +213,25 @@ public:
 	GLuint texture;
 };
 
+class SDLRenderTarget: public RenderTarget {
+public:
+	static SDLRenderTarget* current;
+
+	SDLRenderTarget(const Vector2i& size){
+
+	}
+
+	virtual void bind(){
+
+	}
+
+	virtual void unbind(){
+
+	}
+};
+
+SDLRenderTarget* SDLRenderTarget::current = nullptr;
+
 class SDLBackend: public Backend {
 public:
 	virtual ~SDLBackend(){
@@ -354,7 +373,13 @@ public:
 		return new SDLSprite;
 	}
 
-	virtual void render_begin(){
+	virtual RenderTarget* create_rendertarget(const Vector2i& size) {
+		return new SDLRenderTarget(size);
+	}
+
+	virtual void render_begin(RenderTarget* target){
+
+
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
 		glLoadIdentity();
