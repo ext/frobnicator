@@ -16,6 +16,8 @@ public:
 	 */
 	Projectile(const Vector2f& src, const Entity* dst, float speed, float len, const std::function<void()>& ready);
 
+	~Projectile();
+
 	/**
 	 * Get the current start- and end-point of the projectiles.
 	 */

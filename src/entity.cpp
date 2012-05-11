@@ -19,7 +19,8 @@ Entity::Entity(const std::string& id, const Vector2f& pos, const Blueprint* blue
 	: level(level)
 	, pos(pos)
 	, _id(id)
-	, blueprint(blueprint) {
+	, blueprint(blueprint)
+	, references(1) {
 
 	hp = max_hp();
 }
@@ -68,5 +69,15 @@ void Entity::damage(float amount){
 	hp -= amount;
 	if ( hp <= 0.0f ){
 		kill();
+	}
+}
+
+void Entity::inc_ref() const {
+	references++;
+}
+
+void Entity::dec_ref() const {
+	if ( --references == 0 ){
+		delete this;
 	}
 }

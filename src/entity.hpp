@@ -54,6 +54,9 @@ public:
 
 	virtual void on_kill(){}
 
+	void inc_ref() const;
+	void dec_ref() const;
+
 protected:
 	Entity(const std::string& id, const Vector2f& pos, const Blueprint* blueprint, unsigned int level);
 	size_t level;
@@ -63,6 +66,7 @@ protected:
 private:
 	const std::string _id;
 	const Blueprint* blueprint;
+	mutable int references;
 };
 
 #endif /* DVB021_ENTITY_H */

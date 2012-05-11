@@ -458,6 +458,12 @@ namespace Game {
 	}
 
 	void remove_entity(const std::string& name){
+		Entity* ent = find_entity(name);
+		if ( !ent ){
+			return;
+		}
+		ent->dec_ref();
+
 		/* hack to determine if it is building or creep */
 		const bool is_creep = name[0] == 'c';
 

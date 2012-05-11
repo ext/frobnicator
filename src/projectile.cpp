@@ -17,6 +17,11 @@ Projectile::Projectile(const Vector2f& src, const Entity* dst, float speed, floa
 	, len(len) {
 
 	Game::add_projectile(this);
+	dst->inc_ref();
+}
+
+Projectile::~Projectile(){
+	dst->dec_ref();
 }
 
 void Projectile::get_points(Vector2f* a, Vector2f* b) const {
