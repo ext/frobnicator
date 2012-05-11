@@ -6,6 +6,7 @@ class Blueprint;
 class Creep;
 class Level;
 class Entity;
+class Projectile;
 class Region;
 class Sprite;
 class Tilemap;

@@ -8,9 +8,10 @@
 #include "building.hpp"
 #include "common.hpp"
 #include "creep.hpp"
-#include "level.hpp"
-#include "tilemap.hpp"
 #include "entity.hpp"
+#include "level.hpp"
+#include "projectile.hpp"
+#include "tilemap.hpp"
 #include "waypoint.hpp"
 #include <cstdlib>
 #include <cassert>
@@ -44,6 +45,7 @@ static Backend* backend = NULL;
 static Level* level = NULL;
 static std::map<std::string, Building*> building;
 static std::map<std::string, Creep*> creep;
+static std::vector<Projectile*> projectile;
 static Vector2f camera;
 static Vector2f cursor;
 static bool cursor_ok[4] = {false,false,false,false};
@@ -90,6 +92,7 @@ static void render_world(const Vector2f& cam){
 		});
 
 	backend->render_entities(all, cam);
+	backend->render_projectiles(projectile, cam);
 }
 
 static void render_cursor(const Vector2f& cam){
@@ -259,6 +262,12 @@ namespace Game {
 			std::for_each(building.begin(), building.end(), [](std::pair<const std::string, Building*>& pair){
 				pair.second->tick(dt);
 			});
+
+			/* update projectiles */
+			auto end = std::remove_if(projectile.begin(), projectile.end(), [](Projectile* proj) -> bool {
+					return proj->tick(dt);
+			});
+			projectile.erase(end, projectile.end());
 
 			/* move time forward */
 			t.tv_usec += per_frame;
@@ -461,6 +470,10 @@ namespace Game {
 
 	const std::map<std::string, Creep*>& all_creep(){
 		return ::creep;
+	}
+
+	void add_projectile(Projectile* proj){
+		projectile.push_back(proj);
 	}
 
 };

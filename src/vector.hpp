@@ -69,6 +69,20 @@ public:
 	 */
 	static Vector from_yaml(yaml_parser_t* parser);
 
+	/**
+	 * Get distance between two vectors.
+	 */
+	static T distance(const Vector& a, const Vector& b){
+		return (b-a).length();
+	}
+
+	/**
+	 * Linear interpolation.
+	 */
+	static Vector lerp(const Vector& a, const Vector& b, float s){
+		return (b-a) * s + a;
+	}
+
 	union {
 		struct {
 			T x;

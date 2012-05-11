@@ -14,6 +14,7 @@ frobnicator_SOURCES = \
 	src/game.cpp src/game.hpp \
 	src/entity.cpp src/entity.hpp \
 	src/level.cpp src/level.hpp \
+	src/projectile.cpp src/projectile.hpp \
 	src/region.cpp src/region.hpp \
 	src/sprite.cpp src/sprite.hpp \
 	src/tilemap.cpp src/tilemap.hpp \

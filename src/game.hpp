@@ -1,6 +1,7 @@
 #ifndef DVB021_GAME_H
 #define DVB021_GAME_H
 
+#include "projectile.hpp"
 #include "vector.hpp"
 #include <cstddef>
 #include <string>
@@ -50,6 +51,12 @@ namespace Game {
 	 * No-op if entity no such entity was found.
 	 */
 	void remove_entity(const std::string& name);
+
+	/**
+	 * Add projectile to world.
+	 * @param proj New projectile instance, takes ownership of pointer.
+	 */
+	void add_projectile(Projectile* proj);
 
 	/**
 	 * All creep.

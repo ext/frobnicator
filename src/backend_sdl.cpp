@@ -23,6 +23,7 @@
 #include <math.h>
 #include <map>
 #include <cassert>
+#include <algorithm>
 
 typedef struct {
 	float x;
@@ -533,6 +534,29 @@ public:
 			fprintf(stderr, "OpenGL error: %s\n", gluErrorString(err));
 			exit(1);
 		}
+	}
+
+	virtual void render_projectiles(std::vector<Projectile*>& projectiles, const Vector2f& camera) const {
+		glPushMatrix();
+		glPushAttrib(GL_ENABLE_BIT);
+
+		/* camera */
+		glTranslatef(-camera.x, -camera.y, 0.0f);
+
+		glColor4f(1,1,1,1);
+		glDisable(GL_TEXTURE_2D);
+		std::for_each(projectiles.begin(), projectiles.end(), [](const Projectile* proj){
+			Vector2f src, dst;
+			proj->get_points(&src, &dst);
+
+			glBegin(GL_LINES);
+			glVertex2f(src.x, src.y);
+			glVertex2f(dst.x, dst.y);
+			glEnd();
+		});
+
+		glPopAttrib();
+		glPopMatrix();
 	}
 
 private:
