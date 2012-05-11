@@ -126,6 +126,16 @@ static GLuint load_texture(const std::string filename, size_t* width, size_t* he
 	return texture;
 }
 
+static void setup_projection(const Vector2i resolution){
+	glViewport(0, 0, resolution.x, resolution.y);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(0, resolution.x, 0, resolution.y, -1.0, 1.0);
+	glScalef(1, -1.0, 1);
+	glTranslatef(0, -(float)resolution.y, 0);
+	glMatrixMode(GL_MODELVIEW);
+}
+
 class SDLTilemap: public Tilemap {
 public:
 	SDLTilemap(const std::string& filename)
@@ -261,6 +271,8 @@ public:
 
 		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, id);
 		current = this;
+
+		setup_projection(size);
 	}
 
 	virtual void unbind(){
@@ -315,20 +327,8 @@ public:
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
-		setup_projection();
-
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	}
-
-	void setup_projection(){
-		glViewport(0, 0, size.x, size.y);
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glOrtho(0, size.x, 0, size.y, -1.0, 1.0);
-		glScalef(1, -1.0, 1);
-		glTranslatef(0, -(float)size.y, 0);
-		glMatrixMode(GL_MODELVIEW);
 	}
 
 	virtual void poll(bool& running){
@@ -366,7 +366,6 @@ public:
 			case SDL_VIDEORESIZE:
 				size = Vector2i(event.resize.w, event.resize.h);
 				SDL_SetVideoMode(size.x, size.y, 0, video_flags);
-				setup_projection();
 				Game::resize(size);
 				break;
 
@@ -436,6 +435,8 @@ public:
 	virtual void render_begin(RenderTarget* target){
 		if ( target ){
 			target->bind();
+		} else {
+			setup_projection(size);
 		}
 
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
@@ -678,8 +679,8 @@ public:
 		glBindTexture(GL_TEXTURE_2D, target->color);
 
 		const Vector2i real_offset(
-			offset.x >= 0 ? offset.x : size.x - offset.x,
-			offset.y >= 0 ? offset.y : size.y - offset.y
+			offset.x >= 0 ? offset.x : size.x + offset.x,
+			offset.y >= 0 ? offset.y : size.y + offset.y
 		);
 
 		glTranslatef(real_offset.x, target->size.y + real_offset.y, 0.0f);

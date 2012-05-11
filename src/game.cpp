@@ -63,6 +63,7 @@ static Vector2i window_size;
 static Vector2i scene_size;
 static RenderTarget* scene_target = nullptr;
 static RenderTarget* ui_target = nullptr;
+static const int ui_height = 50;
 
 namespace Game {
 	static Vector2f clamp_to_world(const Vector2f& v);
@@ -159,7 +160,7 @@ static void render_game(){
 	backend->render_begin(nullptr);
 	{
 		backend->render_target(scene_target, Vector2i(0,0));
-		backend->render_target(ui_target, Vector2i(0, -50));
+		backend->render_target(ui_target, Vector2i(0, -ui_height));
 	}
 	backend->render_end();
 }
@@ -187,9 +188,9 @@ namespace Game {
 		});
 
 		/* create render targets */
-		scene_size = Vector2i(window_size.x, window_size.y - 50);
+		scene_size = Vector2i(window_size.x, window_size.y - ui_height);
 		scene_target = backend->create_rendertarget(scene_size);
-		ui_target    = backend->create_rendertarget(Vector2i(window_size.x, 50));
+		ui_target    = backend->create_rendertarget(Vector2i(window_size.x, ui_height));
 
 		/* load all tower blueprints */
 		blueprint[ARROW_TOWER] = Blueprint::from_filename("arrowtower.yaml");
@@ -433,9 +434,9 @@ namespace Game {
 		/* recreate render targets */
 		delete scene_target;
 		delete ui_target;
-		scene_size = Vector2i(window_size.x, window_size.y - 50);
+		scene_size = Vector2i(window_size.x, window_size.y - ui_height);
 		scene_target = backend->create_rendertarget(scene_size);
-		ui_target    = backend->create_rendertarget(Vector2i(window_size.x, 50));
+		ui_target    = backend->create_rendertarget(Vector2i(window_size.x, ui_height));
 	}
 
 	static void build(const Vector2i& pos, Buildings type){
