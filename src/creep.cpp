@@ -42,8 +42,6 @@ void Creep::tick(float dt){
 }
 
 void Creep::on_enter_region(const Waypoint& region){
-	fprintf(stderr, "Entity %s entered `%s'.\n", id().c_str(), region.name().c_str());
-
 	if ( region.name() == "middle" ){
 		kill();
 		return;
@@ -65,5 +63,5 @@ void Creep::on_enter_region(const Waypoint& region){
 }
 
 void Creep::on_exit_region(const Waypoint& region){
-	fprintf(stderr, "Entity %s exited `%s'.\n", id().c_str(), region.name().c_str());
+
 }

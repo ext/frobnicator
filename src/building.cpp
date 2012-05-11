@@ -69,8 +69,6 @@ bool Building::have_target() const {
 }
 
 void Building::fire_at(Creep* creep){
-	fprintf(stderr, "`%s' fires at `%s'.\n", id().c_str(), creep->id().c_str());
-
 	/* Projectile constructor has side-effects, will deallocate itself when hit. */
 	new Projectile(world_pos() + Vector2f(48.0f, -24.0f), creep, 700.0f, 25.0f, [creep, this](){
 		creep->damage(damage());
