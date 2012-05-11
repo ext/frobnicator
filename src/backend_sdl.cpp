@@ -496,6 +496,7 @@ public:
 
 	virtual void render_entities(std::vector<Entity*>& entities, const Vector2f& camera) const {
 		glPushMatrix();
+		glPushAttrib(GL_ENABLE_BIT);
 
 		/* camera */
 		glTranslatef(-camera.x, -camera.y, 0.0f);
@@ -509,6 +510,8 @@ public:
 			const SDLSprite* sprite = static_cast<const SDLSprite*>(ent->sprite());
 			assert(sprite);
 
+			glEnable(GL_TEXTURE_2D);
+			glColor4f(1,1,1,1);
 			glBindTexture(GL_TEXTURE_2D, sprite->texture);
 
 			glPushMatrix();
@@ -518,15 +521,34 @@ public:
 				0.0f);
 
 			/* entity scale */
+			glPushMatrix();
 			glScalef(
 				Game::tile_width()  * sprite->scale().x,
 				Game::tile_height() * sprite->scale().y,
 				1.0f);
 
 			glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, indices);
+
+			glPopMatrix(); /* revert scale */
+
+			/* Render healthbar */
+			const float s = ent->current_hp() / ent->max_hp();
+			if ( s < 1.0f ){
+				const float w = Game::tile_width()  * sprite->scale().x * s;
+				glDisable(GL_TEXTURE_2D);
+				glColor4f(1.0f - s, s, 0.0f, 1.0f);
+				glBegin(GL_QUADS);
+				glVertex2f(0.0f, -10.0f);
+				glVertex2f(w,    -10.0f);
+				glVertex2f(w,    - 3.0f);
+				glVertex2f(0.0f, - 3.0f);
+				glEnd();
+			}
+
 			glPopMatrix();
 		}
 
+		glPopAttrib();
 		glPopMatrix();
 
 		int err;

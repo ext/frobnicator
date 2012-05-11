@@ -15,7 +15,6 @@ Building::Building(const Vector2f& pos, const Blueprint* blueprint)
 
 	fprintf(stderr, "Creating \"%s\" at (%.0f,%.0f)\n", name().c_str(), pos.x, pos.y);
 	firing_delta = static_cast<uint64_t>(600.0f / rof()); /* convert shots/min to deciseconds */
-	fprintf(stderr, "rof: %f delta: %lu\n", rof(), firing_delta);
 }
 
 const std::string Building::generate_id(){
