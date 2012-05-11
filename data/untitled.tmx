@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="48" height="48" tilewidth="50" tileheight="50">
- <tileset firstgid="1" name="tiles1" tilewidth="48" tileheight="48">
-  <image source="tiles1.jpg" width="576" height="624"/>
+ <tileset firstgid="1" name="tiles2" tilewidth="48" tileheight="48">
+  <image source="tiles2.jpg" width="576" height="624"/>
   <tile id="0">
    <properties>
     <property name="build" value="no"/>
@@ -118,24 +118,24 @@
   <object name="inner 1" type="waypoint" x="1150" y="550" width="100" height="100">
    <properties>
     <property name="inner" value="middle"/>
-    <property name="next" value="inner 2"/>
+    <property name="next" value="inner 8"/>
    </properties>
   </object>
   <object name="middle" type="waypoint" x="1100" y="1100" width="200" height="200"/>
   <object name="inner 2" type="waypoint" x="550" y="550" width="100" height="100">
    <properties>
-    <property name="next" value="inner 3"/>
+    <property name="next" value="inner 1"/>
    </properties>
   </object>
   <object name="inner 3" type="waypoint" x="550" y="1150" width="100" height="100">
    <properties>
     <property name="inner" value="middle"/>
-    <property name="next" value="inner 4"/>
+    <property name="next" value="inner 2"/>
    </properties>
   </object>
   <object name="inner 4" type="waypoint" x="550" y="1750" width="100" height="100">
    <properties>
-    <property name="next" value="inner 5"/>
+    <property name="next" value="inner 3"/>
    </properties>
   </object>
   <object name="outer 5" type="waypoint" x="1150" y="2050" width="100" height="100">
@@ -147,23 +147,23 @@
   <object name="inner 5" type="waypoint" x="1150" y="1750" width="100" height="100">
    <properties>
     <property name="inner" value="middle"/>
-    <property name="next" value="inner 6"/>
+    <property name="next" value="inner 4"/>
    </properties>
   </object>
   <object name="inner 6" type="waypoint" x="1750" y="1750" width="100" height="100">
    <properties>
-    <property name="next" value="inner 7"/>
+    <property name="next" value="inner 5"/>
    </properties>
   </object>
   <object name="inner 7" type="waypoint" x="1750" y="1150" width="100" height="100">
    <properties>
     <property name="inner" value="middle"/>
-    <property name="next" value="inner 8"/>
+    <property name="next" value="inner 6"/>
    </properties>
   </object>
   <object name="inner 8" type="waypoint" x="1750" y="550" width="100" height="100">
    <properties>
-    <property name="next" value="inner 1"/>
+    <property name="next" value="inner 7"/>
    </properties>
   </object>
  </objectgroup>

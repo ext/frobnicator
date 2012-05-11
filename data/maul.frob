@@ -107,7 +107,7 @@ waypoint:
     w: 96
     h: 96
     inner: middle
-    next: inner 2
+    next: inner 8
   -
     name: middle
     x: 1056
@@ -120,7 +120,7 @@ waypoint:
     y: 528
     w: 96
     h: 96
-    next: inner 3
+    next: inner 1
   -
     name: inner 3
     x: 528
@@ -128,14 +128,14 @@ waypoint:
     w: 96
     h: 96
     inner: middle
-    next: inner 4
+    next: inner 2
   -
     name: inner 4
     x: 528
     y: 1680
     w: 96
     h: 96
-    next: inner 5
+    next: inner 3
   -
     name: outer 5
     x: 1104
@@ -151,14 +151,14 @@ waypoint:
     w: 96
     h: 96
     inner: middle
-    next: inner 6
+    next: inner 4
   -
     name: inner 6
     x: 1680
     y: 1680
     w: 96
     h: 96
-    next: inner 7
+    next: inner 5
   -
     name: inner 7
     x: 1680
@@ -166,14 +166,14 @@ waypoint:
     w: 96
     h: 96
     inner: middle
-    next: inner 8
+    next: inner 6
   -
     name: inner 8
     x: 1680
     y: 528
     w: 96
     h: 96
-    next: inner 1
+    next: inner 7
 
 spawn:
   -
