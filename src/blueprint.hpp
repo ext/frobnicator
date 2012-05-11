@@ -27,6 +27,10 @@ public:
 		return data[level].amount;
 	}
 
+	int cost(unsigned int level) const {
+		return data[level].cost;
+	}
+
 	size_t num_levels() const {
 		return data.size();
 	}

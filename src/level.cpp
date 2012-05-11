@@ -62,7 +62,6 @@ public:
 		auto pos = tmp.begin();
 		for ( auto it = tilemap->spawnpoints().begin(); it != tilemap->spawnpoints().end(); ++it ){
 			const Spawnpoint* spawn = it->second;
-			fprintf(stderr, "  Spawning %zd units at %s\n", amount, spawn->name().c_str());
 
 			const Waypoint* dst = Game::find_waypoint(spawn->next);
 			std::generate(pos, pos+amount, [this, level, spawn, dst](){

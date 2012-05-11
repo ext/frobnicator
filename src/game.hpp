@@ -59,6 +59,12 @@ namespace Game {
 	void add_projectile(Projectile* proj);
 
 	/**
+	 * Gold transaction.
+	 * @return true if it succeeded.
+	 */
+	bool transaction(int amount, const Vector2i& pos);
+
+	/**
 	 * All creep.
 	 */
 	const std::map<std::string, Creep*>& all_creep();

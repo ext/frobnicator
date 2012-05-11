@@ -61,6 +61,7 @@ bool Entity::is_alive() const { return hp > 0.0; }
 void Entity::kill(){
 	fprintf(stderr, "Entity %s was killed\n", id().c_str());
 	Game::remove_entity(id());
+	Game::transaction(-cost(), grid_pos());
 }
 
 void Entity::damage(float amount){

@@ -13,7 +13,6 @@ Building::Building(const Vector2f& pos, const Blueprint* blueprint)
 	: Entity(generate_id(), pos, blueprint, 0)
 	, last_firing(0) {
 
-	fprintf(stderr, "Creating \"%s\" at (%.0f,%.0f)\n", name().c_str(), pos.x, pos.y);
 	firing_delta = static_cast<uint64_t>(600.0f / rof()); /* convert shots/min to deciseconds */
 }
 

@@ -60,6 +60,7 @@ static bool show_waypoints = false;
 static bool show_aabb = false;
 static const time_t wave_delay = 10;
 static unsigned int wave_current = 0;
+static int gold = 30;
 
 namespace Game {
 	static Vector2f clamp_to_world(const Vector2f& v);
@@ -379,8 +380,6 @@ namespace Game {
 			}
 
 			build(grid, ARROW_TOWER);
-
-			tilemap->reserve(grid.x, grid.y);
 			motion(x, y); /* to update marker */
 			break;
 
@@ -415,8 +414,15 @@ namespace Game {
 	}
 
 	static void build(const Vector2i& pos, Buildings type){
+		const int cost = blueprint[type]->cost(0);
+		if ( !transaction(cost, pos) ){
+			fprintf(stderr, "Not enough gold, cost %d have %d\n", cost, gold);
+			return;
+		}
+
 		Building* tmp = Building::place_at_tile(pos, blueprint[type]);
 		building[tmp->id()] = tmp;
+		tilemap->reserve(pos.x, pos.y);
 	}
 
 	size_t tile_width(){
@@ -482,4 +488,11 @@ namespace Game {
 		projectile.push_back(proj);
 	}
 
+	bool transaction(int amount, const Vector2i& pos){
+		const int tmp = gold - amount;
+		if ( tmp < 0 ) return false;
+		gold = tmp;
+		fprintf(stderr, "Gold changed to %d\n", gold);
+		return true;
+	}
 };
