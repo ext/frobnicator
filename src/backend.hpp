@@ -20,7 +20,7 @@ public:
 	/**
 	 * Initializes backend (including window)
 	 */
-	virtual void init(int width, int height) = 0;
+	virtual void init(const Vector2i& size) = 0;
 
 	/**
 	 * Polling

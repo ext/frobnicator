@@ -285,8 +285,8 @@ public:
 
 	}
 
-	virtual void init(int width, int height){
-		size = Vector2i(width, height);
+	virtual void init(const Vector2i& size){
+		::size = size;
 
 		if ( SDL_Init(SDL_INIT_VIDEO) != 0 ){
 			fprintf(stderr, "SDL_Init failed: %s\n", SDL_GetError());
@@ -294,7 +294,7 @@ public:
 		}
 
 		SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1);
-		SDL_SetVideoMode(width, height, 0, video_flags);
+		SDL_SetVideoMode(size.x, size.y, 0, video_flags);
 		SDL_EnableKeyRepeat(0, 0);
 
 		int ret;
@@ -315,19 +315,19 @@ public:
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
-		setup_projection(width, height);
+		setup_projection();
 
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 	}
 
-	void setup_projection(int w, int h){
-		glViewport(0, 0, w, h);
+	void setup_projection(){
+		glViewport(0, 0, size.x, size.y);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho(0, w, 0, h, -1.0, 1.0);
+		glOrtho(0, size.x, 0, size.y, -1.0, 1.0);
 		glScalef(1, -1.0, 1);
-		glTranslatef(0, -(float)h, 0);
+		glTranslatef(0, -(float)size.y, 0);
 		glMatrixMode(GL_MODELVIEW);
 	}
 
@@ -364,10 +364,10 @@ public:
 				break;
 
 			case SDL_VIDEORESIZE:
-				SDL_SetVideoMode(event.resize.w, event.resize.h, 0, video_flags);
-				setup_projection(event.resize.w, event.resize.h);
-				Game::resize(event.resize.w, event.resize.h);
 				size = Vector2i(event.resize.w, event.resize.h);
+				SDL_SetVideoMode(size.x, size.y, 0, video_flags);
+				setup_projection();
+				Game::resize(size);
 				break;
 
 			case SDL_QUIT:

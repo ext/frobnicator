@@ -50,8 +50,6 @@ static Vector2f camera;
 static Vector2f cursor;
 static bool cursor_ok[4] = {false,false,false,false};
 static Tilemap* tilemap;
-static int width;
-static int height;
 static const Blueprint* blueprint[BUILDING_LAST];
 static bool is_panning = false;
 static Vector2f panning_ref;    /* reference point when panning using mouse */
@@ -61,6 +59,8 @@ static bool show_aabb = false;
 static const time_t wave_delay = 10;
 static unsigned int wave_current = 0;
 static int gold = 30;
+static Vector2i window_size;
+static Vector2i scene_size;
 static RenderTarget* scene_target = nullptr;
 static RenderTarget* ui_target = nullptr;
 
@@ -168,8 +168,7 @@ namespace Game {
 	static void build(const Vector2i& pos, Buildings type);
 
 	void init(const std::string& bn, int w, int h){
-		width = w;
-		height = h;
+		window_size = Vector2i(w, h);
 		backend = Backend::create(bn);
 
 		if ( !backend ){
@@ -177,7 +176,7 @@ namespace Game {
 			exit(1);
 		}
 
-		backend->init(width, height);
+		backend->init(window_size);
 		backend->bindkey("F1", [](){
 				show_waypoints = !show_waypoints;
 				fprintf(stderr, "%s waypoints\n", show_waypoints ? "Showing" : "Hiding");
@@ -188,8 +187,9 @@ namespace Game {
 		});
 
 		/* create render targets */
-		scene_target = backend->create_rendertarget(Vector2i(width, height - 50));
-		ui_target    = backend->create_rendertarget(Vector2i(width, 50));
+		scene_size = Vector2i(window_size.x, window_size.y - 50);
+		scene_target = backend->create_rendertarget(scene_size);
+		ui_target    = backend->create_rendertarget(Vector2i(window_size.x, 50));
 
 		/* load all tower blueprints */
 		blueprint[ARROW_TOWER] = Blueprint::from_filename("arrowtower.yaml");
@@ -324,8 +324,8 @@ namespace Game {
 	 * tilemap - window. Can be used to prevent user from moving outside of map.
 	 */
 	static Vector2f clamp_to_world(const Vector2f& v){
-		const size_t bx = tilemap->tile_width()  * tilemap->map_width()  - width;
-		const size_t by = tilemap->tile_height() * tilemap->map_height() - height;
+		const size_t bx = tilemap->tile_width()  * tilemap->map_width()  - scene_size.x;
+		const size_t by = tilemap->tile_height() * tilemap->map_height() - scene_size.y;
 
 		return Vector2f(
 			clamp(v.x, 0.0f, (float)bx),
@@ -425,17 +425,17 @@ namespace Game {
 		}
 	}
 
-	void resize(size_t w, size_t h){
-		fprintf(stderr, "Window resized to %zdx%zd\n", w, h);
+	void resize(const Vector2i& size){
+		fprintf(stderr, "Window resized to %dx%d\n", size.x, size.y);
 
-		width = w;
-		height = h;
+		window_size = size;
 
 		/* recreate render targets */
 		delete scene_target;
 		delete ui_target;
-		scene_target = backend->create_rendertarget(Vector2i(width, height - 50));
-		ui_target    = backend->create_rendertarget(Vector2i(width, 50));
+		scene_size = Vector2i(window_size.x, window_size.y - 50);
+		scene_target = backend->create_rendertarget(scene_size);
+		ui_target    = backend->create_rendertarget(Vector2i(window_size.x, 50));
 	}
 
 	static void build(const Vector2i& pos, Buildings type){

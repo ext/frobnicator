@@ -115,7 +115,7 @@ namespace Game {
 	 * @param w New width in pixels.
 	 * @param h New height in pixels.
 	 */
-	void resize(size_t w, size_t h);
+	void resize(const Vector2i& size);
 };
 
 #endif /* DVB021_GAME_H */
