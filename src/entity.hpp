@@ -40,6 +40,7 @@ public:
 	float armor() const;
 	float max_hp() const;
 	float current_hp() const;
+	bool is_alive() const;
 
 	/**
 	 * Kill this entity.

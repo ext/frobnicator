@@ -55,6 +55,7 @@ float Entity::speed()  const { return blueprint->data[level].speed; }
 float Entity::armor()  const { return blueprint->data[level].armor; }
 float Entity::max_hp()  const { return blueprint->data[level].hp; }
 float Entity::current_hp()  const { return hp; }
+bool Entity::is_alive() const { return hp > 0.0; }
 
 void Entity::kill(){
 	fprintf(stderr, "Entity %s was killed\n", id().c_str());
@@ -62,6 +63,8 @@ void Entity::kill(){
 }
 
 void Entity::damage(float amount){
+	if ( !is_alive() ) return;
+
 	hp -= amount;
 	if ( hp <= 0.0f ){
 		kill();
