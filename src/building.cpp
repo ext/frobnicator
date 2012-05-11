@@ -45,10 +45,11 @@ void Building::tick(float dt){
 
 		for ( auto it = Game::all_creep().begin(); it != Game::all_creep().end(); ++it ){
 			Creep* creep = it->second;
-			const float distance = (world_pos() - creep->world_pos()).length();
+			const float distance = Vector2f::distance(world_pos(), creep->world_pos());
 
 			if ( distance < current ){
 				target = creep->id();
+				current = distance;
 			}
 		}
 	}
