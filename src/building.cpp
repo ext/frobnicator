@@ -41,13 +41,15 @@ void Building::tick(float dt){
 	}
 
 	if ( !t ){
+		/* find closest entity within range */
+		float current = range();
+
 		for ( auto it = Game::all_creep().begin(); it != Game::all_creep().end(); ++it ){
 			Creep* creep = it->second;
 			const float distance = (world_pos() - creep->world_pos()).length();
 
-			if ( distance < range() ){
+			if ( distance < current ){
 				target = creep->id();
-				break;
 			}
 		}
 	}
