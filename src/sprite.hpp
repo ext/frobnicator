@@ -1,7 +1,7 @@
 #ifndef FROBNICATOR_SPRITE_H
 #define FROBNICATOR_SPRITE_H
 
-#include "common.hpp"
+#include "vector.hpp"
 #include <string>
 
 class Sprite {

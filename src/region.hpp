@@ -1,7 +1,7 @@
 #ifndef DVB021_REGION_H
 #define DVB021_REGION_H
 
-#include "common.hpp"
+#include "vector.hpp"
 #include <string>
 
 class Region {

@@ -1,7 +1,7 @@
 #ifndef DVB021_ENTITY_H
 #define DVB021_ENTITY_H
 
-#include "common.hpp"
+#include "vector.hpp"
 #include <string>
 
 class Entity {

@@ -1,9 +1,11 @@
 #ifndef DVB021_GAME_H
 #define DVB021_GAME_H
 
+#include "vector.hpp"
 #include <cstddef>
 #include <string>
 #include <map>
+#include <functional>
 
 namespace Game {
 	/**

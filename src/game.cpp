@@ -6,6 +6,7 @@
 #include "backend.hpp"
 #include "blueprint.hpp"
 #include "building.hpp"
+#include "common.hpp"
 #include "creep.hpp"
 #include "level.hpp"
 #include "tilemap.hpp"
