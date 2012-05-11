@@ -1,7 +1,7 @@
 meta:
   width: 48
   height: 48
-  texture: tiles1.jpg
+  texture: tiles2.jpg
   tiles_horizontal: 12
   tiles_vertical: 13
 
