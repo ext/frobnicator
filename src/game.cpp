@@ -61,6 +61,8 @@ static bool show_aabb = false;
 static const time_t wave_delay = 10;
 static unsigned int wave_current = 0;
 static int gold = 30;
+static RenderTarget* scene_target = nullptr;
+static RenderTarget* ui_target = nullptr;
 
 namespace Game {
 	static Vector2f clamp_to_world(const Vector2f& v);
@@ -132,7 +134,7 @@ static void render_aabb(const Vector2f& cam){
 }
 
 static void render_game(){
-	backend->render_begin(nullptr);
+	backend->render_begin(scene_target);
 	{
 		Vector2f panned_cam = camera;
 
@@ -145,6 +147,19 @@ static void render_game(){
 		render_cursor(panned_cam);
 		render_waypoints(panned_cam);
 		render_aabb(panned_cam);
+	}
+	backend->render_end();
+
+	backend->render_begin(ui_target);
+	{
+
+	}
+	backend->render_end();
+
+	backend->render_begin(nullptr);
+	{
+		backend->render_target(scene_target, Vector2i(0,0));
+		backend->render_target(ui_target, Vector2i(0, -50));
 	}
 	backend->render_end();
 }
@@ -171,6 +186,10 @@ namespace Game {
 				show_aabb = !show_aabb;
 				fprintf(stderr, "%s AABB\n", show_aabb ? "Showing" : "Hiding");
 		});
+
+		/* create render targets */
+		scene_target = backend->create_rendertarget(Vector2i(width, height - 50));
+		ui_target    = backend->create_rendertarget(Vector2i(width, 50));
 
 		/* load all tower blueprints */
 		blueprint[ARROW_TOWER] = Blueprint::from_filename("arrowtower.yaml");
@@ -411,6 +430,12 @@ namespace Game {
 
 		width = w;
 		height = h;
+
+		/* recreate render targets */
+		delete scene_target;
+		delete ui_target;
+		scene_target = backend->create_rendertarget(Vector2i(width, height - 50));
+		ui_target    = backend->create_rendertarget(Vector2i(width, 50));
 	}
 
 	static void build(const Vector2i& pos, Buildings type){

@@ -20,6 +20,7 @@ AC_CONFIG_FILES([frobnicator-dbg], [chmod +x frobnicator-dbg])
 
 AH_BOTTOM([#include "forward.hpp"
 #define FROB_PURE __attribute__((pure))
+#define FROB_NONNULL(...) __attribute__((nonnull(__VA_ARGS__)))
 ])
 
 pkgdatadir="${datadir}/${PACKAGE}"

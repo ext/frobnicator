@@ -18,8 +18,7 @@
 #include "sprite.hpp"
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
+#include <GL/glew.h>
 #include <math.h>
 #include <map>
 #include <cassert>
@@ -41,6 +40,7 @@ static const float vertices[][5] = { /* x,y,z,u,v */
 };
 static const unsigned int indices[4] = {0,1,2,3};
 static const unsigned int line_indices[5] = {0, 1, 2, 3, 0};
+static Vector2i size;
 
 static int video_flags = SDL_OPENGL|SDL_DOUBLEBUF|SDL_RESIZABLE;
 
@@ -217,17 +217,64 @@ class SDLRenderTarget: public RenderTarget {
 public:
 	static SDLRenderTarget* current;
 
-	SDLRenderTarget(const Vector2i& size){
+	SDLRenderTarget(const Vector2i& size)
+		: size(size)
+		, id(0) {
 
+		glGenFramebuffersEXT(1, &id);
+		glGenTextures(1, &color);
+
+		bind();
+		glDisable(GL_CULL_FACE);
+		glDisable(GL_DEPTH_TEST);
+		glEnable(GL_TEXTURE_2D);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+
+		glBindTexture(GL_TEXTURE_2D, color);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, size.x, size.y, 0, GL_RGB, GL_UNSIGNED_INT, NULL);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, color, 0);
+
+		GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+		if(status != GL_FRAMEBUFFER_COMPLETE_EXT){
+			fprintf(stderr, "Framebuffer incomplete: %s\n", gluErrorString(status));
+			abort();
+		}
+
+		unbind();
+	}
+
+	virtual ~SDLRenderTarget(){
+		glDeleteFramebuffersEXT(1, &id);
+		glDeleteTextures(1, &color);
 	}
 
 	virtual void bind(){
+		if ( current ){
+			fprintf(stderr, "Nesting problem with SDLRenderTarget, did you call Backend::render_end()?\n");
+			abort();
+		}
 
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, id);
+		current = this;
 	}
 
 	virtual void unbind(){
-
+		if ( !current ){
+			fprintf(stderr, "Nesting problem with SDLRenderTarget, did you call Backend::render_begin(..)?\n");
+			abort();
+		}
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+		current = nullptr;
 	}
+
+	const Vector2i size;
+	GLuint id;
+	GLuint color;
 };
 
 SDLRenderTarget* SDLRenderTarget::current = nullptr;
@@ -239,6 +286,8 @@ public:
 	}
 
 	virtual void init(int width, int height){
+		size = Vector2i(width, height);
+
 		if ( SDL_Init(SDL_INIT_VIDEO) != 0 ){
 			fprintf(stderr, "SDL_Init failed: %s\n", SDL_GetError());
 			exit(1);
@@ -247,6 +296,12 @@ public:
 		SDL_GL_SetAttribute(SDL_GL_SWAP_CONTROL, 1);
 		SDL_SetVideoMode(width, height, 0, video_flags);
 		SDL_EnableKeyRepeat(0, 0);
+
+		int ret;
+		if ( (ret=glewInit()) != GLEW_OK ){
+			fprintf(stderr, "Failed to initialize GLEW: %s\n", glewGetErrorString(ret));
+			exit(1);
+		}
 
 		for ( int i = 0; i < SDLK_LAST; i++ ){
 			pressed[i] = false;
@@ -312,6 +367,7 @@ public:
 				SDL_SetVideoMode(event.resize.w, event.resize.h, 0, video_flags);
 				setup_projection(event.resize.w, event.resize.h);
 				Game::resize(event.resize.w, event.resize.h);
+				size = Vector2i(event.resize.w, event.resize.h);
 				break;
 
 			case SDL_QUIT:
@@ -378,7 +434,9 @@ public:
 	}
 
 	virtual void render_begin(RenderTarget* target){
-
+		if ( target ){
+			target->bind();
+		}
 
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
@@ -386,6 +444,11 @@ public:
 	}
 
 	virtual void render_end(){
+		if ( SDLRenderTarget::current ){
+			SDLRenderTarget::current->unbind();
+			return;
+		}
+
 		SDL_GL_SwapBuffers();
 	}
 
@@ -407,7 +470,7 @@ public:
 		int err;
 		if ( (err=glGetError()) != GL_NO_ERROR ){
 			fprintf(stderr, "OpenGL error: %s\n", gluErrorString(err));
-			exit(1);
+			abort();
 		}
 	}
 
@@ -445,7 +508,7 @@ public:
 		int err;
 		if ( (err=glGetError()) != GL_NO_ERROR ){
 			fprintf(stderr, "OpenGL error: %s\n", gluErrorString(err));
-			exit(1);
+			abort();
 		}
 	}
 
@@ -479,7 +542,7 @@ public:
 		int err;
 		if ( (err=glGetError()) != GL_NO_ERROR ){
 			fprintf(stderr, "OpenGL error: %s\n", gluErrorString(err));
-			exit(1);
+			abort();
 		}
 	}
 
@@ -515,7 +578,7 @@ public:
 		int err;
 		if ( (err=glGetError()) != GL_NO_ERROR ){
 			fprintf(stderr, "OpenGL error: %s\n", gluErrorString(err));
-			exit(1);
+			abort();
 		}
 	}
 
@@ -579,7 +642,7 @@ public:
 		int err;
 		if ( (err=glGetError()) != GL_NO_ERROR ){
 			fprintf(stderr, "OpenGL error: %s\n", gluErrorString(err));
-			exit(1);
+			abort();
 		}
 	}
 
@@ -603,6 +666,26 @@ public:
 		});
 
 		glPopAttrib();
+		glPopMatrix();
+	}
+
+	virtual void render_target(RenderTarget* in_target, const Vector2i& offset) const {
+		SDLRenderTarget* target = static_cast<SDLRenderTarget*>(in_target);
+
+		glPushMatrix();
+
+		glColor4f(1,1,1,1);
+		glBindTexture(GL_TEXTURE_2D, target->color);
+
+		const Vector2i real_offset(
+			offset.x >= 0 ? offset.x : size.x - offset.x,
+			offset.y >= 0 ? offset.y : size.y - offset.y
+		);
+
+		glTranslatef(real_offset.x, target->size.y + real_offset.y, 0.0f);
+		glScalef(target->size.x, -target->size.y, 1.0f);
+		glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, indices);
+
 		glPopMatrix();
 	}
 
