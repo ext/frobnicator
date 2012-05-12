@@ -62,7 +62,7 @@ namespace Game {
 	 * Gold transaction.
 	 * @return true if it succeeded.
 	 */
-	bool transaction(int amount, const Vector2i& pos);
+	bool transaction(int amount, const Vector2f& pos);
 
 	/**
 	 * Remove a life.

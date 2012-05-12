@@ -19,6 +19,7 @@
 #include <vector>
 #include <math.h>
 #include <algorithm>
+#include <cstdarg>
 
 #ifdef WIN32
 #define VC_EXTRALEAN
@@ -41,12 +42,14 @@ enum Buildings {
 	BUILDING_LAST,
 };
 
+class Message;
 static bool running = false;
 static Backend* backend = NULL;
 static Level* level = NULL;
 static std::map<std::string, Building*> building;
 static std::map<std::string, Creep*> creep;
 static std::vector<Projectile*> projectile;
+static std::vector<Message*> messages;
 static Vector2f camera;
 static Vector2f cursor;
 static bool cursor_ok[4] = {false,false,false,false};
@@ -76,6 +79,39 @@ namespace Game {
 	static Vector2f clamp_to_world(const Vector2f& v);
 }
 
+class Message {
+public:
+	Message(const Vector2f& pos, const Color& color, const char* fmt, ...)
+		: pos(pos)
+		, color(color)
+		, t(1.0f) {
+
+		va_list ap;
+		va_start(ap, fmt);
+		vasprintf(&msg, fmt, ap);
+		va_end(ap);
+	}
+
+	~Message(){
+		free(msg);
+	}
+
+	bool tick(float dt){
+		static float lifespan = 3.0f;
+
+		t += dt;
+		const float s = t / lifespan;
+		color.a = 1.0f - s;
+		pos.y -= 0.5f;
+		return t < lifespan;
+	}
+
+	Vector2f pos;
+	Color color;
+	float t;
+	char* msg;
+};
+
 static void poll(bool&render){
 	backend->poll(running);
 }
@@ -104,6 +140,13 @@ static void render_world(const Vector2f& cam){
 
 	backend->render_entities(all, cam);
 	backend->render_projectiles(projectile, cam);
+
+	std::for_each(messages.begin(), messages.end(), [cam](const Message* msg){
+			Vector2f p = msg->pos - cam;
+			if ( p.x < 0.0f ) return; /* Font::printf wraps negative positions */
+			if ( p.y < 0.0f ) return;
+			font24->printf(p.x, p.y, msg->color, "%s", msg->msg);
+	});
 }
 
 static void render_cursor(const Vector2f& cam){
@@ -315,6 +358,11 @@ namespace Game {
 			});
 			projectile.erase(end, projectile.end());
 
+			/* update messages */
+			std::remove_if(messages.begin(), messages.end(), [](Message* msg){
+				return msg->tick(dt);
+			});
+
 			/* move time forward */
 			t.tv_usec += per_frame;
 			if ( t.tv_usec > 1000000 ){
@@ -466,7 +514,7 @@ namespace Game {
 
 	static void build(const Vector2i& pos, Buildings type){
 		const int cost = blueprint[type]->cost(0);
-		if ( !transaction(cost, pos) ){
+		if ( !transaction(cost, Vector2f(pos.x*tile_width(), pos.y*tile_height())) ){
 			fprintf(stderr, "Not enough gold, cost %d have %d\n", cost, gold);
 			return;
 		}
@@ -539,10 +587,13 @@ namespace Game {
 		projectile.push_back(proj);
 	}
 
-	bool transaction(int amount, const Vector2i& pos){
+	bool transaction(int amount, const Vector2f& pos){
 		const int tmp = gold - amount;
 		if ( tmp < 0 ) return false;
 		gold = tmp;
+
+		const Color& color = amount > 0 ? Color::red : Color::yellow;
+		messages.push_back(new Message(pos, color, "%d", amount > 0 ? amount : -amount));
 		return true;
 	}
 

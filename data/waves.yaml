@@ -14,27 +14,33 @@
 
 - level: 1
   name: "Internet trolls"
-  hp: 12
+  hp: 10
   cost: 1
 
 - level: 2
   name: "Herpaderps"
-  hp: 14
+  hp: 12
 
 - level: 3
   name: "Rajulol"
-  hp: 16
-
+  hp: 14
+  
 - level: 4
   name: "Rajutroll"
-  hp: 18
+  hp: 16
 
 - level: 5
   name: "Rajuzomg"
-  hp: 20
+  hp: 2
+  amount: 10
+  speed: 130
+  cost: 1
 
 - level: 6
   hp: 22
+  amount: 4
+  speed: 60
+  cost: 2
 
 - level: 7
   hp: 24
@@ -46,10 +52,21 @@
   hp: 28
 
 - level: 10
-  hp: 30
+  hp: 100
+  amount: 2
+  speed: 15
+  cost: 12
+  sprite:
+    texture: "derp2.png"
+    scale: [1.5, 1.5]
 
 - level: 11
   hp: 32
+  amount: 4
+  speed: 60
+  cost: 2
+  sprite:
+    texture: "derp2.png"
 
 - level: 12
   hp: 34
