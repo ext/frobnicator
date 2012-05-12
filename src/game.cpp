@@ -64,6 +64,7 @@ static Vector2i scene_size;
 static RenderTarget* scene_target = nullptr;
 static RenderTarget* ui_target = nullptr;
 static const int ui_height = 50;
+static Font* font;
 
 namespace Game {
 	static Vector2f clamp_to_world(const Vector2f& v);
@@ -153,7 +154,7 @@ static void render_game(){
 
 	backend->render_begin(ui_target);
 	{
-
+		font->printf(0,0, "foobar");
 	}
 	backend->render_end();
 
@@ -191,6 +192,9 @@ namespace Game {
 		scene_size = Vector2i(window_size.x, window_size.y - ui_height);
 		scene_target = backend->create_rendertarget(scene_size);
 		ui_target    = backend->create_rendertarget(Vector2i(window_size.x, ui_height));
+
+		/* load fonts */
+		font = backend->create_font("calibri_16.bff");
 
 		/* load all tower blueprints */
 		blueprint[ARROW_TOWER] = Blueprint::from_filename("arrowtower.yaml");
