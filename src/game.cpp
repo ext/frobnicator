@@ -61,6 +61,7 @@ static time_t wave_delay = 5;
 static int wave_left = 0;
 static unsigned int wave_current = 0;
 static int gold = 30;
+static int lives = 100;
 static Vector2i window_size;
 static Vector2i scene_size;
 static RenderTarget* scene_target = nullptr;
@@ -159,10 +160,11 @@ static void render_game(){
 
 	backend->render_begin(ui_target);
 	{
-		backend->render_clear(Color::transparent);
-		backend->render_sprite(Vector2i(0,0), ui_bar_left);
+		backend->render_clear(Color::rgba(0,0,0,0.5f));
+		//backend->render_sprite(Vector2i(0,0), ui_bar_left);
 		font24->printf(7,  5, Color::white, "Gold: %4d", gold);
-		font24->printf(7, 22, Color::white, "Next wave: %4ds", wave_left);
+		font24->printf(-112,  5, Color::white, "Creep: %4zd", creep.size());
+		font24->printf(-150, 22, Color::white, "Next wave: %4ds", wave_left);
 	}
 	backend->render_end();
 

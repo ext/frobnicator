@@ -359,7 +359,6 @@ public:
 		offset.y = (float)cell.y / (float)header.image_height;
 
 		/* read bitmaps */
-		::printf("derp: %d\n", ftell(fp));
 		const size_t pixel_size = header.bpp / 8;
 		const size_t bytes = header.image_width * header.image_height * pixel_size;
 		char* data = (char*)malloc(bytes);
@@ -376,8 +375,6 @@ public:
 		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP_TO_EDGE);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, header.image_width, header.image_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-
-		::printf("font: %d\n", texture);
 
 		free(data);
 	}
@@ -439,6 +436,9 @@ public:
 
 			cx += dx;
 		}
+
+		if ( x < 0 ) x = size.x + x;
+		if ( y < 0 ) y = size.y + y;
 
 		glPushMatrix();
 		glPushAttrib(GL_ENABLE_BIT);
