@@ -13,6 +13,10 @@ public:
 	virtual void unbind() = 0;
 };
 
+class Font {
+
+};
+
 class Backend {
 public:
 	virtual ~Backend();
@@ -54,6 +58,7 @@ public:
 
 	virtual Sprite* create_sprite() = 0;
 	virtual RenderTarget* create_rendertarget(const Vector2i& size) = 0;
+	virtual Font* create_font(const std::string& filename) = 0;
 
 	typedef Backend* (*factory_callback)();
 	typedef std::map<std::string, factory_callback> map;

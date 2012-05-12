@@ -291,6 +291,18 @@ public:
 
 SDLRenderTarget* SDLRenderTarget::current = nullptr;
 
+class BitmapFont: public Font {
+public:
+	BitmapFont(const std::string& filename){
+
+
+		sprite.texture_from_file(filename);
+	}
+
+private:
+	SDLSprite sprite;
+};
+
 class SDLBackend: public Backend {
 public:
 	virtual ~SDLBackend(){
@@ -430,6 +442,10 @@ public:
 
 	virtual RenderTarget* create_rendertarget(const Vector2i& size) {
 		return new SDLRenderTarget(size);
+	}
+
+	virtual Font* create_font(const std::string& filename) {
+		return new BitmapFont(filename);
 	}
 
 	virtual void render_begin(RenderTarget* target){
