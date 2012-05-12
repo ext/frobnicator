@@ -38,6 +38,7 @@ public:
 	static const Color magenta;
 	static const Color yellow;
 	static const Color white;
+	static const Color transparent;
 
 	unsigned int to_32_bit(){
 		unsigned int v = 0;

@@ -16,8 +16,8 @@ public:
 
 class Font {
 public:
-	virtual void __attribute__((format(printf, 4, 5))) printf(int x, int y, const char* fmt, ...) const = 0;
-	virtual void vprintf(int x, int y, const char* fmt, va_list ap) const = 0;
+	virtual void __attribute__((format(printf, 5, 6))) printf(int x, int y, const Color& color, const char* fmt, ...) const = 0;
+	virtual void vprintf(int x, int y, const Color& color, const char* fmt, va_list ap) const = 0;
 };
 
 class Backend {

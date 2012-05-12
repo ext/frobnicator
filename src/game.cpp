@@ -159,10 +159,10 @@ static void render_game(){
 
 	backend->render_begin(ui_target);
 	{
-		backend->render_clear(Color::rgba(0,0,0,0.5));
+		backend->render_clear(Color::transparent);
 		backend->render_sprite(Vector2i(0,0), ui_bar_left);
-		font24->printf(2,  2, "Gold: %4d", gold);
-		font24->printf(2, 21, "Next wave: %4ds", wave_left);
+		font24->printf(7,  5, Color::white, "Gold: %4d", gold);
+		font24->printf(7, 22, Color::white, "Next wave: %4ds", wave_left);
 	}
 	backend->render_end();
 

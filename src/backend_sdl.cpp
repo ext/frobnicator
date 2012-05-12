@@ -359,6 +359,7 @@ public:
 		offset.y = (float)cell.y / (float)header.image_height;
 
 		/* read bitmaps */
+		::printf("derp: %d\n", ftell(fp));
 		const size_t pixel_size = header.bpp / 8;
 		const size_t bytes = header.image_width * header.image_height * pixel_size;
 		char* data = (char*)malloc(bytes);
@@ -370,8 +371,8 @@ public:
 		/* upload texture */
 		glGenTextures(1, &texture);
 		glBindTexture(GL_TEXTURE_2D, texture);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_S,GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_WRAP_T,GL_CLAMP_TO_EDGE);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, header.image_width, header.image_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
@@ -385,14 +386,14 @@ public:
 		glDeleteTextures(1, &texture);
 	}
 
-	virtual void  printf(int x, int y, const char* fmt, ...) const {
+	virtual void  printf(int x, int y, const Color& color, const char* fmt, ...) const {
 		va_list ap;
 		va_start(ap, fmt);
-		vprintf(x, y, fmt, ap);
+		vprintf(x, y, color, fmt, ap);
 		va_end(ap);
 	}
 
-	virtual void vprintf(int x, int y, const char* fmt, va_list ap) const {
+	virtual void vprintf(int x, int y, const Color& color, const char* fmt, va_list ap) const {
 		char* str = NULL;
 		vasprintf(&str, fmt, ap);
 
@@ -445,7 +446,7 @@ public:
 
 		glLoadIdentity();
 		glTranslatef(x, y, 0);
-		glColor4f(1,1,1,1);
+		glColor4fv(color.value);
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glVertexPointer  (3, GL_FLOAT, sizeof(float)*5, &v[0].x);
 		glTexCoordPointer(2, GL_FLOAT, sizeof(float)*5, &v[0].s);
