@@ -513,7 +513,7 @@ public:
 		while ( SDL_PollEvent(&event) ){
 			switch ( event.type ){
 			case SDL_KEYDOWN:
-				if ( event.key.keysym.sym == SDLK_ESCAPE || (event.key.keysym.sym == SDLK_q && event.key.keysym.mod & KMOD_CTRL) ){
+				if ( event.key.keysym.sym == SDLK_q && event.key.keysym.mod & KMOD_CTRL ){
 					running = false;
 				}
 
@@ -587,6 +587,17 @@ public:
 		else if ( key == "F11" ){	actions[SDLK_F11] = func; }
 		else if ( key == "F12" ){	actions[SDLK_F12] = func; }
 		else if ( key == "F13" ){	actions[SDLK_F13] = func; }
+		else if ( key == "ESC" ){	actions[SDLK_ESCAPE] = func; }
+		else if ( key == "0"   ){ actions[SDLK_0] = func; }
+		else if ( key == "1"   ){ actions[SDLK_1] = func; }
+		else if ( key == "2"   ){ actions[SDLK_2] = func; }
+		else if ( key == "3"   ){ actions[SDLK_3] = func; }
+		else if ( key == "4"   ){ actions[SDLK_4] = func; }
+		else if ( key == "5"   ){ actions[SDLK_5] = func; }
+		else if ( key == "6"   ){ actions[SDLK_6] = func; }
+		else if ( key == "7"   ){ actions[SDLK_7] = func; }
+		else if ( key == "8"   ){ actions[SDLK_8] = func; }
+		else if ( key == "9"   ){ actions[SDLK_9] = func; }
 		else {
 			fprintf(stderr, "key '%s` not recognized.\n", key.c_str());
 			abort();

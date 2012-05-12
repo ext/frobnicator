@@ -42,6 +42,11 @@ enum Buildings {
 	BUILDING_LAST,
 };
 
+enum Mode {
+	SELECT,
+	BUILD,
+};
+
 class Message;
 static bool running = false;
 static Backend* backend = NULL;
@@ -50,6 +55,8 @@ static std::map<std::string, Building*> building;
 static std::map<std::string, Creep*> creep;
 static std::vector<Projectile*> projectile;
 static std::vector<Message*> messages;
+static Buildings building_selected = BUILDING_LAST;
+static Mode mode = SELECT;
 static Vector2f camera;
 static Vector2f cursor;
 static bool cursor_ok[4] = {false,false,false,false};
@@ -150,7 +157,9 @@ static void render_world(const Vector2f& cam){
 }
 
 static void render_cursor(const Vector2f& cam){
-	backend->render_marker(cursor, cam, cursor_ok);
+	if ( mode == BUILD ){
+		backend->render_marker(cursor, cam, cursor_ok);
+	}
 }
 
 static void render_waypoints(const Vector2f& cam){
@@ -240,6 +249,16 @@ namespace Game {
 		backend->bindkey("F2", [](){
 				show_aabb = !show_aabb;
 				fprintf(stderr, "%s AABB\n", show_aabb ? "Showing" : "Hiding");
+		});
+		backend->bindkey("1", [](){
+				building_selected = ARROW_TOWER;
+				mode = BUILD;
+				if ( gold < blueprint[building_selected]->cost(0) ){
+					mode = SELECT;
+				}
+		});
+		backend->bindkey("ESC", [](){
+				mode = SELECT;
 		});
 
 		/* create render targets */
@@ -467,13 +486,16 @@ namespace Game {
 
 		switch ( button ){
 		case 1: /* left button */
-			/* try to build at cursor */
-			if ( !(cursor_ok[0] && cursor_ok[1] && cursor_ok[2] && cursor_ok[3]) ){
-				return;
-			}
+			if ( mode == BUILD){
+				/* try to build at cursor */
+				if ( !(cursor_ok[0] && cursor_ok[1] && cursor_ok[2] && cursor_ok[3]) ){
+					return;
+				}
 
-			build(grid, ARROW_TOWER);
-			motion(x, y); /* to update marker */
+				build(grid, building_selected);
+				motion(x, y); /* to update marker */
+				mode = SELECT;
+			}
 			break;
 
 		case 3: /* right button */
