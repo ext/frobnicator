@@ -204,7 +204,7 @@ public:
 	SDLSprite(){
 	}
 
-	virtual void load_texture(const std::string& filename){
+	virtual Sprite* load_texture(const std::string& filename){
 		/* search cache */
 		auto it = texture_cache.find(filename);
 		if ( it != texture_cache.end() ){
@@ -218,7 +218,11 @@ public:
 		texture = ::load_texture(filename, &width, &height);
 		texture_cache[filename] = this;
 
-		printf("texture: %d\n", texture);
+		return this;
+	}
+
+	virtual Sprite* autoscale(){
+		return set_scale(Vector2f(width, height));
 	}
 
 	size_t width;
@@ -627,9 +631,25 @@ public:
 		SDL_GL_SwapBuffers();
 	}
 
-	virtual void render_clear(const Color& color) {
+	virtual void render_clear(const Color& color) const {
 		glClearColor(color.r, color.g, color.b, color.a);
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+	}
+
+	virtual void render_sprite(const Vector2i pos, const Sprite* in_sprite) const {
+		const SDLSprite* sprite = static_cast<const SDLSprite*>(in_sprite);
+
+		glPushMatrix();
+		glLoadIdentity();
+		//glTranslatef(pos.x, pos.y, 0.0f);
+		glBindTexture(GL_TEXTURE_2D, sprite->texture);
+		glVertexPointer(3, GL_FLOAT, sizeof(float)*5, vertices);
+		glTexCoordPointer(2, GL_FLOAT, sizeof(float)*5, &vertices[0][3]);
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		//glScalef(Game::tile_width() * sprite->scale().x, Game::tile_height() * sprite->scale().y,	1.0f);
+		glScalef(300, 50, 1);
+		glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, indices);
+		glPopMatrix();
 	}
 
 	virtual void render_tilemap(const Tilemap& in, const Vector2f& camera) const {

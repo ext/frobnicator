@@ -11,6 +11,7 @@
 #include "entity.hpp"
 #include "level.hpp"
 #include "projectile.hpp"
+#include "sprite.hpp"
 #include "tilemap.hpp"
 #include "waypoint.hpp"
 #include <cstdlib>
@@ -68,6 +69,7 @@ static const int ui_height = 50;
 static Font* font16;
 static Font* font24;
 static Font* font34;
+static Sprite* ui_bar_left = nullptr;
 
 namespace Game {
 	static Vector2f clamp_to_world(const Vector2f& v);
@@ -121,7 +123,6 @@ static void render_waypoints(const Vector2f& cam){
 		static float color[3] = {0.7f, 0, 0.7f};
 		backend->render_region(it->second, cam, color);
 	}
-
 }
 
 static void render_aabb(const Vector2f& cam){
@@ -158,7 +159,8 @@ static void render_game(){
 
 	backend->render_begin(ui_target);
 	{
-		backend->render_clear(Color::green);
+		backend->render_clear(Color::rgba(0,0,0,0.5));
+		backend->render_sprite(Vector2i(0,0), ui_bar_left);
 		font24->printf(2,  2, "Gold: %4d", gold);
 		font24->printf(2, 21, "Next wave: %4ds", wave_left);
 	}
@@ -166,7 +168,6 @@ static void render_game(){
 
 	backend->render_begin(nullptr);
 	{
-		backend->render_clear(Color::magenta);
 		backend->render_target(scene_target, Vector2i(0,0));
 		backend->render_target(ui_target, Vector2i(0, -ui_height));
 	}
@@ -196,14 +197,15 @@ namespace Game {
 		});
 
 		/* create render targets */
-		scene_size = Vector2i(window_size.x, window_size.y - ui_height);
+		scene_size = window_size;
 		scene_target = backend->create_rendertarget(scene_size, false);
-		ui_target    = backend->create_rendertarget(Vector2i(window_size.x, ui_height), true);
+		ui_target    = backend->create_rendertarget(Vector2i(window_size.x, ui_height), false);
 
-		/* load fonts */
+		/* load fonts and ui elements */
 		font16 = backend->create_font("calibri_16.bff");
 		font24 = backend->create_font("calibri_24.bff");
 		font34 = backend->create_font("calibri_34.bff");
+		ui_bar_left = backend->create_sprite()->load_texture("bar_left.png")->autoscale();
 
 		/* load all tower blueprints */
 		blueprint[ARROW_TOWER] = Blueprint::from_filename("arrowtower.yaml");
@@ -450,7 +452,7 @@ namespace Game {
 		/* recreate render targets */
 		delete scene_target;
 		delete ui_target;
-		scene_size = Vector2i(window_size.x, window_size.y - ui_height);
+		scene_size = window_size;
 		scene_target = backend->create_rendertarget(scene_size, false);
 		ui_target    = backend->create_rendertarget(Vector2i(window_size.x, ui_height), true);
 	}
