@@ -58,18 +58,22 @@ float Entity::max_hp()  const { return blueprint->data[level].hp; }
 float Entity::current_hp()  const { return hp; }
 bool Entity::is_alive() const { return hp > 0.0; }
 
-void Entity::kill(){
-	fprintf(stderr, "Entity %s was killed\n", id().c_str());
+void Entity::kill(Entity* who){
+	if ( who ){
+		fprintf(stderr, "Entity `%s' was killed by `%s'\n", id().c_str(), who->id().c_str());
+		Game::transaction(-cost(), grid_pos());
+	} else {
+		Game::mutilate();
+	}
 	Game::remove_entity(id());
-	Game::transaction(-cost(), grid_pos());
 }
 
-void Entity::damage(float amount){
+void Entity::damage(float amount, Entity* who){
 	if ( !is_alive() ) return;
 
 	hp -= amount;
 	if ( hp <= 0.0f ){
-		kill();
+		kill(who);
 	}
 }
 

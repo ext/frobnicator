@@ -162,7 +162,8 @@ static void render_game(){
 	{
 		backend->render_clear(Color::rgba(0,0,0,0.5f));
 		//backend->render_sprite(Vector2i(0,0), ui_bar_left);
-		font24->printf(7,  5, Color::white, "Gold: %4d", gold);
+		font24->printf(   8,  5, Color::white, "Gold: %4d", gold);
+		font24->printf(   7, 22, Color::white, "Lives: %4d", lives);
 		font24->printf(-112,  5, Color::white, "Creep: %4zd", creep.size());
 		font24->printf(-150, 22, Color::white, "Next wave: %4ds", wave_left);
 	}
@@ -240,6 +241,10 @@ namespace Game {
 			/* frame update */
 			poll(running); /* byref */
 			render_game();
+
+			if ( lives == 0 ){
+				continue;
+			}
 
 			struct timeval cur;
 			gettimeofday(&cur, NULL);
@@ -538,7 +543,12 @@ namespace Game {
 		const int tmp = gold - amount;
 		if ( tmp < 0 ) return false;
 		gold = tmp;
-		fprintf(stderr, "Gold changed to %d\n", gold);
 		return true;
+	}
+
+	void mutilate(){
+		if ( --lives == 0 ){
+			fprintf(stderr, "Game over.\n");
+		}
 	}
 };

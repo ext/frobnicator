@@ -65,6 +65,11 @@ namespace Game {
 	bool transaction(int amount, const Vector2i& pos);
 
 	/**
+	 * Remove a life.
+	 */
+	void mutilate();
+
+	/**
 	 * All creep.
 	 */
 	const std::map<std::string, Creep*>& all_creep();

@@ -11,8 +11,6 @@
 Creep::Creep(const Vector2f& pos, const Blueprint* blueprint, unsigned int level)
 	: Entity(generate_id(), pos, blueprint, level)
 	, left(7) {
-
-	fprintf(stderr, "Spawning \"%s\" at (%.0f,%.0f)\n", name().c_str(), pos.x, pos.y);
 }
 
 const std::string Creep::generate_id(){
@@ -43,7 +41,7 @@ void Creep::tick(float dt){
 
 void Creep::on_enter_region(const Waypoint& region){
 	if ( region.name() == "middle" ){
-		kill();
+		kill(NULL);
 		return;
 	}
 

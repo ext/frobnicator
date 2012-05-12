@@ -45,12 +45,12 @@ public:
 	/**
 	 * Kill this entity.
 	 */
-	void kill();
+	void kill(Entity* who);
 
 	/**
 	 * Damage this entity.
 	 */
-	void damage(float amount);
+	void damage(float amount, Entity* who);
 
 	virtual void on_kill(){}
 

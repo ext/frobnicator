@@ -70,7 +70,7 @@ bool Building::have_target() const {
 void Building::fire_at(Creep* creep){
 	/* Projectile constructor has side-effects, will deallocate itself when hit. */
 	new Projectile(world_pos() + Vector2f(48.0f, -24.0f), creep, 700.0f, 25.0f, [creep, this](){
-		creep->damage(damage());
+		creep->damage(damage(), this);
 	});
 
 	struct timeval t;
