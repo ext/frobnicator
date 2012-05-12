@@ -59,7 +59,14 @@ public:
 	virtual Tilemap* load_tilemap(const std::string& filename) = 0;
 
 	virtual Sprite* create_sprite() = 0;
-	virtual RenderTarget* create_rendertarget(const Vector2i& size) = 0;
+
+	/**
+	 * Create a new render-target.
+	 * @param size Target resolution.
+	 * @param alpha If true the target will have an alpha channel. If false all
+	 *              alpha will be premultiplied.
+	 */
+	virtual RenderTarget* create_rendertarget(const Vector2i& size, bool alpha) = 0;
 	virtual Font* create_font(const std::string& filename) = 0;
 
 	typedef Backend* (*factory_callback)();

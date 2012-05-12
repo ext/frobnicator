@@ -194,8 +194,8 @@ namespace Game {
 
 		/* create render targets */
 		scene_size = Vector2i(window_size.x, window_size.y - ui_height);
-		scene_target = backend->create_rendertarget(scene_size);
-		ui_target    = backend->create_rendertarget(Vector2i(window_size.x, ui_height));
+		scene_target = backend->create_rendertarget(scene_size, false);
+		ui_target    = backend->create_rendertarget(Vector2i(window_size.x, ui_height), true);
 
 		/* load fonts */
 		font16 = backend->create_font("calibri_16.bff");
@@ -448,8 +448,8 @@ namespace Game {
 		delete scene_target;
 		delete ui_target;
 		scene_size = Vector2i(window_size.x, window_size.y - ui_height);
-		scene_target = backend->create_rendertarget(scene_size);
-		ui_target    = backend->create_rendertarget(Vector2i(window_size.x, ui_height));
+		scene_target = backend->create_rendertarget(scene_size, false);
+		ui_target    = backend->create_rendertarget(Vector2i(window_size.x, ui_height), true);
 	}
 
 	static void build(const Vector2i& pos, Buildings type){

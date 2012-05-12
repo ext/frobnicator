@@ -229,7 +229,7 @@ class SDLRenderTarget: public RenderTarget {
 public:
 	static SDLRenderTarget* current;
 
-	SDLRenderTarget(const Vector2i& size)
+	SDLRenderTarget(const Vector2i& size, bool alpha)
 		: size(size)
 		, id(0) {
 
@@ -244,7 +244,7 @@ public:
 		glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
 		glBindTexture(GL_TEXTURE_2D, color);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, size.x, size.y, 0, GL_RGB, GL_UNSIGNED_INT, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, alpha ? GL_RGBA8 : GL_RGB8, size.x, size.y, 0, alpha ? GL_RGBA : GL_RGB, GL_UNSIGNED_INT, NULL);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -599,8 +599,8 @@ public:
 		return new SDLSprite;
 	}
 
-	virtual RenderTarget* create_rendertarget(const Vector2i& size) {
-		return new SDLRenderTarget(size);
+	virtual RenderTarget* create_rendertarget(const Vector2i& size, bool alpha) {
+		return new SDLRenderTarget(size, alpha);
 	}
 
 	virtual Font* create_font(const std::string& filename) {
