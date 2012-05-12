@@ -411,14 +411,14 @@ public:
 			n++;
 
 			v[n].x = cx;
-			v[n].y = 16.0f;
+			v[n].y = cell.y;
 			v[n].z = 0.0f;
 			v[n].s = col * offset.x;
 			v[n].t = row * offset.y + offset.y;
 			n++;
 
 			v[n].x = cx + cell.x;
-			v[n].y = 16.0f;
+			v[n].y = cell.y;
 			v[n].z = 0.0f;
 			v[n].s = col * offset.x + offset.x;
 			v[n].t = row * offset.y + offset.y;
@@ -439,8 +439,9 @@ public:
 		glPushClientAttrib(GL_CLIENT_ALL_ATTRIB_BITS);
 
 		glLoadIdentity();
+		glTranslatef(x, y, 0);
 		glColor4f(1,1,1,1);
-		glBindTexture(GL_TEXTURE_2D, 3);
+		glBindTexture(GL_TEXTURE_2D, texture);
 		glVertexPointer  (3, GL_FLOAT, sizeof(float)*5, &v[0].x);
 		glTexCoordPointer(2, GL_FLOAT, sizeof(float)*5, &v[0].s);
 		glDrawArrays(GL_QUADS, 0, num_vertices);
