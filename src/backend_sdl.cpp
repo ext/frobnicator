@@ -10,6 +10,7 @@
 #endif
 
 #include "backend.hpp"
+#include "color.hpp"
 #include "tilemap.hpp"
 #include "game.hpp"
 #include "common.hpp"
@@ -614,8 +615,6 @@ public:
 			setup_projection(size);
 		}
 
-		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-
 		glLoadIdentity();
 	}
 
@@ -626,6 +625,11 @@ public:
 		}
 
 		SDL_GL_SwapBuffers();
+	}
+
+	virtual void render_clear(const Color& color) {
+		glClearColor(color.r, color.g, color.b, color.a);
+		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	}
 
 	virtual void render_tilemap(const Tilemap& in, const Vector2f& camera) const {

@@ -148,6 +148,7 @@ static void render_game(){
 			panned_cam = Game::clamp_to_world(panned_cam);
 		}
 
+		backend->render_clear(Color::red);
 		render_world(panned_cam);
 		render_cursor(panned_cam);
 		render_waypoints(panned_cam);
@@ -157,6 +158,7 @@ static void render_game(){
 
 	backend->render_begin(ui_target);
 	{
+		backend->render_clear(Color::green);
 		font24->printf(2,  2, "Gold: %4d", gold);
 		font24->printf(2, 21, "Next wave: %4ds", wave_left);
 	}
@@ -164,6 +166,7 @@ static void render_game(){
 
 	backend->render_begin(nullptr);
 	{
+		backend->render_clear(Color::magenta);
 		backend->render_target(scene_target, Vector2i(0,0));
 		backend->render_target(ui_target, Vector2i(0, -ui_height));
 	}
