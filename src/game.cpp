@@ -57,6 +57,7 @@ static Vector2f panning_cur;    /* where the mouse currently is (to calculate ho
 static bool show_waypoints = false;
 static bool show_aabb = false;
 static time_t wave_delay = 5;
+static int wave_left = 0;
 static unsigned int wave_current = 0;
 static int gold = 30;
 static Vector2i window_size;
@@ -64,7 +65,9 @@ static Vector2i scene_size;
 static RenderTarget* scene_target = nullptr;
 static RenderTarget* ui_target = nullptr;
 static const int ui_height = 50;
-static Font* font;
+static Font* font16;
+static Font* font24;
+static Font* font34;
 
 namespace Game {
 	static Vector2f clamp_to_world(const Vector2f& v);
@@ -154,7 +157,8 @@ static void render_game(){
 
 	backend->render_begin(ui_target);
 	{
-		font->printf(0,0, "foobar");
+		font24->printf(2,  2, "Gold: %4d", gold);
+		font24->printf(2, 21, "Next wave: %4ds", wave_left);
 	}
 	backend->render_end();
 
@@ -194,7 +198,9 @@ namespace Game {
 		ui_target    = backend->create_rendertarget(Vector2i(window_size.x, ui_height));
 
 		/* load fonts */
-		font = backend->create_font("calibri_16.bff");
+		font16 = backend->create_font("calibri_16.bff");
+		font24 = backend->create_font("calibri_24.bff");
+		font34 = backend->create_font("calibri_34.bff");
 
 		/* load all tower blueprints */
 		blueprint[ARROW_TOWER] = Blueprint::from_filename("arrowtower.yaml");
@@ -220,7 +226,7 @@ namespace Game {
 		unsigned int fps = 0;
 
 		/* spawn timer */
-		struct timeval sref = {t.tv_sec, 0};
+		struct timeval sref = {t.tv_sec + wave_delay, 0};
 		fprintf(stderr, "Next wave will start in %lld seconds.\n", (long long)wave_delay);
 
 		while ( running ){
@@ -239,7 +245,8 @@ namespace Game {
 			}
 
 			/* spawn wave */
-			if ( cur.tv_sec - sref.tv_sec > wave_delay ){
+			wave_left = (sref.tv_sec - cur.tv_sec);
+			if ( wave_left <= 0 ){
 				wave_current++;
 				wave_delay = 15;
 				sref.tv_sec += wave_delay;
