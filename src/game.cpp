@@ -214,7 +214,7 @@ static void render_game(){
 	backend->render_begin(ui_target);
 	{
 		backend->render_clear(Color::rgba(0,0,0,0.5f));
-		backend->render_sprite(Vector2i(0,0), ui_bar_left);
+		//backend->render_sprite(Vector2i(0,0), ui_bar_left);
 
 		for ( int i = 0; i < BUILDING_LAST; i++ ){
 			backend->render_sprite(Vector2i(150 + i * 41, 7), blueprint[i]->icon(0), gold >= blueprint[i]->cost(0) ? Color::white : Color::rgba(0.3,0.3,0.3,1));
