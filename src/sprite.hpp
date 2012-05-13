@@ -10,6 +10,7 @@ public:
 	virtual ~Sprite();
 
 	static Sprite* from_yaml(yaml_parser_t* parser);
+	static Sprite* from_filename(const std::string& filename);
 
 	virtual Sprite* load_texture(const std::string& filename) = 0;
 

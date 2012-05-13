@@ -61,3 +61,9 @@ Sprite* Sprite::from_yaml(yaml_parser_t* parser){
 
 	} while (1);
 }
+
+Sprite* Sprite::from_filename(const std::string& filename){
+	Sprite* sprite = Game::create_sprite();
+	sprite->load_texture(filename);
+	return sprite;
+}
