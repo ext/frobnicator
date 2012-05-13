@@ -77,6 +77,13 @@ public:
 	}
 
 	/**
+	 * Get squared distance between two vectors.
+	 */
+	static T distance2(const Vector& a, const Vector& b){
+		return (b-a).length2();
+	}
+
+	/**
 	 * Linear interpolation.
 	 */
 	static Vector lerp(const Vector& a, const Vector& b, float s){
