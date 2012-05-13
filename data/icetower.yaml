@@ -1,0 +1,14 @@
+- level: 0
+  name: "Ice Tower"
+  sprite:
+    texture: "icetower.png"
+    offset: [0, -2]
+    scale: [2, 4]
+  splash: 0
+  range: 200
+  rof: 40
+  cost: 15
+  damage: 3
+  icon: "icetower_icon.png"
+
+- level: 1

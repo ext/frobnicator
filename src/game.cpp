@@ -38,6 +38,7 @@ typedef std::vector<Entity*> EntityVector;
 
 enum Buildings {
 	ARROW_TOWER,
+	ICE_TOWER,
 
 	BUILDING_LAST,
 };
@@ -213,7 +214,11 @@ static void render_game(){
 	backend->render_begin(ui_target);
 	{
 		backend->render_clear(Color::rgba(0,0,0,0.5f));
-		//backend->render_sprite(Vector2i(0,0), ui_bar_left);
+		backend->render_sprite(Vector2i(0,0), ui_bar_left);
+
+		for ( int i = 0; i < BUILDING_LAST; i++ ){
+			backend->render_sprite(Vector2i(150 + i * 41, 7), blueprint[i]->icon(0));
+		}
 		font24->printf(   8,  5, Color::white, "Gold: %4d", gold);
 		font24->printf(   7, 22, Color::white, "Lives: %4d", lives);
 		font24->printf(-112,  5, Color::white, "Creep: %4zd", creep.size());
@@ -250,13 +255,18 @@ namespace Game {
 				show_aabb = !show_aabb;
 				fprintf(stderr, "%s AABB\n", show_aabb ? "Showing" : "Hiding");
 		});
-		backend->bindkey("1", [](){
-				building_selected = ARROW_TOWER;
-				mode = BUILD;
-				if ( gold < blueprint[building_selected]->cost(0) ){
-					mode = SELECT;
-				}
-		});
+
+		/* hotkey wrapper function */
+		std::function<void(Buildings)> build_hotkey = [](Buildings type){
+			building_selected = type;
+			mode = BUILD;
+			if ( gold < blueprint[building_selected]->cost(0) ){
+				mode = SELECT;
+			}
+		};
+
+		backend->bindkey("1", std::bind(build_hotkey, ARROW_TOWER));
+		backend->bindkey("2", std::bind(build_hotkey, ICE_TOWER));
 		backend->bindkey("ESC", [](){
 				mode = SELECT;
 		});
@@ -399,6 +409,7 @@ namespace Game {
 
 		/* load all tower blueprints */
 		blueprint[ARROW_TOWER] = Blueprint::from_filename("arrowtower.yaml");
+		blueprint[ICE_TOWER]   = Blueprint::from_filename("icetower.yaml");
 	}
 
 	Tilemap* load_tilemap(const std::string& filename){

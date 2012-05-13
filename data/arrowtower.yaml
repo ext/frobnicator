@@ -14,6 +14,7 @@
   range: 350
   rof: 75
   cost: 7
+  icon: "arrowtower_icon.png"
 
 - level: 1
   damage: 2
