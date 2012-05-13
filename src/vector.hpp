@@ -39,6 +39,14 @@ public:
 		return *this;
 	}
 
+	/**
+	 * Component-wise multiplication.
+	 * @note NOT CROSS-PRODUCT.
+	 */
+	Vector operator*(const Vector& rhs) const {
+		return Vector(x * rhs.x, y * rhs.y);
+	}
+
 	Vector operator*(T scalar) const {
 		return Vector(x * scalar, y * scalar);
 	}
