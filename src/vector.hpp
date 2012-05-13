@@ -51,6 +51,10 @@ public:
 		return Vector(x * scalar, y * scalar);
 	}
 
+	bool operator==(const Vector& rhs) const {
+		return x == rhs.x && y == rhs.y; /* won't work very well for floatingpoint */
+	}
+
 	/**
 	 * Gives the squared length.
 	 */

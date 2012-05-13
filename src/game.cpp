@@ -520,6 +520,14 @@ namespace Game {
 				build(grid, building_selected);
 				motion(x, y); /* to update marker */
 				mode = SELECT;
+			} else if ( mode == SELECT ){
+				for ( auto it = building.begin(); it != building.end(); ++it ){
+					Building* building = it->second;
+					if ( building->grid_pos() == grid ){
+						printf("selected `%s'\n", building->id().c_str());
+						break;
+					}
+				}
 			}
 			break;
 
