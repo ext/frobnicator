@@ -35,8 +35,10 @@ public:
 	float rof() const;
 	float range() const;
 	float slow() const;
+	float slow_duration() const;
 	float poison() const;
-	float speed() const;
+	float poison_duration() const;
+	virtual float speed() const;
 	float armor() const;
 	float max_hp() const;
 	float current_hp() const;

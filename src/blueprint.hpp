@@ -54,7 +54,9 @@ private:
 		float rof;
 		float range;
 		float slow;
+		float slow_duration;
 		float poison;
+		float poison_duration;
 		float speed;
 		float armor;
 		float hp;

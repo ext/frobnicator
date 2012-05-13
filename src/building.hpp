@@ -2,6 +2,7 @@
 #define FROBNICATOR_BUILDING_H
 
 #include "entity.hpp"
+#include "buff.hpp"
 
 class Building: public Entity {
 public:
@@ -23,7 +24,12 @@ private:
 
 	bool can_fire() const;
 	bool have_target() const;
+	bool have_slow() const;
+	bool have_poison() const;
 	void fire_at(Creep* creep);
+
+	SlowBuff slow_buff() const;
+	PoisonBuff poison_buff() const;
 
 	std::string target;
 	uint64_t firing_delta;

@@ -55,7 +55,9 @@ const Blueprint* Blueprint::from_filename(const std::string& filename){
 		/* .rof    = */ 1.0f,
 		/* .range  = */ 100.0f,
 		/* .slow   = */ 0.0f,
+		/* .slow_d = */ 0.0f,
 		/* .poison = */ 0.0f,
+		/* .poison_d= */ 0.0f,
 		/* .speed  = */ 0.0f,
 		/* .armor  = */ 0.0f,
 		/* .amount = */ 10,
@@ -131,8 +133,10 @@ void Blueprint::parse_leveldata(struct level* level, yaml_parser_t* parser){
 		} else if ( key == "damage" ){ level->damage = (float)atof(value);
 		} else if ( key == "rof"    ){ level->rof = (float)atof(value);
 		} else if ( key == "range"  ){ level->range = (float)atof(value);
-		} else if ( key == "slow"   ){ level->slow = (float)atof(value);
+		} else if ( key == "slow"   ){ level->slow = 1.0f - (float)atof(value) / 100.0f;
+		} else if ( key == "slow_duration" ){ level->slow_duration = (float)atof(value);
 		} else if ( key == "poison" ){ level->poison = (float)atof(value);
+		} else if ( key == "poison_duration" ){ level->poison_duration = (float)atof(value);
 		} else if ( key == "speed"  ){ level->speed = (float)atof(value);
 		} else if ( key == "armor"  ){ level->armor = (float)atof(value);
 		} else if ( key == "amount" ){ level->amount = (float)atoi(value);

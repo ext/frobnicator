@@ -2,6 +2,7 @@
 #define FROBNICATOR_CREEP_H
 
 #include "entity.hpp"
+#include "buff.hpp"
 
 class Creep: public Entity {
 public:
@@ -11,6 +12,9 @@ public:
 	static Creep* spawn_at(const Vector2f& pos, const Blueprint* blueprint, unsigned int level){
 		return new Creep(pos, blueprint, level);
 	}
+
+	void add_buff(const SlowBuff& buf);
+	void add_buff(const PoisonBuff& buf);
 
 	/**
 	 * Mark what region it currently is in.
@@ -29,6 +33,8 @@ public:
 	Creep& set_dst(const Vector2f& dst);
 
 	virtual void tick(float dt);
+
+	virtual float speed() const;
 
 	/** Triggers **/
 
@@ -50,6 +56,8 @@ private:
 	Vector2f dst;
 	std::string region;
 	int left;
+	SlowBuff slow_buff;
+	PoisonBuff poison_buff;
 };
 
 #endif /* FROBNICATOR_CREEP_H */

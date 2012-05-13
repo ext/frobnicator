@@ -51,7 +51,9 @@ float Entity::damage() const { return blueprint->data[level].damage; }
 float Entity::rof()    const { return blueprint->data[level].rof; }
 float Entity::range()  const { return blueprint->data[level].range; }
 float Entity::slow()   const { return blueprint->data[level].slow; }
+float Entity::slow_duration() const { return blueprint->data[level].slow_duration; }
 float Entity::poison() const { return blueprint->data[level].poison; }
+float Entity::poison_duration() const { return blueprint->data[level].poison_duration; }
 float Entity::speed()  const { return blueprint->data[level].speed; }
 float Entity::armor()  const { return blueprint->data[level].armor; }
 float Entity::max_hp()  const { return blueprint->data[level].hp; }

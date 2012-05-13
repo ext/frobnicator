@@ -36,6 +36,11 @@ void Building::tick(float dt){
 	/* test if it can fire */
 	if ( t && can_fire() ){
 		fire_at(t);
+
+		/* reset target for towers with buffs */
+		if ( have_slow() || have_poison() ){
+			target = "";
+		}
 	}
 
 	if ( !t ){
@@ -63,14 +68,33 @@ bool Building::can_fire() const {
 	return delta >= firing_delta;
 }
 
+bool Building::have_slow() const {
+	return slow() > 0.0f && slow_duration() > 0.0f;
+}
+
+bool Building::have_poison() const {
+	return poison() > 0.0f && poison_duration() > 0.0f;
+}
+
 bool Building::have_target() const {
 	return target != "";
+}
+
+SlowBuff Building::slow_buff() const {
+	return SlowBuff(slow(), slow_duration());
+}
+
+PoisonBuff Building::poison_buff() const {
+	return PoisonBuff(poison(), poison_duration());
 }
 
 void Building::fire_at(Creep* creep){
 	/* Projectile constructor has side-effects, will deallocate itself when hit. */
 	new Projectile(world_pos() + Vector2f(48.0f, -24.0f), creep, 700.0f, 25.0f, [creep, this](){
 		creep->damage(damage(), this);
+
+		if ( have_slow()   ){ creep->add_buff(slow_buff()); }
+		if ( have_poison() ){ creep->add_buff(poison_buff()); }
 	});
 
 	struct timeval t;

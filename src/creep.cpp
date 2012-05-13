@@ -13,6 +13,14 @@ Creep::Creep(const Vector2f& pos, const Blueprint* blueprint, unsigned int level
 	, left(7) {
 }
 
+void Creep::add_buff(const SlowBuff& buf){
+	slow_buff = buf;
+}
+
+void Creep::add_buff(const PoisonBuff& buf){
+	poison_buff = buf;
+}
+
 const std::string Creep::generate_id(){
 	static int n = 1;
 	std::stringstream s;
@@ -37,6 +45,19 @@ Creep& Creep::set_dst(const Vector2f& dst){
 void Creep::tick(float dt){
 	const Vector2f d = (dst - pos - /* hack hack hack */ Vector2f(24,24)).normalized();
 	pos += d * speed() * dt;
+
+	slow_buff.tick(dt);
+	poison_buff.tick(dt);
+}
+
+float Creep::speed() const {
+	float base = Entity::speed();
+
+	if ( slow_buff.duration > 0.0 ){
+		base *= slow_buff.amount;
+	}
+
+	return base;
 }
 
 void Creep::on_enter_region(const Waypoint& region){
