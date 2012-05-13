@@ -28,8 +28,8 @@ void Projectile::get_points(Vector2f* a, Vector2f* b) const {
 	const float s = cur / delay;
 
 	const Vector2f offset = Vector2f(
-		Game::tile_width() * dst->sprite()->scale().x * 0.5f,
-		Game::tile_width() * dst->sprite()->scale().y * 0.5f
+		dst->sprite()->scale().x * 0.5f,
+		dst->sprite()->scale().y * 0.5f
 	);
 	const Vector2f real_dst = dst->world_pos() + offset;
 	const float distance = Vector2f::distance(src, real_dst);

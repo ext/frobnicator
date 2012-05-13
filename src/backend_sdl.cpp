@@ -212,11 +212,14 @@ public:
 			texture = c->texture;
 			width   = c->width;
 			height  = c->height;
+			set_scale(Vector2f(width, height));
+			return this;
 		}
 
 		/* load new texture */
 		texture = ::load_texture(filename, &width, &height);
 		texture_cache[filename] = this;
+		set_scale(Vector2f(width, height));
 
 		return this;
 	}
@@ -658,7 +661,7 @@ public:
 		glVertexPointer(3, GL_FLOAT, sizeof(float)*5, vertices);
 		glTexCoordPointer(2, GL_FLOAT, sizeof(float)*5, &vertices[0][3]);
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-		//glScalef(Game::tile_width() * sprite->scale().x, Game::tile_height() * sprite->scale().y,	1.0f);
+		glScalef(sprite->scale().x, sprite->scale().y,	1.0f);
 		glScalef(300, 50, 1);
 		glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, indices);
 		glPopMatrix();
@@ -770,7 +773,7 @@ public:
 		glTranslatef(ent->world_pos().x, ent->world_pos().y, 0.0f);
 
 		/* tile scale */
-		glScalef(Game::tile_width() * sprite->scale().x, Game::tile_height() * (sprite->scale().y+sprite->offset().y), 1.0f);
+		glScalef(sprite->scale().x, sprite->scale().y + sprite->offset().y, 1.0f);
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glVertexPointer(3, GL_FLOAT, sizeof(float)*5, vertices);
@@ -822,10 +825,7 @@ public:
 
 			/* entity scale */
 			glPushMatrix();
-			glScalef(
-				Game::tile_width()  * sprite->scale().x,
-				Game::tile_height() * sprite->scale().y,
-				1.0f);
+			glScalef(sprite->scale().x, sprite->scale().y, 1.0f);
 
 			glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, indices);
 
@@ -834,7 +834,7 @@ public:
 			/* Render healthbar */
 			const float s = ent->current_hp() / ent->max_hp();
 			if ( s < 1.0f ){
-				const float w = Game::tile_width()  * sprite->scale().x * s;
+				const float w = sprite->scale().x * s;
 				glDisable(GL_TEXTURE_2D);
 				glColor4f(1.0f - s, s, 0.0f, 1.0f);
 				glBegin(GL_QUADS);

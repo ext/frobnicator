@@ -53,7 +53,7 @@ Sprite* Sprite::from_yaml(yaml_parser_t* parser){
 		} else if ( key == "offset" ){
 			sprite->set_offset(Vector2f::from_yaml(parser));
 		} else if ( key == "scale" ){
-			sprite->set_scale(Vector2f::from_yaml(parser));
+			sprite->set_scale(Vector2f::from_yaml(parser) * Vector2f(Game::tile_width(), Game::tile_height()));
 		} else {
 			/* warning only */
 			fprintf(stderr, "Unhandled key `%s'\n", key.c_str());
