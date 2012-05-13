@@ -46,7 +46,7 @@ public:
 
 	virtual void render_begin(RenderTarget* target) = 0;
 	virtual void render_clear(const Color& color) const = 0;
-	virtual void render_sprite(const Vector2i pos, const Sprite* sprite) const = 0;
+	virtual void render_sprite(const Vector2i pos, const Sprite* sprite, const Color& color = Color::white) const = 0;
 	virtual void render_tilemap(const Tilemap& tilemap, const Vector2f& camera) const = 0;
 	virtual void render_marker(const Vector2f& pos, const Vector2f& camera, const bool v[]) const = 0;
 	virtual void FROB_NONNULL(1) render_region(const Region* region, const Vector2f& camera, float color[3]) const = 0;

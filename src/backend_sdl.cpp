@@ -651,7 +651,7 @@ public:
 		glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	}
 
-	virtual void render_sprite(const Vector2i pos, const Sprite* in_sprite) const {
+	virtual void render_sprite(const Vector2i pos, const Sprite* in_sprite, const Color& color) const {
 		const SDLSprite* sprite = static_cast<const SDLSprite*>(in_sprite);
 
 		glPushMatrix();
@@ -660,7 +660,7 @@ public:
 		glBindTexture(GL_TEXTURE_2D, sprite->texture);
 		glVertexPointer(3, GL_FLOAT, sizeof(float)*5, vertices);
 		glTexCoordPointer(2, GL_FLOAT, sizeof(float)*5, &vertices[0][3]);
-		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		glColor4fv(color.value);
 		glScalef(sprite->scale().x, sprite->scale().y,	1.0f);
 		glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, indices);
 		glPopMatrix();
