@@ -5,6 +5,8 @@
 #include "vector.hpp"
 #include "common.hpp"
 #include <cstdlib>
+#include <sstream>
+#include <iomanip>
 #include <yaml.h>
 
 template <class T>
@@ -53,6 +55,17 @@ Vector<T> Vector<T>::from_yaml(yaml_parser_t* parser){
 
 	return v;
 };
+
+template<>
+const std::string Vector<float>::str() const {
+	std::stringstream s;
+	s << "<"
+	  << std::setprecision(1) << x
+	  << ", "
+	  << std::setprecision(1) << y
+	  << ">";
+	return s.str();
+}
 
 /* instantiate templates to get Vector::from_yaml */
 template class Vector<float>;

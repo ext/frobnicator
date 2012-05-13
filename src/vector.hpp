@@ -2,6 +2,7 @@
 #define FROBNICATOR_VECTOR_H
 
 #include <math.h>
+#include <string>
 
 template <class T>
 class Vector {
@@ -89,6 +90,8 @@ public:
 	static Vector lerp(const Vector& a, const Vector& b, float s){
 		return (b-a) * s + a;
 	}
+
+	const std::string str() const;
 
 	union {
 		struct {
