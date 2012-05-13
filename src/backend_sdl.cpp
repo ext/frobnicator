@@ -656,7 +656,7 @@ public:
 
 		glPushMatrix();
 		glLoadIdentity();
-		//glTranslatef(pos.x, pos.y, 0.0f);
+		glTranslatef(pos.x, pos.y, 0.0f);
 		glBindTexture(GL_TEXTURE_2D, sprite->texture);
 		glVertexPointer(3, GL_FLOAT, sizeof(float)*5, vertices);
 		glTexCoordPointer(2, GL_FLOAT, sizeof(float)*5, &vertices[0][3]);
