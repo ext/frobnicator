@@ -19,6 +19,10 @@ public:
 		return data[level].sprite;
 	}
 
+	const Sprite* icon(unsigned int level) const {
+		return data[level].icon;
+	}
+
 	const std::string name(unsigned int level) const {
 		return data[level].name;
 	}
@@ -40,6 +44,7 @@ private:
 
 	struct level {
 		Sprite* sprite;
+		Sprite* icon;
 		std::string name;
 
 		/* gameplay stats */

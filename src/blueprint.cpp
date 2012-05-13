@@ -47,6 +47,7 @@ const Blueprint* Blueprint::from_filename(const std::string& filename){
 	struct level current = {
 		/* yey, not even c++0x supports designated initializers... =( */
 		/* .sprite = */ NULL,
+		/* .icon   = */ NULL,
 		/* .name   = */ std::string("unnamed tower"),
 		/* .cost   = */ 100,
 		/* .splash = */ 0.0f,
@@ -124,6 +125,7 @@ void Blueprint::parse_leveldata(struct level* level, yaml_parser_t* parser){
 		if ( key == "level" ){
 			/* ignore */
 		} else if ( key == "name"   ){ level->name = std::string(value, len);
+		} else if ( key == "icon"   ){ level->icon = Sprite::from_filename(std::string(value, len));
 		} else if ( key == "cost"   ){ level->cost = atoi(value);
 		} else if ( key == "splash" ){ level->splash = (float)atof(value);
 		} else if ( key == "damage" ){ level->damage = (float)atof(value);
