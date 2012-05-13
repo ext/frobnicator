@@ -234,6 +234,15 @@ static void render_game(){
 	backend->render_end();
 }
 
+/* build action wrapper function */
+std::function<void(Buildings)> build_action = [](Buildings type){
+	building_selected = type;
+	mode = BUILD;
+	if ( gold < blueprint[building_selected]->cost(0) ){
+		mode = SELECT;
+	}
+};
+
 namespace Game {
 	static void build(const Vector2i& pos, Buildings type);
 
@@ -256,17 +265,8 @@ namespace Game {
 				fprintf(stderr, "%s AABB\n", show_aabb ? "Showing" : "Hiding");
 		});
 
-		/* hotkey wrapper function */
-		std::function<void(Buildings)> build_hotkey = [](Buildings type){
-			building_selected = type;
-			mode = BUILD;
-			if ( gold < blueprint[building_selected]->cost(0) ){
-				mode = SELECT;
-			}
-		};
-
-		backend->bindkey("1", std::bind(build_hotkey, ARROW_TOWER));
-		backend->bindkey("2", std::bind(build_hotkey, ICE_TOWER));
+		backend->bindkey("1", std::bind(build_action, ARROW_TOWER));
+		backend->bindkey("2", std::bind(build_action, ICE_TOWER));
 		backend->bindkey("ESC", [](){
 				mode = SELECT;
 		});
@@ -497,6 +497,20 @@ namespace Game {
 
 		switch ( button ){
 		case 1: /* left button */
+
+			/* test if clicking on ui-bar */
+			if ( y > window_size.y - ui_height ){
+				const int ix = (int)x;
+				const int bar_min = 150;
+				const int bar_max = bar_min + BUILDING_LAST * 41;
+				if ( ix > bar_min && ix < bar_max ){
+					const int icon = (ix - 150) / 41;
+					build_action((Buildings)icon);
+				}
+				break;
+			}
+
+			/* assume clicking on world */
 			if ( mode == BUILD){
 				/* try to build at cursor */
 				if ( !(cursor_ok[0] && cursor_ok[1] && cursor_ok[2] && cursor_ok[3]) ){
