@@ -271,9 +271,6 @@ namespace Game {
 		font24 = backend->create_font("calibri_24.bff");
 		font34 = backend->create_font("calibri_34.bff");
 		ui_bar_left = backend->create_sprite()->load_texture("bar_left.png")->autoscale();
-
-		/* load all tower blueprints */
-		blueprint[ARROW_TOWER] = Blueprint::from_filename("arrowtower.yaml");
 	}
 
 	void cleanup(){
@@ -399,6 +396,9 @@ namespace Game {
 	void load_level(const std::string& filename){
 		delete level;
 		level = Level::from_filename(filename);
+
+		/* load all tower blueprints */
+		blueprint[ARROW_TOWER] = Blueprint::from_filename("arrowtower.yaml");
 	}
 
 	Tilemap* load_tilemap(const std::string& filename){
