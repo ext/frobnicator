@@ -662,7 +662,6 @@ public:
 		glTexCoordPointer(2, GL_FLOAT, sizeof(float)*5, &vertices[0][3]);
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 		glScalef(sprite->scale().x, sprite->scale().y,	1.0f);
-		glScalef(300, 50, 1);
 		glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, indices);
 		glPopMatrix();
 	}
