@@ -63,7 +63,6 @@ bool Entity::is_alive() const { return hp > 0.0; }
 
 void Entity::kill(Entity* who){
 	if ( who ){
-		fprintf(stderr, "Entity `%s' was killed by `%s'\n", id().c_str(), who->id().c_str());
 		Game::transaction(-cost(), world_pos());
 	} else {
 		Game::mutilate();
