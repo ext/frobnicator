@@ -80,7 +80,22 @@ public:
 	 */
 	Vector normalized() const {
 		const T len = length();
+		if ( len < 0.001 ) return Vector(0,0);
 		return Vector(x/len, y/len);
+	}
+
+	/**
+	 * Normalize.
+	 */
+	void normalize() {
+		const T len = length();
+		if ( len < 0.001 ){
+			x = 0;
+			y = 0;
+			return;
+		}
+		x /= len;
+		y /= len;
 	}
 
 	/**
