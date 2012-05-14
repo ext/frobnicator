@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="64" height="64" tilewidth="48" tileheight="48">
+ <properties>
+  <property name="inner" value="0"/>
+  <property name="slots" value="8"/>
+  <property name="title" value="GreenTD remake"/>
+  <property name="waves" value="waves.yaml"/>
+ </properties>
+ <tileset firstgid="1" name="tiles2" tilewidth="48" tileheight="48">
+  <image source="tiles2.jpg" width="576" height="624"/>
+  <tile id="22">
+   <properties>
+    <property name="build" value="yes"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="Tile Layer 1" width="64" height="64" opacity="0.99">
+  <data encoding="base64" compression="zlib">
+   eJztmb0SwiAQBq/0J6Uaa/URHO31/d/JNMxQKDmE5I5kix2KhJlvIeEI6UWkXzmPgaeDHFa8Bt4OcljDc8BzAAAAAAAAAAAAAAB6rgqsM07JXYF1RvynY6/AOuOc8J9t3f/ZmP9lzL+mrmuxdtGgqWMW4G9HF+XYia7WB2r1tfQ/RzlORn3xxx9/n/4b+V3zb1HfS+K+bUP+YW8b2vj6v3wbV6/+YW8b2lr+qXH15J+6nlPjO9GPayv+OWtcydqIP/74+/NP1fjU3mAp/jXrfy1Kz23G5sm7f2m2sZwHKf/+PzbsX/LuzEHOmcsYufPkwd8S/PHHH3/88cffJsMHSYWWmw==
+  </data>
+ </layer>
+ <objectgroup name="Spawnpoints" width="64" height="64">
+  <properties>
+   <property name="section" value="spawn"/>
+  </properties>
+  <object name="Spawn 1" x="48" y="2544" width="240" height="96">
+   <properties>
+    <property name="next" value="lower_left"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <objectgroup name="Waypoints" width="64" height="64">
+  <properties>
+   <property name="section" value="waypoint"/>
+  </properties>
+  <object name="lower_left" x="816" y="2544" width="96" height="96">
+   <properties>
+    <property name="next" value="lower_junction_left"/>
+   </properties>
+  </object>
+  <object name="lower_junction_left" x="816" y="1680" width="96" height="96"/>
+  <object name="b" x="144" y="144" width="96" height="96"/>
+  <object name="a" x="48" y="48" width="96" height="96"/>
+ </objectgroup>
+</map>
