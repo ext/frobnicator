@@ -11,15 +11,25 @@
     offset: [0, -2]
     scale: [2, 4]
   splash: 0
-  range: 350
-  rof: 75
-  cost: 7
   icon: "arrowtower_icon.png"
 
 - level: 1
+  cost: 7
+  range: 350
+  rof: 75
   damage: 2
 
 - level: 2
   cost: 16
   damage: 4
-  rof: 80
+  rof: 85
+
+- level: 3
+  cost: 42
+  damage: 11
+  rof: 100
+
+- level: 4
+  cost: 160
+  damage: 36
+  rof: 120

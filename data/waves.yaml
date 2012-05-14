@@ -93,6 +93,7 @@
   hp: 48
 
 - level: 20
+  cost: 3
   hp: 50
 
 - level: 21
@@ -109,3 +110,34 @@
 
 - level: 25
   hp: 60
+
+- level: 26
+  hp: 62
+
+- level: 27
+  hp: 64
+
+- level: 28
+  hp: 66
+
+- level: 29
+  hp: 68
+
+- level: 30
+  cost: 4
+  hp: 70
+
+- level: 31
+  hp: 72
+
+- level: 32
+  hp: 74
+
+- level: 33
+  hp: 76
+
+- level: 34
+  hp: 78
+
+- level: 35
+  hp: 80

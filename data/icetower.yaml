@@ -5,12 +5,27 @@
     offset: [0, -2]
     scale: [2, 4]
   splash: 0
+  icon: "icetower_icon.png"
+
+- level: 1
   cost: 15
   damage: 3
   range: 200
   rof: 40
   slow: 20
   slow_duration: 5
-  icon: "icetower_icon.png"
 
-- level: 1
+- level: 2
+  cost: 60
+  damage: 8
+  range: 250
+  rof: 45
+  slow: 30
+  slow_duration: 5.5
+
+- level: 3
+  cost: 210
+  damage: 24
+  rof: 50
+  slow: 40
+  slow_duration: 6.0
