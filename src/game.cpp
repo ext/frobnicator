@@ -57,6 +57,7 @@ static std::map<std::string, Creep*> creep;
 static std::vector<Projectile*> projectile;
 static std::vector<Message*> messages;
 static Buildings building_selected = BUILDING_LAST;
+static Building* selected = nullptr;
 static Mode mode = SELECT;
 static Vector2f camera;
 static Vector2f cursor;
@@ -77,6 +78,7 @@ static Vector2i window_size;
 static Vector2i scene_size;
 static RenderTarget* scene_target = nullptr;
 static RenderTarget* ui_target = nullptr;
+static RenderTarget* info_target = nullptr;
 static const int ui_height = 50;
 static Font* font16;
 static Font* font24;
@@ -193,6 +195,26 @@ static void render_aabb(const Vector2f& cam){
 	}
 }
 
+static void render_info(const Building* building){
+	backend->render_begin(info_target);
+	if ( building ){
+		backend->render_clear(Color::rgba(0,0,0,0.5f));
+		font24->printf(10,  5, Color::white, "%s", building->name().c_str());
+
+		int line = 0;
+		font16->printf(10, 40+line++*16, Color::white, "Level: \t\t%d", building->current_level());
+		font16->printf(10, 40+line++*16, Color::white, "Damage: \t%.0f", building->damage());
+		font16->printf(10, 40+line++*16, Color::white, "Range: \t\t%.0f", building->range());
+		font16->printf(10, 40+line++*16, Color::white, "RoF: \t\t%.0f (per minute)", building->rof());
+		if ( building->have_slow() ){
+			font16->printf(10, 40+line++*16, Color::white, "Slows target by %.1f%% for %.1f sec", (1.0f-building->slow())*100, building->slow_duration());
+		}
+	} else {
+		backend->render_clear(Color::rgba(0,0,0,0));
+	}
+	backend->render_end();
+}
+
 static void render_game(){
 	backend->render_begin(scene_target);
 	{
@@ -229,7 +251,8 @@ static void render_game(){
 	backend->render_begin(nullptr);
 	{
 		backend->render_target(scene_target, Vector2i(0,0));
-		backend->render_target(ui_target, Vector2i(0, -ui_height));
+		backend->render_target(ui_target,    Vector2i(0, -ui_height));
+		backend->render_target(info_target,  Vector2i(-200, -ui_height - 200 ));
 	}
 	backend->render_end();
 }
@@ -275,6 +298,7 @@ namespace Game {
 		scene_size = window_size;
 		scene_target = backend->create_rendertarget(scene_size, false);
 		ui_target    = backend->create_rendertarget(Vector2i(window_size.x, ui_height), true);
+		info_target  = backend->create_rendertarget(Vector2i(200, 200), true);
 
 		/* load fonts and ui elements */
 		font16 = backend->create_font("calibri_16.bff");
@@ -519,13 +543,15 @@ namespace Game {
 				motion(x, y); /* to update marker */
 				mode = SELECT;
 			} else if ( mode == SELECT ){
+				selected = nullptr;
 				for ( auto it = building.begin(); it != building.end(); ++it ){
 					Building* building = it->second;
 					if ( building->grid_pos() == grid ){
-						printf("selected `%s'\n", building->id().c_str());
+						selected = building;
 						break;
 					}
 				}
+				render_info(selected);
 			}
 			break;
 
@@ -560,9 +586,11 @@ namespace Game {
 		/* recreate render targets */
 		delete scene_target;
 		delete ui_target;
+		delete info_target;
 		scene_size = window_size;
 		scene_target = backend->create_rendertarget(scene_size, false);
 		ui_target    = backend->create_rendertarget(Vector2i(window_size.x, ui_height), true);
+		info_target  = backend->create_rendertarget(Vector2i(200, 200), true);
 	}
 
 	static void build(const Vector2i& pos, Buildings type){

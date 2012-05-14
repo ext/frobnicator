@@ -29,6 +29,7 @@ public:
 	 */
 	const std::string id() const;
 
+	int current_level() const;
 	int cost() const;
 	float splash() const;
 	float damage() const;

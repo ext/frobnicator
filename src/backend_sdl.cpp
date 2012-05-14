@@ -398,16 +398,23 @@ public:
 		vasprintf(&str, fmt, ap);
 
 		const size_t num_chars = strlen(str);
-		const size_t num_vertices = num_chars * 4; /* QUADS */
+		size_t num_vertices = num_chars * 4; /* QUADS */
 		vertex v[num_vertices];
 
 		int n = 0;
-		float cx = 0.0f;
+		int cx = 0;
 		for ( unsigned int i = 0; i < num_chars; i++ ){
 			unsigned char ch = str[i];
+
+			if ( ch == '\t' ){
+				cx += 25 - cx % 25;
+				num_vertices -= 4;
+				continue;
+			}
+
 			int row = (ch-base) / pitch;
 			int col = (ch-base) % pitch;
-			const float dx = (float)width_lut[ch];
+			const int dx = width_lut[ch];
 
 			v[n].x = cx;
 			v[n].y = 0.0f;

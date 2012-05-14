@@ -45,6 +45,7 @@ const std::string Entity::id() const {
 	return _id;
 }
 
+int Entity::current_level() const { return level; }
 int Entity::cost()     const { return blueprint->data[level].cost; }
 float Entity::splash() const { return blueprint->data[level].splash; }
 float Entity::damage() const { return blueprint->data[level].damage; }

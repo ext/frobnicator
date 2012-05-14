@@ -17,6 +17,9 @@ public:
 
 	virtual void tick(float dt);
 
+	bool have_slow() const;
+	bool have_poison() const;
+
 private:
 	Building(const Vector2f& pos, const Blueprint* blueprint);
 
@@ -24,8 +27,6 @@ private:
 
 	bool can_fire() const;
 	bool have_target() const;
-	bool have_slow() const;
-	bool have_poison() const;
 	void fire_at(Creep* creep);
 
 	SlowBuff slow_buff() const;
