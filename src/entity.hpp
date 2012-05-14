@@ -65,10 +65,10 @@ protected:
 	size_t level;
 	Vector2f pos;
 	float hp;
+	const Blueprint* blueprint;
 
 private:
 	const std::string _id;
-	const Blueprint* blueprint;
 	mutable int references;
 };
 

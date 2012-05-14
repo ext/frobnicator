@@ -19,6 +19,11 @@ public:
 
 	bool have_slow() const;
 	bool have_poison() const;
+	bool can_upgrade() const;
+	int upgrade_cost() const;
+	int sell_cost() const;
+	void upgrade();
+	void sell();
 
 private:
 	Building(const Vector2f& pos, const Blueprint* blueprint);

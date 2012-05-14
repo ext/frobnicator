@@ -3,6 +3,7 @@
 #endif
 
 #include "building.hpp"
+#include "blueprint.hpp"
 #include "creep.hpp"
 #include "game.hpp"
 #include <sstream>
@@ -88,13 +89,48 @@ PoisonBuff Building::poison_buff() const {
 	return PoisonBuff(poison(), poison_duration());
 }
 
+bool Building::can_upgrade() const {
+	/* -1 because first is base stat */
+	return current_level() < (int)blueprint->num_levels() - 1;
+}
+
+int Building::upgrade_cost() const {
+	return blueprint->cost(current_level()+1);
+}
+
+int Building::sell_cost() const {
+	int sum = 0;
+	int n = level;
+	while ( n > 0 ){
+		sum += blueprint->cost(n);
+		n--;
+	}
+	return (int)(sum * 0.75f);
+}
+
+void Building::upgrade(){
+	if ( Game::transaction(upgrade_cost(), world_pos()) ){
+		level++;
+	}
+}
+
+void Building::sell(){
+	Game::transaction(-sell_cost(), world_pos());
+	Game::remove_entity(id());
+}
+
 void Building::fire_at(Creep* creep){
+	/* must increase reference count because projectile callback requires the instance. */
+	inc_ref();
+
 	/* Projectile constructor has side-effects, will deallocate itself when hit. */
 	new Projectile(world_pos() + Vector2f(48.0f, -24.0f), creep, 700.0f, 25.0f, [creep, this](){
 		creep->damage(damage(), this);
 
 		if ( have_slow()   ){ creep->add_buff(slow_buff()); }
 		if ( have_poison() ){ creep->add_buff(poison_buff()); }
+
+		dec_ref();
 	});
 
 	struct timeval t;

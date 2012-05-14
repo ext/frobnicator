@@ -215,8 +215,16 @@ static void render_info(const Building* building, bool b1, bool b2){
 		if ( building->have_slow() ){
 			font16->printf(10, 40+line++*16, Color::white, "Slows target by %.1f%% for %.1f sec", (1.0f-building->slow())*100, building->slow_duration());
 		}
+		if ( b1 ){
+			font16->printf(10, 40+line++*16, Color::white, "Cost: \t\t%d", building->upgrade_cost());
+		}
+		if ( b2 ){
+			font16->printf(10, 40+line++*16, Color::white, "Income: \t\t%d (75%% of value)", building->sell_cost());
+		}
 
-		backend->render_sprite(Vector2i(10,  161), ui_upgrade, b1 ? c1 : c2);
+		if ( building->can_upgrade() ){
+			backend->render_sprite(Vector2i(10,  161), ui_upgrade, b1 ? c1 : c2);
+		}
 		backend->render_sprite(Vector2i(105, 161), ui_sell,    b2 ? c1 : c2);
 	} else {
 		backend->render_clear(Color::rgba(0,0,0,0));
@@ -537,8 +545,8 @@ namespace Game {
 		/* test if hovering over infobox */
 		if ( selected && x > window_size.x - info_size.x && y > window_size.y - ui_height - info_size.y ){
 			const Vector2i local((int)x - (window_size.x - info_size.x), (int)y - (window_size.y - ui_height - info_size.y));
-			bool b1 = local.y >= 161 && local.y < 200 && local.x >= 10  && local.x < 95;
-			bool b2 = local.y >= 161 && local.y < 200 && local.x >= 105 && local.x < 190;
+			const bool b1 = local.y >= 161 && local.y < 200 && local.x >= 10  && local.x < 95 && selected->can_upgrade();
+			const bool b2 = local.y >= 161 && local.y < 200 && local.x >= 105 && local.x < 190;
 			render_info(selected, b1, b2);
 		}
 	}
@@ -570,8 +578,18 @@ namespace Game {
 			/* test if clicking on infobox */
 			if ( selected && x > window_size.x - info_size.x && y > window_size.y - ui_height - info_size.y ){
 				const Vector2i local((int)x - (window_size.x - info_size.x), (int)y - (window_size.y - ui_height - info_size.y));
-				bool b1 = local.y >= 161 && local.y < 200 && local.x >= 10  && local.x < 95;
-				bool b2 = local.y >= 161 && local.y < 200 && local.x >= 105 && local.x < 190;
+				const bool b1 = local.y >= 161 && local.y < 200 && local.x >= 10  && local.x < 95 && selected->can_upgrade();
+				const bool b2 = local.y >= 161 && local.y < 200 && local.x >= 105 && local.x < 190;
+
+				if ( b1 ){
+					selected->upgrade();
+				}
+				if ( b2 ){
+					selected->sell();
+					selected = nullptr;
+				}
+
+				render_info(selected, b1 && selected->can_upgrade(), b2);
 				break;
 			}
 

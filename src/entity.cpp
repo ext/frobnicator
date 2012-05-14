@@ -18,8 +18,8 @@ extern "C" char* strndup(const char* src, size_t n);
 Entity::Entity(const std::string& id, const Vector2f& pos, const Blueprint* blueprint, unsigned int level)
 	: level(level)
 	, pos(pos)
-	, _id(id)
 	, blueprint(blueprint)
+	, _id(id)
 	, references(1) {
 
 	hp = max_hp();
