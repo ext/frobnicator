@@ -52,6 +52,9 @@ public:
 	 */
 	size_t tile_height() const;
 
+	const std::string& title() const;
+	unsigned int slots() const;
+	int inner() const;
 
 	const Tile& operator[](unsigned int i) const;
 	const Tile& at(unsigned int x, unsigned int y) const;

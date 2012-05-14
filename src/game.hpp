@@ -89,6 +89,8 @@ namespace Game {
 	 */
 	size_t FROB_PURE tile_height();
 
+	size_t FROB_PURE inner();
+
 	/**
 	 * Pan the camera.
 	 */

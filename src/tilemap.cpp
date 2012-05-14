@@ -186,18 +186,23 @@ private:
 				abort();
 			}
 
-			const std::string key((const char*)event.data.scalar.value, event.data.scalar.length);
+			const std::string key((const char*)ekey.data.scalar.value, ekey.data.scalar.length);
 
 			/* Parse value */
 			yaml_parser_parse(parser, &evalue) || yaml_error(parser);
 			const char* value = (const char*)evalue.data.scalar.value;
+			const size_t len = evalue.data.scalar.length;
 
 			/* Fill level with info */
-			       if ( key == "width"            ){ map_width = atoi(value);
+			if ( key == "width"            ){ map_width = atoi(value);
 			} else if ( key == "height"           ){ map_height = atoi(value);
 			} else if ( key == "tiles_horizontal" ){ tiles_horizontal = atoi(value);
 			} else if ( key == "tiles_vertical"   ){ tiles_vertical = atoi(value);
-			} else if ( key == "texture"          ){ texture_name = std::string(value, evalue.data.scalar.length);
+			} else if ( key == "texture"          ){ texture_name = std::string(value, len);
+			} else if ( key == "title"            ){ title = std::string(value, len);
+			} else if ( key == "waves"            ){ wave_file = std::string(value, len);
+			} else if ( key == "slots"            ){ slots = atoi(value);
+			} else if ( key == "inner"            ){ inner = atoi(value);
 			} else {
 				/* warning only */
 				fprintf(stderr, "    - Unhandled key `%s'\n", key.c_str());
@@ -417,6 +422,10 @@ public:
 	unsigned int tile_width;       /* tile width in pixels (set by backend after loading) */
 	unsigned int tile_height;      /* tile height in pixels (set by backend after loading) */
 	unsigned int tiles_size;       /* h * v */
+	std::string title;             /* map title */
+	std::string wave_file;         /* wave definition file */
+	unsigned int slots;            /* number of players supported */
+	int inner;                     /* if >0 defines how many waypoints to move to before jumping into inner circle */
 	std::vector<Tilemap::Tile> tile;
 	std::string texture_name;
 	std::map<std::string, Waypoint*> waypoint;
@@ -512,4 +521,16 @@ const std::map<std::string, Spawnpoint*>& Tilemap::spawnpoints() const {
 void Tilemap::set_dimensions(size_t w, size_t h){
 	pimpl->tile_width  = w / pimpl->tiles_horizontal;
 	pimpl->tile_height = h / pimpl->tiles_vertical;
+}
+
+const std::string& Tilemap::title() const {
+	return pimpl->title;
+}
+
+unsigned int Tilemap::slots() const {
+	return pimpl->slots;
+}
+
+int Tilemap::inner() const {
+	return pimpl->inner;
 }

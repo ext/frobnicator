@@ -10,7 +10,7 @@
 
 Creep::Creep(const Vector2f& pos, const Blueprint* blueprint, unsigned int level)
 	: Entity(generate_id(), pos, blueprint, level)
-	, left(7) {
+	, left(Game::inner()) {
 }
 
 void Creep::add_buff(const SlowBuff& buf){
