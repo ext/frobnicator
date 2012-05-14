@@ -475,9 +475,9 @@ namespace Game {
 		return tilemap;
 	}
 
-	Sprite* create_sprite(){
+	Sprite* create_sprite(const Sprite* base){
 		assert(backend);
-		return backend->create_sprite();
+		return backend->create_sprite(base);
 	}
 
 	/**

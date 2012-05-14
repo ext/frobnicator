@@ -111,7 +111,7 @@ void Blueprint::parse_leveldata(struct level* level, yaml_parser_t* parser){
 
 		/* sprite requires special handling */
 		if ( key == "sprite" ){
-			level->sprite = Sprite::from_yaml(parser);
+			level->sprite = Sprite::from_yaml(parser, level->sprite);
 			continue;
 		}
 

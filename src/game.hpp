@@ -32,7 +32,7 @@ namespace Game {
 	/**
 	 * Allocate a new sprite.
 	 */
-	Sprite* create_sprite();
+	Sprite* create_sprite(const Sprite* base = NULL);
 
 	/**
 	 * Find waypoint by name.

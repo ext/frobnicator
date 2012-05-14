@@ -7,18 +7,22 @@
 #include "game.hpp"
 #include <yaml.h>
 
-Sprite::Sprite()
+Sprite::Sprite(const Sprite* base)
 	: _offset(0,0)
 	, _scale(1,1) {
 
+	if ( base ){
+		_offset = base->_offset;
+		_scale = base->_scale;
+	}
 }
 
 Sprite::~Sprite(){
 
 }
 
-Sprite* Sprite::from_yaml(yaml_parser_t* parser){
-	Sprite* sprite = Game::create_sprite();
+Sprite* Sprite::from_yaml(yaml_parser_t* parser, const Sprite* base){
+	Sprite* sprite = Game::create_sprite(base);
 
 	yaml_event_t event;
 	yaml_event_t evalue;

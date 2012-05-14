@@ -62,7 +62,7 @@ public:
 	 */
 	virtual Tilemap* load_tilemap(const std::string& filename) = 0;
 
-	virtual Sprite* create_sprite() = 0;
+	virtual Sprite* create_sprite(const Sprite* base = NULL) = 0;
 
 	/**
 	 * Create a new render-target.

@@ -201,7 +201,15 @@ static std::map<std::string, SDLSprite*> texture_cache;
 
 class SDLSprite: public Sprite {
 public:
-	SDLSprite(){
+	SDLSprite(const Sprite* base)
+	: Sprite(base) {
+		if ( base ){
+			const SDLSprite* _  = static_cast<const SDLSprite*>(base);
+			width   = _->width;
+			height  = _->height;
+			texture = _->texture;
+
+		}
 	}
 
 	virtual Sprite* load_texture(const std::string& filename){
@@ -622,8 +630,8 @@ public:
 		return new SDLTilemap(filename);
 	}
 
-	virtual Sprite* create_sprite(){
-		return new SDLSprite;
+	virtual Sprite* create_sprite(const Sprite* base){
+		return new SDLSprite(base);
 	}
 
 	virtual RenderTarget* create_rendertarget(const Vector2i& size, bool alpha) {

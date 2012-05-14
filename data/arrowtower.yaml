@@ -8,6 +8,8 @@
   name: "Arrow Tower"
   splash: 0
   icon: "arrowtower_icon.png"
+  sprite:
+    texture: "arrowtower.png"
 
 - level: 1
   cost: 7
