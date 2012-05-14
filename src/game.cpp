@@ -253,6 +253,18 @@ static void render_game(){
 		backend->render_target(scene_target, Vector2i(0,0));
 		backend->render_target(ui_target,    Vector2i(0, -ui_height));
 		backend->render_target(info_target,  Vector2i(-200, -ui_height - 200 ));
+
+		/* render ui-outline */
+		const float w = window_size.x;
+		const float h = window_size.y - ui_height;
+		const float s = selected != nullptr ? 200 : 0;
+		Vector2f p[] = {
+			Vector2f(0, h),
+			Vector2f(w - 200, h),
+			Vector2f(w - 200, h - s),
+			Vector2f(w, h - s)
+		};
+		backend->render_lines(Color::white, 3, p, 4);
 	}
 	backend->render_end();
 }

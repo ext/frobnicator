@@ -54,6 +54,7 @@ public:
 	virtual void render_entities(std::vector<Entity*>& entities, const Vector2f& camera) const = 0;
 	virtual void render_projectiles(std::vector<Projectile*>& projectiles, const Vector2f& camera) const = 0;
 	virtual void FROB_NONNULL(1) render_target(RenderTarget* target, const Vector2i& offset) const = 0;
+	virtual void render_lines(const Color& color, float width, const Vector2f* points, unsigned int n) const = 0;
 	virtual void render_end() = 0;
 
 	/**

@@ -867,6 +867,7 @@ public:
 	virtual void render_projectiles(std::vector<Projectile*>& projectiles, const Vector2f& camera) const {
 		glPushMatrix();
 		glPushAttrib(GL_ENABLE_BIT);
+		glLineWidth(1.0f);
 
 		/* camera */
 		glTranslatef(-camera.x, -camera.y, 0.0f);
@@ -904,6 +905,22 @@ public:
 		glScalef(target->size.x, -target->size.y, 1.0f);
 		glDrawElements(GL_QUADS, 4, GL_UNSIGNED_INT, indices);
 
+		glPopMatrix();
+	}
+
+	virtual void render_lines(const Color& color, float width, const Vector2f* points, unsigned int n) const {
+		glPushMatrix();
+		glLoadIdentity();
+
+		glPushAttrib(GL_ENABLE_BIT);
+		glDisable(GL_TEXTURE_2D);
+		glLineWidth(width);
+
+		glColor4fv(color.value);
+		glVertexPointer(2, GL_FLOAT, sizeof(Vector2f), &points[0].x);
+		glDrawArrays(GL_LINE_STRIP, 0, n);
+
+		glPopAttrib();
 		glPopMatrix();
 	}
 
