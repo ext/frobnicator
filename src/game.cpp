@@ -274,7 +274,7 @@ namespace Game {
 		/* create render targets */
 		scene_size = window_size;
 		scene_target = backend->create_rendertarget(scene_size, false);
-		ui_target    = backend->create_rendertarget(Vector2i(window_size.x, ui_height), false);
+		ui_target    = backend->create_rendertarget(Vector2i(window_size.x, ui_height), true);
 
 		/* load fonts and ui elements */
 		font16 = backend->create_font("calibri_16.bff");
