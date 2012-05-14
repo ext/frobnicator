@@ -186,27 +186,21 @@ private:
 				abort();
 			}
 
-			const char* key = (const char*)ekey.data.scalar.value;
-			const size_t len = ekey.data.scalar.length;
+			const std::string key((const char*)event.data.scalar.value, event.data.scalar.length);
 
 			/* Parse value */
 			yaml_parser_parse(parser, &evalue) || yaml_error(parser);
 			const char* value = (const char*)evalue.data.scalar.value;
 
 			/* Fill level with info */
-			if ( strncmp("width", key, len) == 0 ){
-			  map_width = atoi(value);
-			} else if ( strncmp("height", key, len) == 0 ){
-				map_height = atoi(value);
-			} else if ( strncmp("tiles_horizontal", key, len) == 0 ){
-				tiles_horizontal = atoi(value);
-			} else if ( strncmp("tiles_vertical", key, len) == 0 ){
-				tiles_vertical = atoi(value);
-			} else if ( strncmp("texture", key, len) == 0 ){
-				texture_name = std::string(value, evalue.data.scalar.length);
+			       if ( key == "width"            ){ map_width = atoi(value);
+			} else if ( key == "height"           ){ map_height = atoi(value);
+			} else if ( key == "tiles_horizontal" ){ tiles_horizontal = atoi(value);
+			} else if ( key == "tiles_vertical"   ){ tiles_vertical = atoi(value);
+			} else if ( key == "texture"          ){ texture_name = std::string(value, evalue.data.scalar.length);
 			} else {
 				/* warning only */
-				fprintf(stderr, "    - Unhandled key `%.*s'\n", (int)len, key);
+				fprintf(stderr, "    - Unhandled key `%s'\n", key.c_str());
 			}
 		} while ( true );
 
