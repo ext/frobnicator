@@ -239,7 +239,7 @@ static void render_game(){
 		//backend->render_sprite(Vector2i(0,0), ui_bar_left);
 
 		for ( int i = 0; i < BUILDING_LAST; i++ ){
-			backend->render_sprite(Vector2i(150 + i * 41, 7), blueprint[i]->icon(0), gold >= blueprint[i]->cost(0) ? Color::white : Color::rgba(0.3,0.3,0.3,1));
+			backend->render_sprite(Vector2i(150 + i * 41, 7), blueprint[i]->icon(1), gold >= blueprint[i]->cost(1) ? Color::white : Color::rgba(0.3,0.3,0.3,1));
 		}
 		font24->printf(   8,  5, Color::white, "Gold: %4d", gold);
 		font24->printf(   7, 22, Color::white, "Lives: %4d", lives);
@@ -273,7 +273,7 @@ static void render_game(){
 std::function<void(Buildings)> build_action = [](Buildings type){
 	building_selected = type;
 	mode = BUILD;
-	if ( gold < blueprint[building_selected]->cost(0) ){
+	if ( gold < blueprint[building_selected]->cost(1) ){
 		mode = SELECT;
 	}
 };
@@ -606,7 +606,7 @@ namespace Game {
 	}
 
 	static void build(const Vector2i& pos, Buildings type){
-		const int cost = blueprint[type]->cost(0);
+		const int cost = blueprint[type]->cost(1);
 		if ( !transaction(cost, Vector2f(pos.x*tile_width(), pos.y*tile_height())) ){
 			fprintf(stderr, "Not enough gold, cost %d have %d\n", cost, gold);
 			return;

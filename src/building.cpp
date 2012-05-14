@@ -10,7 +10,7 @@
 #include <sys/time.h>
 
 Building::Building(const Vector2f& pos, const Blueprint* blueprint)
-	: Entity(generate_id(), pos, blueprint, 0)
+	: Entity(generate_id(), pos, blueprint, 1)
 	, last_firing(0) {
 
 	firing_delta = static_cast<uint64_t>(600.0f / rof()); /* convert shots/min to deciseconds */
