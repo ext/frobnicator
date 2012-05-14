@@ -111,6 +111,7 @@ int Building::sell_cost() const {
 void Building::upgrade(){
 	if ( Game::transaction(upgrade_cost(), world_pos()) ){
 		level++;
+		firing_delta = static_cast<uint64_t>(600.0f / rof()); /* convert shots/min to deciseconds */
 	}
 }
 
