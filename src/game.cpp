@@ -76,6 +76,7 @@ static int gold = 30;
 static int lives = 100;
 static Vector2i window_size;
 static Vector2i scene_size;
+static Vector2i info_size(200,200);
 static RenderTarget* scene_target = nullptr;
 static RenderTarget* ui_target = nullptr;
 static RenderTarget* info_target = nullptr;
@@ -257,16 +258,16 @@ static void render_game(){
 	{
 		backend->render_target(scene_target, Vector2i(0,0));
 		backend->render_target(ui_target,    Vector2i(0, -ui_height));
-		backend->render_target(info_target,  Vector2i(-200, -ui_height - 200 ));
+		backend->render_target(info_target,  Vector2i(-info_size.x, -ui_height - info_size.y));
 
 		/* render ui-outline */
 		const float w = window_size.x;
 		const float h = window_size.y - ui_height;
-		const float s = selected != nullptr ? 200 : 0;
+		const float s = selected != nullptr ? info_size.y : 0;
 		Vector2f p[] = {
 			Vector2f(0, h),
-			Vector2f(w - 200, h),
-			Vector2f(w - 200, h - s),
+			Vector2f(w - info_size.x, h),
+			Vector2f(w - info_size.x, h - s),
 			Vector2f(w, h - s)
 		};
 		backend->render_lines(Color::white, 3, p, 4);
@@ -315,7 +316,7 @@ namespace Game {
 		scene_size = window_size;
 		scene_target = backend->create_rendertarget(scene_size, false);
 		ui_target    = backend->create_rendertarget(Vector2i(window_size.x, ui_height), true);
-		info_target  = backend->create_rendertarget(Vector2i(200, 200), true);
+		info_target  = backend->create_rendertarget(info_size, true);
 
 		/* load fonts and ui elements */
 		font16 = backend->create_font("calibri_16.bff");
@@ -609,7 +610,7 @@ namespace Game {
 		scene_size = window_size;
 		scene_target = backend->create_rendertarget(scene_size, false);
 		ui_target    = backend->create_rendertarget(Vector2i(window_size.x, ui_height), true);
-		info_target  = backend->create_rendertarget(Vector2i(200, 200), true);
+		info_target  = backend->create_rendertarget(info_size, true);
 	}
 
 	static void build(const Vector2i& pos, Buildings type){
