@@ -304,7 +304,6 @@ namespace Game {
 
 		/* spawn timer */
 		struct timeval sref = {t.tv_sec + wave_delay, 0};
-		fprintf(stderr, "Next wave will start in %lld seconds.\n", (long long)wave_delay);
 
 		while ( running ){
 			/* frame update */
@@ -335,7 +334,6 @@ namespace Game {
 				fprintf(stderr, "Spawning wave %d\n", wave_current);
 				EntityVector wave = level->spawn(wave_current);
 				std::for_each(wave.begin(), wave.end(), [](Entity* e){ creep[e->id()] = static_cast<Creep*>(e); });
-				fprintf(stderr, "Next wave will start in %lld seconds.\n", (long long)wave_delay);
 			}
 
 			/* calculate dt */
