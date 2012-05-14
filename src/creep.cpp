@@ -72,6 +72,11 @@ void Creep::on_enter_region(const Waypoint& region){
 		left = 7;
 	}
 
+	if ( name == "" ){
+		fprintf(stderr, "Waypoint `%s' is missing next waypoint.\n", region.name().c_str());
+		return;
+	}
+
 	const Waypoint* next = Game::find_waypoint(name);
 	if ( !next ){
 		fprintf(stderr, "Waypoint `%s' refers to non-existing waypoint `%s', ignored.\n", region.name().c_str(), region.next().c_str());
