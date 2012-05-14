@@ -84,6 +84,8 @@ static Font* font16;
 static Font* font24;
 static Font* font34;
 static Sprite* ui_bar_left = nullptr;
+static Sprite* ui_upgrade = nullptr;
+static Sprite* ui_sell = nullptr;
 
 namespace Game {
 	static Vector2f clamp_to_world(const Vector2f& v);
@@ -209,6 +211,9 @@ static void render_info(const Building* building){
 		if ( building->have_slow() ){
 			font16->printf(10, 40+line++*16, Color::white, "Slows target by %.1f%% for %.1f sec", (1.0f-building->slow())*100, building->slow_duration());
 		}
+
+		backend->render_sprite(Vector2i(10,  161), ui_upgrade);
+		backend->render_sprite(Vector2i(105, 161), ui_sell);
 	} else {
 		backend->render_clear(Color::rgba(0,0,0,0));
 	}
@@ -317,6 +322,8 @@ namespace Game {
 		font24 = backend->create_font("calibri_24.bff");
 		font34 = backend->create_font("calibri_34.bff");
 		ui_bar_left = backend->create_sprite()->load_texture("bar_left.png")->autoscale();
+		ui_upgrade  = backend->create_sprite()->load_texture("icon_upgrade.png")->autoscale();
+		ui_sell     = backend->create_sprite()->load_texture("icon_sell.png")->autoscale();
 	}
 
 	void cleanup(){
