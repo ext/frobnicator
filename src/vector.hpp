@@ -51,6 +51,12 @@ public:
 		return Vector(x * scalar, y * scalar);
 	}
 
+	Vector& operator*=(T scalar){
+		x *= scalar;
+		y *= scalar;
+		return *this;
+	}
+
 	bool operator==(const Vector& rhs) const {
 		return x == rhs.x && y == rhs.y; /* won't work very well for floatingpoint */
 	}
