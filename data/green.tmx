@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" width="96" height="96" tilewidth="48" tileheight="48">
+<map version="1.0" orientation="orthogonal" width="78" height="78" tilewidth="48" tileheight="48">
  <properties>
   <property name="inner" value="0"/>
   <property name="slots" value="8"/>
@@ -13,134 +13,166 @@
     <property name="build" value="yes"/>
    </properties>
   </tile>
+  <tile id="31">
+   <properties>
+    <property name="build" value="yes"/>
+   </properties>
+  </tile>
+  <tile id="32">
+   <properties>
+    <property name="build" value="yes"/>
+   </properties>
+  </tile>
  </tileset>
- <layer name="Tile Layer 1" width="96" height="96" opacity="0.99">
+ <layer name="Tile Layer 1" width="78" height="78" opacity="0.99">
   <data encoding="base64" compression="zlib">
-   eJztnMtu3DAMRb1MmyynmSw1aT+haPbN//9TPAEMGAJtizKpoeyzOCtbMnnnWqEeznUYhisAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC48m/kI0AcZ+X/yGeAOM4O78Fj4T0AAAAAAAAAADgnTyO/M34EiKvXOLW8jfzNeA0QV69xHjWvXuI8al69xHnUvHqJU8tl5GWW08+RXwHi6jVODdOe5NxbET3VS5xapj3J6Hn1EqeWXnzVS5xaWvvq1kmctUhzxBL+zPJ6r+yjBRZxes6ZpRoN2tWs6B9H/3t9/AzfzOcNrfS/P0dz5tDqfKLHOcdU2X/ruil/jubModX5RO9zjjU5PUp/T/8v1ZJTP0nRdu3ePXHif3si+n/pd869Ujs/6Il5fV+qi5Untvx/hvp08vdNoYvX+DP9zpIPjspW3o8Y/yUflMwP8vX22prbu21e36/l3Up/aX1kvn4i+cTSN5ZtNXGW5G2te834IvlE65tkrP9toa0mztK/D5ZMcVyG8ne8ZO/OUkPpHqvnavW3rn+8vm2MMv5s3a/1nXX906qeyq+vzSdK1+ql9fhW86Wo/S3p4FHPSvp66x/R/9KYrKlnW9XrtXuYR/D/2nVNjf/oej2i//fqr9HJq987Je9Hz/6/bVxf0iAZ6Z+E+7X6R/V/HnuP/i+hZ/8nR/1TZb+p8LkTUf1fqpN0XXMeZ2s9plf/W3+jo9E/Yv2/pIeX/yU99pxn0/jUS3+r+KX5hrX/PfdXJJ0uw/41fGkd0DuPlv731H/P2FXa1iOPlv63Ogc392lJja3Vf97n2ntVu4/Wwv9S3C2+0UkG+nuwpIdXvd4CSWuJPXtnpc+o5Qz/i9DL/96/Tc+UrA2Bj945mrW5OylAPkdiT/0DPvqnin5q2sAxxv8vKZipYA==
+   eJztnMFywyAMRH1s0x7dpkfS5hP6/99W+9AZxkMAgYR2Yw57scE8NmALweS6LMt1ilIvm34Oes1c9+at7YO17pt+D/rc9JW4/u3AV/NbpVg99Mg3L5bpm71vl01vA/Qu8M2DSepbTXkNrQnuj8z1EUxSHzx8Q9T0bfrG4htKrOQdUzLEISlGRCYGRkSmHCNKrITIhPBdKLWJyMTAiMjEwIjIxMCIyMTAiMjEwIjIxMCIyMTAiMjEwIjIxMCIyMTAiMjEwIjIxMCIyMTAiMjEwIjIxMCIyBRrz+PHefV9fyF3NkLr3Iu1b1JOqQ+pfHSOU1reyzfrfk3fMMtP36ZvsdZFdo5lLx/v+1wK5b18k3JKfWiRRowwIg5BO78xfZu+Td/G+dZ65ucYV1s8Y0QbrWelvM+uMAjxzA+DUM78MEhyVgrhe6Ol0FkfMcfFICTfboX7QVA3V/bZfGNSr28eZ7pHqxSftfh2hjjlv9/xu2D6Vu+b1Xirie+O+a7WmMm6bm98Ft8vrRGt9xNH1u3tt2QeavgWlH27Ndbt7fe61M+FmpyxVd9Lsd9o37TFMk+1x4u1b7l4sDZX1hJvoWtEXMO+7km9cxB9K70bEaQdD54lH2aVR7DMTyCMxxR/zbovxR6UfAuJ8t6+HdtkHG8ISvGHwv0e30Ljc0Nlu56+Pbov2c+UrBdHjDft/1pDjEMs/Ej1o+f/QzTzCK2+afFb90PSv3Xpz6Gl1ouj+zG6vZ45XlvXyzetfft4XNTESFLf4mfmxnFr3lg6b0bkTYKCbxby8qPWo5bxlntObRvPKKvx9oyeSvYsz6zc90Gy5t8VAPqDoJ7v6ZlVygnUqqUOsxjeb3+ZCKl9
   </data>
  </layer>
- <objectgroup color="#ff00ff" name="Spawnpoints" width="96" height="96">
+ <objectgroup color="#ff00ff" name="Spawnpoints" width="78" height="78">
   <properties>
    <property name="section" value="spawn"/>
   </properties>
-  <object name="Spawn 1" x="624" y="4032" width="192" height="192">
+  <object name="Spawn 1" x="144" y="3168" width="192" height="192">
    <properties>
     <property name="next" value="lower_left"/>
    </properties>
   </object>
-  <object name="Spawn 2" x="3888" y="4032" width="192" height="192">
+  <object name="Spawn 2" x="3408" y="3168" width="192" height="192">
    <properties>
     <property name="next" value="lower_right"/>
    </properties>
   </object>
-  <object name="Spawn 3" x="1248" y="2352" width="192" height="192">
+  <object name="Spawn 3" x="768" y="1488" width="192" height="192">
    <properties>
     <property name="next" value="middle_left_1"/>
    </properties>
   </object>
-  <object name="Spawn 4" x="3264" y="2352" width="192" height="192"/>
+  <object name="Spawn 4" x="2784" y="1488" width="192" height="192">
+   <properties>
+    <property name="next" value="middle_right_1"/>
+   </properties>
+  </object>
  </objectgroup>
- <objectgroup color="#ffff00" name="Waypoints" width="96" height="96">
+ <objectgroup color="#ffff00" name="Waypoints" width="78" height="78">
   <properties>
    <property name="section" value="waypoint"/>
   </properties>
-  <object name="lower_left" x="1584" y="4080" width="96" height="96">
+  <object name="lower_left" x="1104" y="3216" width="96" height="96">
    <properties>
     <property name="next" value="lower_junction_left"/>
    </properties>
   </object>
-  <object name="lower_junction_left" x="1584" y="3216" width="96" height="96">
+  <object name="lower_junction_left" x="1104" y="2352" width="96" height="96">
    <properties>
     <property name="next" value="center_junction_left"/>
    </properties>
   </object>
-  <object name="b" x="912" y="1680" width="96" height="96"/>
-  <object name="a" x="816" y="1584" width="96" height="96"/>
-  <object name="center_junction_left" x="2256" y="3216" width="96" height="96">
+  <object name="center_junction_left" x="1800" y="2352" width="72" height="96">
    <properties>
     <property name="next" value="circle_left_1"/>
    </properties>
   </object>
-  <object name="center_junction_right" x="2352" y="3216" width="96" height="96">
+  <object name="center_junction_right" x="1872" y="2352" width="72" height="96">
    <properties>
     <property name="next" value="circle_right_1"/>
    </properties>
   </object>
-  <object name="circle_left_1" x="2256" y="3600" width="96" height="96">
+  <object name="circle_left_1" x="1800" y="2736" width="72" height="96">
    <properties>
     <property name="next" value="circle_left_2"/>
    </properties>
   </object>
-  <object name="circle_right_1" x="2352" y="3600" width="96" height="96">
+  <object name="circle_right_1" x="1872" y="2736" width="72" height="96">
    <properties>
     <property name="next" value="circle_right_2"/>
    </properties>
   </object>
-  <object name="circle_left_2" x="1968" y="3600" width="96" height="96">
+  <object name="circle_left_2" x="1488" y="2736" width="96" height="96">
    <properties>
     <property name="next" value="circle_left_3"/>
    </properties>
   </object>
-  <object name="circle_left_3" x="1968" y="3984" width="96" height="96">
+  <object name="circle_left_3" x="1488" y="3120" width="96" height="96">
    <properties>
     <property name="next" value="circle_exit"/>
    </properties>
   </object>
-  <object name="circle_right_2" x="2640" y="3600" width="96" height="96">
+  <object name="circle_right_2" x="2160" y="2736" width="96" height="96">
    <properties>
     <property name="next" value="circle_right_3"/>
    </properties>
   </object>
-  <object name="circle_exit" x="2304" y="3984" width="96" height="96">
+  <object name="circle_exit" x="1824" y="3120" width="96" height="96">
    <properties>
     <property name="next" value="middle"/>
    </properties>
   </object>
-  <object name="circle_right_3" x="2640" y="3984" width="96" height="96">
+  <object name="circle_right_3" x="2160" y="3120" width="96" height="96">
    <properties>
     <property name="next" value="circle_exit"/>
    </properties>
   </object>
-  <object name="middle" x="2256" y="4512" width="192" height="96"/>
-  <object name="lower_junction_right" x="3024" y="3216" width="96" height="96">
+  <object name="middle" x="1776" y="3648" width="192" height="96"/>
+  <object name="lower_junction_right" x="2544" y="2352" width="96" height="96">
    <properties>
     <property name="next" value="center_junction_right"/>
    </properties>
   </object>
-  <object name="lower_right" x="3024" y="4080" width="96" height="96">
+  <object name="lower_right" x="2544" y="3216" width="96" height="96">
    <properties>
     <property name="next" value="lower_junction_right"/>
    </properties>
   </object>
-  <object name="middle_left_5" x="1008" y="3216" width="96" height="96">
+  <object name="middle_left_5" x="528" y="2352" width="96" height="96">
    <properties>
     <property name="next" value="lower_junction_left"/>
    </properties>
   </object>
-  <object name="middle_left_4" x="1008" y="3360" width="96" height="96">
+  <object name="middle_left_4" x="528" y="2496" width="96" height="96">
    <properties>
     <property name="next" value="middle_left_5"/>
    </properties>
   </object>
-  <object name="middle_left_3" x="624" y="3360" width="96" height="96">
+  <object name="middle_left_3" x="144" y="2496" width="96" height="96">
    <properties>
     <property name="next" value="middle_left_4"/>
    </properties>
   </object>
-  <object name="middle_left_2" x="624" y="2832" width="96" height="96">
+  <object name="middle_left_2" x="144" y="1968" width="96" height="96">
    <properties>
     <property name="next" value="middle_left_3"/>
    </properties>
   </object>
-  <object name="middle_left_1" x="1296" y="2832" width="96" height="96">
+  <object name="middle_left_1" x="816" y="1968" width="96" height="96">
    <properties>
     <property name="next" value="middle_left_2"/>
    </properties>
   </object>
-  <object x="3312" y="2832" width="144" height="96"/>
-  <object x="3984" y="2832" width="96" height="96"/>
-  <object x="3984" y="3408" width="96" height="96"/>
-  <object x="3600" y="3408" width="96" height="96"/>
-  <object x="3600" y="3216" width="96" height="96"/>
+  <object name="middle_right_1" x="2832" y="1968" width="96" height="96">
+   <properties>
+    <property name="next" value="middle_right_2"/>
+   </properties>
+  </object>
+  <object name="middle_right_2" x="3504" y="1968" width="96" height="96">
+   <properties>
+    <property name="next" value="middle_right_3"/>
+   </properties>
+  </object>
+  <object name="middle_right_3" x="3504" y="2544" width="96" height="96">
+   <properties>
+    <property name="next" value="middle_right_4"/>
+   </properties>
+  </object>
+  <object name="middle_right_4" x="3120" y="2544" width="96" height="96">
+   <properties>
+    <property name="next" value="middle_right_5"/>
+   </properties>
+  </object>
+  <object name="middle_right_5" x="3120" y="2352" width="96" height="96">
+   <properties>
+    <property name="next" value="lower_junction_right"/>
+   </properties>
+  </object>
  </objectgroup>
 </map>
