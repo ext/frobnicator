@@ -107,7 +107,7 @@ void Blueprint::parse_leveldata(struct level* level, yaml_parser_t* parser){
 			abort();
 		}
 
-		std::string key((const char*)event.data.scalar.value, event.data.scalar.length);
+		const std::string key((const char*)event.data.scalar.value, event.data.scalar.length);
 
 		/* sprite requires special handling */
 		if ( key == "sprite" ){
