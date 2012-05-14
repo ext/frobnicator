@@ -198,7 +198,10 @@ static void render_aabb(const Vector2f& cam){
 	}
 }
 
-static void render_info(const Building* building){
+static void render_info(const Building* building, bool b1, bool b2){
+	static Color c1 = Color::rgba(1,1,1,1.0f);
+	static Color c2 = Color::rgba(1,1,1,0.7f);
+
 	backend->render_begin(info_target);
 	if ( building ){
 		backend->render_clear(Color::rgba(0,0,0,0.5f));
@@ -213,8 +216,8 @@ static void render_info(const Building* building){
 			font16->printf(10, 40+line++*16, Color::white, "Slows target by %.1f%% for %.1f sec", (1.0f-building->slow())*100, building->slow_duration());
 		}
 
-		backend->render_sprite(Vector2i(10,  161), ui_upgrade);
-		backend->render_sprite(Vector2i(105, 161), ui_sell);
+		backend->render_sprite(Vector2i(10,  161), ui_upgrade, b1 ? c1 : c2);
+		backend->render_sprite(Vector2i(105, 161), ui_sell,    b2 ? c1 : c2);
 	} else {
 		backend->render_clear(Color::rgba(0,0,0,0));
 	}
@@ -282,6 +285,10 @@ std::function<void(Buildings)> build_action = [](Buildings type){
 	if ( gold < blueprint[building_selected]->cost(1) ){
 		mode = SELECT;
 	}
+
+	/* drop current entity selection */
+	selected = nullptr;
+	render_info(selected, false, false);
 };
 
 namespace Game {
@@ -526,6 +533,14 @@ namespace Game {
 			const Vector2f c = Game::clamp_to_world(p);
 			panning_ref -= p-c;
 		}
+
+		/* test if hovering over infobox */
+		if ( selected && x > window_size.x - info_size.x && y > window_size.y - ui_height - info_size.y ){
+			const Vector2i local((int)x - (window_size.x - info_size.x), (int)y - (window_size.y - ui_height - info_size.y));
+			bool b1 = local.y >= 161 && local.y < 200 && local.x >= 10  && local.x < 95;
+			bool b2 = local.y >= 161 && local.y < 200 && local.x >= 105 && local.x < 190;
+			render_info(selected, b1, b2);
+		}
 	}
 
 	void button_pressed(float x, float y, int button){
@@ -552,6 +567,14 @@ namespace Game {
 				break;
 			}
 
+			/* test if clicking on infobox */
+			if ( selected && x > window_size.x - info_size.x && y > window_size.y - ui_height - info_size.y ){
+				const Vector2i local((int)x - (window_size.x - info_size.x), (int)y - (window_size.y - ui_height - info_size.y));
+				bool b1 = local.y >= 161 && local.y < 200 && local.x >= 10  && local.x < 95;
+				bool b2 = local.y >= 161 && local.y < 200 && local.x >= 105 && local.x < 190;
+				break;
+			}
+
 			/* assume clicking on world */
 			if ( mode == BUILD){
 				/* try to build at cursor */
@@ -571,7 +594,7 @@ namespace Game {
 						break;
 					}
 				}
-				render_info(selected);
+				render_info(selected, false, false);
 			}
 			break;
 
