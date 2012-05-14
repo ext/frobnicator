@@ -663,7 +663,7 @@ namespace Game {
 
 		Building* tmp = Building::place_at_tile(pos, blueprint[type]);
 		building[tmp->id()] = tmp;
-		tilemap->reserve(pos.x, pos.y);
+		tilemap->reserve(pos, Vector2i(2,2));
 	}
 
 	size_t tile_width(){
@@ -709,7 +709,6 @@ namespace Game {
 		if ( !ent ){
 			return;
 		}
-		ent->dec_ref();
 
 		/* hack to determine if it is building or creep */
 		const bool is_creep = name[0] == 'c';
@@ -717,8 +716,12 @@ namespace Game {
 		if ( is_creep ){
 			creep.erase(name);
 		} else {
+			tilemap->unreserve(ent->grid_pos(), Vector2i(2,2));
 			building.erase(name);
 		}
+
+		/* release resources */
+		ent->dec_ref();
 	}
 
 	const std::map<std::string, Creep*>& all_creep(){

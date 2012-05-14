@@ -475,11 +475,20 @@ const Tilemap::Tile& Tilemap::at(unsigned int x, unsigned int y) const {
 	return pimpl->tile[index];
 }
 
-void Tilemap::reserve(unsigned int x, unsigned int y){
-	pimpl->tile[x   + (y  ) * pimpl->map_width].build = 0;
-	pimpl->tile[x+1 + (y  ) * pimpl->map_width].build = 0;
-	pimpl->tile[x   + (y+1) * pimpl->map_width].build = 0;
-	pimpl->tile[x+1 + (y+1) * pimpl->map_width].build = 0;
+void Tilemap::reserve(const Vector2i& pos, const Vector2i& size){
+	for ( int x = pos.x; x < pos.x + size.x; x++ ){
+		for ( int y = pos.y; y < pos.y + size.y; y++ ){
+			pimpl->tile[x + y * pimpl->map_width].build = 0;
+		}
+	}
+}
+
+void Tilemap::unreserve(const Vector2i& pos, const Vector2i& size){
+	for ( int x = pos.x; x < pos.x + size.x; x++ ){
+		for ( int y = pos.y; y < pos.y + size.y; y++ ){
+			pimpl->tile[x + y * pimpl->map_width].build = 1;
+		}
+	}
 }
 
 std::vector<Tilemap::Tile>::iterator Tilemap::begin(){
